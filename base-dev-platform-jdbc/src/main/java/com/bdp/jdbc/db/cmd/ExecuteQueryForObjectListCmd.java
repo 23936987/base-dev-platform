@@ -8,22 +8,22 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class ExecuteQueryForObjectListCmd<T> extends BaseCmd<T,List<T>> {
+public class ExecuteQueryForObjectListCmd<V> extends BaseCmd<V,List<V>> {
     private static Logger logger = LoggerFactory.getLogger(ExecuteQueryForObjectListCmd.class);
     private String sql;
     private Map<String,Object> wheres;
-    public ExecuteQueryForObjectListCmd(String sql, Map<String, Object> wheres, Class<T> clazz){
+    public ExecuteQueryForObjectListCmd(String sql, Map<String, Object> wheres, Class<V> clazz){
         this.sql = sql;
         this.wheres = wheres;
         this.clazz = clazz;
     }
 
     @Override
-    public List<T> execute(JdbcContext context) throws Exception {
+    public List<V> execute(JdbcContext context) throws Exception {
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        List<T> result = context.getNamedParameterJdbcTemplate().queryForObject(sql, wheres, getVoRowMapper());
+        List<V> result = context.getNamedParameterJdbcTemplate().query(sql, wheres, getVoRowMapper());
         logger.debug("result : " + result);
         return result;
     }

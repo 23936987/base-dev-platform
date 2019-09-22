@@ -6,11 +6,11 @@ import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.annotation.DateColumn;
 import com.bdp.jdbc.annotation.RelationColumn;
 import com.bdp.jdbc.annotation.Table;
-import com.bdp.jdbc.db.cmd.BaseCmd;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.Query;
 import com.bdp.jdbc.db.WhereResult;
 import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.db.cmd.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,13 +18,11 @@ import java.beans.Transient;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class EntityCommand<T,R,E extends Entity> extends BaseCmd<T,R> {
-    private static Logger logger = LoggerFactory.getLogger(EntityCommand.class);
-    protected Class<T> clazz;
+public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
+    private static Logger logger = LoggerFactory.getLogger(EntityCmd.class);
     protected Class<E> entityClass;
 
-	public void setClazz(Class<T> clazz,Class<E> entityClass){
-        this.clazz = clazz;
+	public void setClazz(Class<E> entityClass){
         this.entityClass = entityClass;
 	}
 
@@ -327,7 +325,7 @@ public abstract class EntityCommand<T,R,E extends Entity> extends BaseCmd<T,R> {
 
     protected String getQuery() {
         String query = "";
-        List<Field> fields = ReflectionHelper.getDeclaredFields(clazz);
+        List<Field> fields = ReflectionHelper.getDeclaredFields(entityClass);
         for (int i = 0; i < fields.size(); i++) {
             Field f = fields.get(i);
             String fieldName = f.getName();
@@ -377,4 +375,6 @@ public abstract class EntityCommand<T,R,E extends Entity> extends BaseCmd<T,R> {
         }
         return query;
     }
+
+
 }

@@ -24,8 +24,7 @@ public class ExecuteUpdateCmd implements Command<Integer> {
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Integer result = null;
-        result = context.getJdbcTemplate().update(sql,wheres);
+        Integer result  = context.getJdbcTemplate().update(sql,wheres);
         return result;
     }
 }

@@ -23,8 +23,7 @@ public class ExecuteQueryForLongCmd implements Command<Long> {
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Long result;
-        result = context.getNamedParameterJdbcTemplate().queryForObject(sql,wheres,Long.class);
+        Long result = context.getNamedParameterJdbcTemplate().queryForObject(sql,wheres,Long.class);
         logger.debug("result : " + result);
         return result;
     }

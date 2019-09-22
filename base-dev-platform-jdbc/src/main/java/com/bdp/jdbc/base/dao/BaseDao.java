@@ -46,10 +46,17 @@ public interface BaseDao<E extends Entity> {
 
     /**************queryForObjectBySql**************start********************/
     E queryForObjectBySql(String sql, Map<String, Object> wheres) throws Exception;
+
+    /**************queryForObjectBySql**************start********************/
+
     List<E> queryForListBySql(String sql, Map<String, Object> wheres) throws Exception;
     List<E> queryForListBySql(String sql, Map<String, Object> wheres, Integer pageNum, Integer pageSize) throws Exception;
 
-    /**************queryForObjectBySql**************end********************/
+    /**************queryVoForListBySql**************end********************/
+    <V> V queryVoForObjectBySql(String sql, Map<String, Object> wheres,Class<V> vClass) throws Exception;
+    <V> List<V> queryVoForListBySql(String sql, Map<String, Object> wheres,Class<V> vClass) throws Exception;
+    <V> List<V> queryVoForListBySql(String sql, Map<String, Object> wheres, Integer pageNum, Integer pageSize,Class<V> vClass) throws Exception;
+    /**************queryVoForListBySql**************start********************/
 
 
     /**************pagination**************start********************/

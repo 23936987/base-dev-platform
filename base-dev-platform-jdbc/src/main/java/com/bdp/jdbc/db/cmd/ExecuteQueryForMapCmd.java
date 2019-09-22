@@ -24,8 +24,7 @@ public class ExecuteQueryForMapCmd implements Command<Map<String,Object>> {
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Map<String,Object> result;
-        result = context.getNamedParameterJdbcTemplate().queryForObject(sql,wheres,new SingleColumnRowMapper<Map>());
+        Map<String,Object> result = context.getNamedParameterJdbcTemplate().queryForObject(sql,wheres,new SingleColumnRowMapper<Map>());
         logger.debug("result : " + result);
         return result;
     }

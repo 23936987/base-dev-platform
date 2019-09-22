@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SaveCommand<E extends Entity> extends EntityCommand<E,Integer,E> {
-    private static Logger logger = LoggerFactory.getLogger(SaveCommand.class);
+public class SaveCmd<E extends Entity> extends EntityCmd<E,Integer> {
+    private static Logger logger = LoggerFactory.getLogger(SaveCmd.class);
 
     private E entity;
 
-    public SaveCommand(E entity) {
+    public SaveCmd(E entity) {
         this.entity = entity;
     }
 

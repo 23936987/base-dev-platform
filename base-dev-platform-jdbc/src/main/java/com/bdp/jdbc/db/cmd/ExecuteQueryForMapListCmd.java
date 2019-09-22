@@ -24,8 +24,7 @@ public class ExecuteQueryForMapListCmd implements Command<List<Map<String,Object
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        List<Map<String,Object>> result;
-        result = context.getNamedParameterJdbcTemplate().queryForList(sql,wheres);
+        List<Map<String,Object>> result= context.getNamedParameterJdbcTemplate().queryForList(sql,wheres);
         logger.debug("result : " + result);
         return result;
     }

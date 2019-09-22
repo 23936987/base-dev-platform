@@ -1,25 +1,18 @@
 package com.bdp.jdbc.base.cmd;
 
-import com.bdp.exception.Assert;
-import com.bdp.helper.JsonHelper;
-import com.bdp.helper.ReflectionHelper;
-import com.bdp.jdbc.annotation.Transient;
 import com.bdp.jdbc.base.entity.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class SaveListCommand<E extends Entity> extends EntityCommand<E,String,E> {
-    private static Logger logger = LoggerFactory.getLogger(SaveListCommand.class);
+public class SaveListCmd<E extends Entity> extends EntityCmd<E,String> {
+    private static Logger logger = LoggerFactory.getLogger(SaveListCmd.class);
 
     private List<Entity> list;
 
-    public SaveListCommand(List<Entity> list) {
+    public SaveListCmd(List<Entity> list) {
         this.list = list;
     }
 

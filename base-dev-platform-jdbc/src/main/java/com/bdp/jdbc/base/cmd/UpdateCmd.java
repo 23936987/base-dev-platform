@@ -16,13 +16,13 @@ import java.util.Map;
 import java.util.Set;
 
 @Slf4j
-public class UpdateCommand<E extends Entity> extends EntityCommand<E,Integer,E> {
-    private static Logger logger = LoggerFactory.getLogger(UpdateCommand.class);
+public class UpdateCmd<E extends Entity> extends EntityCmd<E,Integer> {
+    private static Logger logger = LoggerFactory.getLogger(UpdateCmd.class);
     private Map<String,Object> props;
     private Map<String,Object> wheres;
 
 
-    public UpdateCommand(Map<String, Object> props, Map<String, Object> wheres){
+    public UpdateCmd(Map<String, Object> props, Map<String, Object> wheres){
         this.props = props;
         this.wheres = wheres;
     }
@@ -65,8 +65,7 @@ public class UpdateCommand<E extends Entity> extends EntityCommand<E,Integer,E> 
         log.debug("sql : " + sql);
         log.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Integer result;
-        result = context.getJdbcTemplate().update(sql,wheres);
+        Integer result = context.getJdbcTemplate().update(sql,wheres);
         log.debug("result : " + result);
 
         //返回值处理

@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class DeleteCommand<E extends Entity> extends EntityCommand<E,Integer,E> {
-    private static Logger logger = LoggerFactory.getLogger(DeleteCommand.class);
+public class DeleteCmd<E extends Entity> extends EntityCmd<E,Integer> {
+    private static Logger logger = LoggerFactory.getLogger(DeleteCmd.class);
     private Map<String,Object> wheres;
 
-    public DeleteCommand(Map<String, Object> wheres){
+    public DeleteCmd(Map<String, Object> wheres){
         this.wheres = wheres;
     }
     @Override
@@ -32,8 +32,7 @@ public class DeleteCommand<E extends Entity> extends EntityCommand<E,Integer,E> 
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Integer result;
-        result = context.getNamedParameterJdbcTemplate().update(sql,wheres);
+        Integer result = context.getNamedParameterJdbcTemplate().update(sql,wheres);
         return result;
     }
 
