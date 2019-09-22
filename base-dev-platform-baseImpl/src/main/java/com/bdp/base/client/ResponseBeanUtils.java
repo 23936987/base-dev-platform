@@ -25,12 +25,12 @@ public class ResponseBeanUtils {
         logger.error(e.getMessage(), e);
         if(e instanceof BizException) {
             BizException ex = (BizException) e;
-            logger.error(ex.getErrorMsg(),e);
+            logger.error(ex.getMessage(),e);
             responseBean.setErrorCode(ex.getErrorCode());
-            responseBean.setErrorMsg(ex.getErrorMsg());
+            responseBean.setErrorMsg(ex.getMessage());
         }else{
             logger.error(e.getMessage(),e);
-            responseBean.setErrorCode(BizErrorEnum.UNKONW.getErrorCode());
+            responseBean.setErrorCode(BizErrorEnum.FAILURE.getErrorCode());
             responseBean.setErrorMsg(e.getMessage());
         }
 
