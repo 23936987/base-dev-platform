@@ -9,7 +9,7 @@ import com.bdp.jdbc.annotation.Table;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.Query;
 import com.bdp.jdbc.db.WhereResult;
-import com.bdp.jdbc.entity.Entity;
+import com.bdp.jdbc.db.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

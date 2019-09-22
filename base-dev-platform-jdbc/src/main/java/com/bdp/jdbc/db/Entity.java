@@ -1,4 +1,4 @@
-package com.bdp.jdbc.entity;
+package com.bdp.jdbc.db;
 
 import com.bdp.jdbc.annotation.Column;
 import com.bdp.jdbc.annotation.Id;

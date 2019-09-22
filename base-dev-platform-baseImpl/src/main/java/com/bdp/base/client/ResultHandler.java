@@ -1,12 +1,10 @@
-package com.bdp.common.client;
+package com.bdp.base.client;
 
-import com.bdp.common.app.App;
-import com.bdp.common.dto.RequestDTO;
-import com.bdp.common.dto.ResponseDTO;
+import com.bdp.jdbc.db.App;
+import com.bdp.jdbc.dto.RequestDTO;
+import com.bdp.jdbc.dto.ResponseDTO;
 import com.bdp.common.helper.SpringContextHelper;
 import com.bdp.exception.Assert;
-import com.bdp.exception.BizErrorEnum;
-import com.bdp.exception.BizException;
 import com.bdp.helper.DateHelper;
 import com.bdp.helper.JsonHelper;
 import org.slf4j.Logger;
@@ -26,32 +24,26 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ResultHandler {
     private static Logger logger = LoggerFactory.getLogger(ResultHandler.class);
-    public <T> ResponseEntity<T> callApi(HttpServletRequest request, RequestDTO requestDTO, AskListener listener){
+    public <T> ResponseEntity<ResponseBean<T>> callApi(HttpServletRequest request, RequestDTO requestDTO,
+                                                                   AskListener<T> listener){
         logger.info("输入参数:" + JsonHelper.toJSonString(requestDTO));
         long start = System.currentTimeMillis();
 
         ResponseDTO responseDTO  = null;
         try {
             responseDTO = callService(requestDTO);
-           return listener.ask(responseDTO);
+            long end = System.currentTimeMillis();
+            logger.info("输出参数:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("耗时:" + DateHelper.formatTime(end - start));
+           T object= listener.ask(responseDTO);
+          return ResponseBeanUtils.response_success(object);
         } catch (Exception e) {
-            responseDTO = new ResponseDTO();
-            logger.error(e.getMessage(), e);
-            if(e instanceof BizException) {
-                BizException ex = (BizException) e;
-                responseDTO.setErrorCode(ex.getErrorCode());
-                responseDTO.setErrorMsg(ex.getErrorCode());
-            }else{
-                responseDTO.setErrorCode(BizErrorEnum.UNKONW.getErrorCode());
-                responseDTO.setErrorMsg(e.getMessage());
-            }
+            long end = System.currentTimeMillis();
+            logger.info("输出参数:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("耗时:" + DateHelper.formatTime(end - start));
+            return ResponseBeanUtils.response_fail(e);
         }
-        long end = System.currentTimeMillis();
-        logger.info("输出参数:" +JsonHelper.toJSonString(responseDTO));
-        logger.info("耗时:" + DateHelper.formatTime(end - start));
-        return null;
     }
-
     private ResponseDTO callService(RequestDTO requestDTO) throws Exception {
         String channel = requestDTO.getChannel();
         Assert.isNotNull(channel,"channel ${0} is null",channel);
