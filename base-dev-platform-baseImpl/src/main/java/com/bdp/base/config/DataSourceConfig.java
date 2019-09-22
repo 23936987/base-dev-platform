@@ -37,22 +37,27 @@ public class DataSourceConfig {
     }
 
 
+
+
     @Bean(name = "primaryNamedParameterJdbcTemplate")
     @Primary
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate(@Qualifier("primaryDataSource") DataSource dataSource) {
         return new NamedParameterJdbcTemplate(new JdbcTemplate(dataSource));
     }
 
+
     @Bean(name = "primaryTransactionManager")
     public PlatformTransactionManager primaryTransactionManager(@Qualifier("primaryDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean("primaryJdbcContext")
-    public JdbcContext primayJdbcContest(@Qualifier("primaryDataSource") DataSource dataSource,
-         @Qualifier("primaryJdbcTemplate") JdbcTemplate jdbcTemplate,
-         @Qualifier("primaryNamedParameterJdbcTemplate") NamedParameterJdbcTemplate namedParameterJdbcTemplate){
 
-        return new JdbcContext(dataSource,jdbcTemplate,namedParameterJdbcTemplate);
+
+    @Bean("primaryJdbcContext")
+    public JdbcContext primayJdbcContext(
+            @Qualifier("primaryJdbcTemplate") JdbcTemplate jdbcTemplate,
+            @Qualifier("primaryNamedParameterJdbcTemplate") NamedParameterJdbcTemplate namedParameterJdbcTemplate){
+
+        return new JdbcContext(jdbcTemplate,namedParameterJdbcTemplate);
     }
 }

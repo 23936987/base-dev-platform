@@ -13,5 +13,5 @@ import com.bdp.jdbc.dto.ResponseDTO;
 
 @SuppressWarnings("unchecked")
 public interface App {
-     ResponseDTO execute(RequestDTO requestDto) throws Exception;
+     ResponseDTO execute(RequestDTO requestDTO) throws Exception;
 }

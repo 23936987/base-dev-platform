@@ -1,6 +1,6 @@
 package com.bdp.jdbc.base.cmd;
 
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

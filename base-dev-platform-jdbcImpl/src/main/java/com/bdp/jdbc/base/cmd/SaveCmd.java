@@ -4,7 +4,7 @@ import com.bdp.exception.Assert;
 import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.jdbc.annotation.Transient;
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package com.bdp.jdbc.base.dao;
 
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 
 import java.util.List;
 import java.util.Map;

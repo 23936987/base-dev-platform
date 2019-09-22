@@ -3,7 +3,7 @@ package com.bdp.jdbc.base.cmd;
 import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

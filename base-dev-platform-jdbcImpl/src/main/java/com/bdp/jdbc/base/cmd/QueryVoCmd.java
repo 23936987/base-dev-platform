@@ -1,15 +1,12 @@
 package com.bdp.jdbc.base.cmd;
 
-import com.bdp.helper.BaseHelper;
 import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
-import com.bdp.jdbc.db.WhereResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.lang.reflect.Field;

@@ -26,21 +26,21 @@ public class ResultHandler {
     private static Logger logger = LoggerFactory.getLogger(ResultHandler.class);
     public <T> ResponseEntity<ResponseBean<T>> callApi(HttpServletRequest request, RequestDTO requestDTO,
                                                                    AskListener<T> listener){
-        logger.info("输入参数:" + JsonHelper.toJSonString(requestDTO));
+        logger.info("in_params:" + JsonHelper.toJSonString(requestDTO));
         long start = System.currentTimeMillis();
 
         ResponseDTO responseDTO  = null;
         try {
             responseDTO = callService(requestDTO);
             long end = System.currentTimeMillis();
-            logger.info("输出参数:" +JsonHelper.toJSonString(responseDTO));
-            logger.info("耗时:" + DateHelper.formatTime(end - start));
+            logger.info("out_params:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("time_consuming:" + DateHelper.formatTime(end - start));
            T object= listener.ask(responseDTO);
           return ResponseBeanUtils.response_success(object);
         } catch (Exception e) {
             long end = System.currentTimeMillis();
-            logger.info("输出参数:" +JsonHelper.toJSonString(responseDTO));
-            logger.info("耗时:" + DateHelper.formatTime(end - start));
+            logger.info("out_params:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("time_consuming:"+(end - start) +",time_consuming_cn"+ DateHelper.formatTime(end - start));
             return ResponseBeanUtils.response_fail(e);
         }
     }

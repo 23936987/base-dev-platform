@@ -31,7 +31,7 @@ public class ResponseBeanUtils {
         }else{
             logger.error(e.getMessage(),e);
             responseBean.setErrorCode(BizErrorEnum.UNKONW.getErrorCode());
-            responseBean.setErrorMsg(BizErrorEnum.UNKONW.getErrorMsg());
+            responseBean.setErrorMsg(e.getMessage());
         }
 
         ResponseEntity<ResponseBean<T>> responseEntity = new ResponseEntity<ResponseBean<T>>(responseBean, HttpStatus.OK);

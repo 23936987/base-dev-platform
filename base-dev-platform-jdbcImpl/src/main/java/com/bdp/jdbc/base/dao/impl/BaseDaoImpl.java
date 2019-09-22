@@ -7,7 +7,7 @@ import com.bdp.helper.PrimaryKeyHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.jdbc.base.cmd.*;
 import com.bdp.jdbc.base.dao.BaseDao;
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import com.bdp.jdbc.db.cmd.ExecuteQueryForLongCmd;
 import com.bdp.jdbc.db.cmd.ExecuteUpdateCmd;

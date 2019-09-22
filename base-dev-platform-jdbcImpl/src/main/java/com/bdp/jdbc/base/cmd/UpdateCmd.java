@@ -3,7 +3,7 @@ package com.bdp.jdbc.base.cmd;
 
 import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
-import com.bdp.jdbc.base.entity.Entity;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import com.bdp.jdbc.db.WhereResult;
 import lombok.extern.slf4j.Slf4j;
