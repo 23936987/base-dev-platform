@@ -28,6 +28,7 @@
     <modules>
         <module>base-dev-platform-common</module>
         <module>base-dev-platform-jdbc</module>
+        <module>base-dev-platform-jdbcImpl</module>
         <module>base-dev-platform-base</module>
         <module>base-dev-platform-baseImpl</module>
     </modules> 
