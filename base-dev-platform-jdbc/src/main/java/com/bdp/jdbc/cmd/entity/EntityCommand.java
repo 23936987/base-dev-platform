@@ -1,4 +1,4 @@
-package com.bdp.jdbc.cmd;
+package com.bdp.jdbc.cmd.entity;
 
 import com.bdp.helper.BaseHelper;
 import com.bdp.helper.ReflectionHelper;
@@ -6,6 +6,7 @@ import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.annotation.DateColumn;
 import com.bdp.jdbc.annotation.RelationColumn;
 import com.bdp.jdbc.annotation.Table;
+import com.bdp.jdbc.cmd.BaseCmd;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.Query;
 import com.bdp.jdbc.db.WhereResult;
