@@ -1,6 +1,6 @@
 package com.bdp.base.project.test.entity;
 
-import com.bdp.jdbc.db.Entity;
+import com.bdp.jdbc.base.entity.Entity;
 
 /***
  *

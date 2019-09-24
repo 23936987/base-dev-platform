@@ -1,7 +1,7 @@
-package com.bdp.jdbc.cmd.entity;
+package com.bdp.jdbc.base.cmd;
 
 import com.bdp.helper.JsonHelper;
-import com.bdp.jdbc.db.Entity;
+import com.bdp.jdbc.base.entity.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import com.bdp.jdbc.db.WhereResult;
 import org.slf4j.Logger;

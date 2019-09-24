@@ -1,4 +1,4 @@
-package com.bdp.jdbc.cmd;
+package com.bdp.jdbc.db.cmd;
 
 
 import com.bdp.jdbc.db.JdbcContext;

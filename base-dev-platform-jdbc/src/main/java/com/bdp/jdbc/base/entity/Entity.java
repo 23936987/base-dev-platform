@@ -1,7 +1,8 @@
-package com.bdp.jdbc.db;
+package com.bdp.jdbc.base.entity;
 
 import com.bdp.jdbc.annotation.Column;
 import com.bdp.jdbc.annotation.Id;
+import lombok.Data;
 
 /***
  *
@@ -11,7 +12,7 @@ import com.bdp.jdbc.annotation.Id;
  * @Date: 2019/9/22 10:17
  * @version : 1.0
  */
-
+@Data
 public class Entity {
     @Id
     @Column(name = "id",nameCn = "主键",label = "主键",comment = "主键")

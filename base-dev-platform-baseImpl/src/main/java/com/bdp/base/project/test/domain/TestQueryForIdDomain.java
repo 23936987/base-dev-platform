@@ -2,9 +2,9 @@ package com.bdp.base.project.test.domain;
 
 import com.bdp.base.project.test.dto.TestQueryDTO;
 import com.bdp.exception.Assert;
-import com.bdp.jdbc.cmd.Command;
-import com.bdp.jdbc.cmd.ExecuteQueryForObjectCmd;
-import com.bdp.jdbc.db.Domain;
+import com.bdp.jdbc.db.cmd.Command;
+import com.bdp.jdbc.db.cmd.ExecuteQueryForObjectCmd;
+import com.bdp.jdbc.base.domain.Domain;
 import com.bdp.jdbc.db.JdbcContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

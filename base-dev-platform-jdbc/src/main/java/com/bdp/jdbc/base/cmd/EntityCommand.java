@@ -1,4 +1,4 @@
-package com.bdp.jdbc.cmd.entity;
+package com.bdp.jdbc.base.cmd;
 
 import com.bdp.helper.BaseHelper;
 import com.bdp.helper.ReflectionHelper;
@@ -6,11 +6,11 @@ import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.annotation.DateColumn;
 import com.bdp.jdbc.annotation.RelationColumn;
 import com.bdp.jdbc.annotation.Table;
-import com.bdp.jdbc.cmd.BaseCmd;
+import com.bdp.jdbc.db.cmd.BaseCmd;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.Query;
 import com.bdp.jdbc.db.WhereResult;
-import com.bdp.jdbc.db.Entity;
+import com.bdp.jdbc.base.entity.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

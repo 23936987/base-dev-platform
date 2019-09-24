@@ -3,7 +3,7 @@ package com.bdp.base.project.test.app;
 import com.bdp.base.project.test.domain.TestQueryForIdDomain;
 import com.bdp.base.project.test.dto.TestQueryDTO;
 import com.bdp.exception.Assert;
-import com.bdp.jdbc.db.App;
+import com.bdp.jdbc.base.app.App;
 import com.bdp.jdbc.dto.RequestDTO;
 import com.bdp.jdbc.dto.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
