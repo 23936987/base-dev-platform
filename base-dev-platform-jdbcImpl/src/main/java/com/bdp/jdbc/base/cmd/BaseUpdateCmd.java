@@ -6,7 +6,6 @@ import com.bdp.helper.ReflectionHelper;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import com.bdp.jdbc.db.WhereResult;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +14,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class UpdateCmd<E extends Entity> extends EntityCmd<E,Integer> {
-    private static Logger logger = LoggerFactory.getLogger(UpdateCmd.class);
+public class BaseUpdateCmd<E extends Entity> extends BaseEntityCmd<E,Integer> {
+    private static Logger logger = LoggerFactory.getLogger(BaseUpdateCmd.class);
     private Map<String,Object> props;
     private Map<String,Object> wheres;
 
 
-    public UpdateCmd(Map<String, Object> props, Map<String, Object> wheres){
+    public BaseUpdateCmd(Map<String, Object> props, Map<String, Object> wheres){
         this.props = props;
         this.wheres = wheres;
     }

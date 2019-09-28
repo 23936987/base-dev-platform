@@ -3,7 +3,6 @@ CREATE TABLE t_test
 	id BIGINT(20) not null comment '主键',
 	code VARCHAR(100)  comment '编码',
 	name VARCHAR(100)  comment '名称',
-	table_name VARCHAR(100)  comment '表名称',
 	/*约束*/
 	primary key(id)
 ) DEFAULT CHARSET=utf8;

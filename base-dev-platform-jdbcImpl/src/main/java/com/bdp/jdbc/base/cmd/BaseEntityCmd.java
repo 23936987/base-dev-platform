@@ -18,8 +18,8 @@ import java.beans.Transient;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
-    private static Logger logger = LoggerFactory.getLogger(EntityCmd.class);
+public abstract class BaseEntityCmd<E extends Entity,R> implements Command<R> {
+    private static Logger logger = LoggerFactory.getLogger(BaseEntityCmd.class);
     protected Class<E> entityClass;
 
 	public void setClazz(Class<E> entityClass){
@@ -94,7 +94,7 @@ public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
                             	QueryItem query = (QueryItem) where;
                             	if(query.getValue() == null) {
                                     sql = getNullSql( sql, columnName);
-                                }else if(!"".equals(query.getValue().toString().trim())){
+                                }else if("".equals(query.getValue().toString().trim())){
                                     sql = getEmptySql( sql, columnName);
                                 }else{
                                     sql = getQuerySql(wheres, sql, query, fieldName, columnName);

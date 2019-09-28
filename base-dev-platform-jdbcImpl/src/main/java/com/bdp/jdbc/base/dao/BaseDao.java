@@ -8,7 +8,7 @@ import java.util.Map;
 public interface BaseDao<E extends Entity> {
     /**************save**************start********************/
     String save(E entity) throws Exception;
-    String save(List<Entity> list) throws Exception;
+    void save(List<Entity> list) throws Exception;
     /**************save**************end********************/
 
     /**************update**************start********************/

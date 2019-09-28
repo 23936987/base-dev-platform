@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class ExecuteQueryForObjectListCmd<V> extends BaseCmd<V,List<V>> {
-    private static Logger logger = LoggerFactory.getLogger(ExecuteQueryForObjectListCmd.class);
+public class QueryForObjectListCmd<V> extends BaseCmd<V,List<V>> {
+    private static Logger logger = LoggerFactory.getLogger(QueryForObjectListCmd.class);
     private String sql;
     private Map<String,Object> wheres;
-    public ExecuteQueryForObjectListCmd(String sql, Map<String, Object> wheres, Class<V> clazz){
+    public QueryForObjectListCmd(String sql, Map<String, Object> wheres, Class<V> clazz){
         this.sql = sql;
         this.wheres = wheres;
         this.clazz = clazz;

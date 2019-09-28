@@ -1,25 +1,35 @@
 package com.bdp.jdbc.base.cmd;
 
+import com.bdp.exception.Assert;
+import com.bdp.helper.JsonHelper;
+import com.bdp.helper.PrimaryKeyHelper;
+import com.bdp.helper.ReflectionHelper;
+import com.bdp.jdbc.annotation.Transient;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class SaveListCmd<E extends Entity> extends EntityCmd<E,String> {
-    private static Logger logger = LoggerFactory.getLogger(SaveListCmd.class);
+public class BaseSaveCmd<E extends Entity> extends BaseEntityCmd<E,String> {
+    private static Logger logger = LoggerFactory.getLogger(BaseSaveCmd.class);
 
-    private List<Entity> list;
+    private E entity;
 
-    public SaveListCmd(List<Entity> list) {
-        this.list = list;
+    public BaseSaveCmd(E entity) {
+        this.entity = entity;
     }
 
     @Override
     public String execute(JdbcContext context) throws Exception {
+        String id = PrimaryKeyHelper.getUUID32();
+        entity.setId(id);
 
-       /* String insertSql = "insert into [TABLE] ([COLUMNS]) values ([COLUMNS_VALUES])";
+        String insertSql = "insert into [TABLE] ([COLUMNS]) values ([COLUMNS_VALUES])";
         Map<String,Object> wheres = new HashMap<>();
 
         String columns = "";
@@ -58,7 +68,6 @@ public class SaveListCmd<E extends Entity> extends EntityCmd<E,String> {
         logger.debug("wheres : " + JsonHelper.toJSonString(entity));
         Integer result =context.getNamedParameterJdbcTemplate().update(insertSql, wheres);
 
-        return result;*/
-       return null;
+        return id;
     }
 }

@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class DeleteCmd<E extends Entity> extends EntityCmd<E,Integer> {
-    private static Logger logger = LoggerFactory.getLogger(DeleteCmd.class);
+public class BaseDeleteCmd<E extends Entity> extends BaseEntityCmd<E,Integer> {
+    private static Logger logger = LoggerFactory.getLogger(BaseDeleteCmd.class);
     private Map<String,Object> wheres;
 
-    public DeleteCmd(Map<String, Object> wheres){
+    public BaseDeleteCmd(Map<String, Object> wheres){
         this.wheres = wheres;
     }
     @Override

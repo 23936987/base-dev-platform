@@ -3,13 +3,12 @@ package com.bdp.jdbc.base.dao.impl;
 import com.bdp.exception.Assert;
 import com.bdp.helper.BaseHelper;
 import com.bdp.helper.Constant;
-import com.bdp.helper.PrimaryKeyHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.jdbc.base.cmd.*;
 import com.bdp.jdbc.base.dao.BaseDao;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
-import com.bdp.jdbc.db.cmd.ExecuteQueryForLongCmd;
+import com.bdp.jdbc.db.cmd.QueryForLongCmd;
 import com.bdp.jdbc.db.cmd.ExecuteUpdateCmd;
 import com.bdp.jdbc.helper.BeanHelper;
 
@@ -40,21 +39,18 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
     @Override
     public String save(E entity) throws Exception {
         Assert.isNotNull(entity,"entity不为空");
-        String id = PrimaryKeyHelper.getUUID32();
-        entity.setId(id);
 
-        SaveCmd cmd = new SaveCmd<>(entity);
+        BaseSaveCmd cmd = new BaseSaveCmd<>(entity);
         cmd.setClazz(entityClass);
-        cmd.execute(jdbcContext);
-        return id;
+        return cmd.execute(jdbcContext);
     }
 
     @Override
-    public String save(List<Entity> list) throws Exception {
+    public void save(List<Entity> list) throws Exception {
         Assert.isTrue(list != null && list.size()>0,"entity不为空");
-        SaveListCmd cmd = new SaveListCmd<>(list);
+        BaseSaveListCmd cmd = new BaseSaveListCmd<>(list,100);
         cmd.setClazz(entityClass);
-        return  cmd.execute(jdbcContext);
+        cmd.execute(jdbcContext);
     }
     /**************save**************end********************/
     @Override
@@ -117,7 +113,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(props != null && props.size() > 0, "props为空");
         Assert.isTrue(wheres != null && wheres.size() > 0, "wheres为空");
 
-        UpdateCmd cmd = new UpdateCmd<E>(props, wheres);
+        BaseUpdateCmd cmd = new BaseUpdateCmd<E>(props, wheres);
         cmd.setClazz(entityClass);
         return cmd.execute(jdbcContext);
     }
@@ -148,7 +144,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
     public Integer delete(Map<String, Object> wheres) throws Exception {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
-        DeleteCmd cmd = new DeleteCmd<>(wheres);
+        BaseDeleteCmd cmd = new BaseDeleteCmd<>(wheres);
         cmd.setClazz(entityClass);
         return cmd.execute(jdbcContext);
     }
@@ -198,7 +194,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
     public List<E> queryForList(Map<String, Object> wheres) throws Exception {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
-         QueryEntityCmd cmd = new QueryEntityCmd(wheres);
+         BaseQueryCmd cmd = new BaseQueryCmd(wheres);
          cmd.setClazz(entityClass);
          return cmd.execute(jdbcContext);
     }
@@ -208,7 +204,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
 
-        QueryEntityCmd cmd = new QueryEntityCmd(wheres,pageNum, pageSize);
+        BaseQueryCmd cmd = new BaseQueryCmd(wheres,pageNum, pageSize);
         cmd.setClazz(entityClass);
         return cmd.execute(jdbcContext);
 
@@ -247,7 +243,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
 
-        QueryBySqlCmd cmd = new QueryBySqlCmd<>(sql, wheres);
+        BaseQueryBySqlCmd cmd = new BaseQueryBySqlCmd<>(sql, wheres);
         cmd.setClazz(entityClass);
         return cmd.execute(jdbcContext);
     }
@@ -271,7 +267,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
 
-        QueryVoCmd cmd = new QueryVoCmd(sql,wheres);
+        BaseQueryVoCmd cmd = new BaseQueryVoCmd(sql,wheres);
         cmd.setClazz(vClass,entityClass);
         List<V> list =  cmd.execute(jdbcContext);
         return list != null && list.size() > 0 ? list.get(0) : null;
@@ -283,7 +279,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
 
-        QueryVoCmd cmd = new QueryVoCmd(sql,wheres);
+        BaseQueryVoCmd cmd = new BaseQueryVoCmd(sql,wheres);
         cmd.setClazz(vClass,entityClass);
         return  cmd.execute(jdbcContext);
     }
@@ -304,7 +300,7 @@ public abstract class BaseDaoImpl<E extends Entity>  implements BaseDao<E> {
         Assert.isTrue(wheres != null && wheres.size()>0,"wheres为空");
 
         sql = sql.replace("[queryString]", "count(*)");
-        ExecuteQueryForLongCmd cmd = new ExecuteQueryForLongCmd(sql, wheres);
+        QueryForLongCmd cmd = new QueryForLongCmd(sql, wheres);
         return cmd.execute(jdbcContext);
     }
 

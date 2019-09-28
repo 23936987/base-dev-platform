@@ -1,7 +1,11 @@
-package com.bdp.jdbc.db.cmd;
+package com.bdp.jdbc.base.cmd;
 
+import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
+import com.bdp.jdbc.base.entity.po.Entity;
+import com.bdp.jdbc.db.JdbcContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -9,14 +13,36 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
+public class BaseQueryVoCmd<V,E extends Entity> extends BaseEntityCmd<E,List<V>> {
 
-public abstract class BaseCmd<V,R> implements Command<R> {
+    private Map<String,Object> wheres;
+    private String sql;
     protected Class<V> clazz;
 
-    public void setClazz(Class<V> clazz) {
+    public void setClazz(Class<V> clazz,Class<E> entityClass){
         this.clazz = clazz;
+        this.entityClass = entityClass;
     }
+
+    public BaseQueryVoCmd(String sql, Map<String, Object> wheres){
+        this.wheres = wheres;
+    }
+
+
+    @Override
+    public List<V> execute(JdbcContext context) throws Exception {
+
+        log.debug("sql : " + sql);
+        log.debug("params : " + JsonHelper.toJSonString(wheres));
+
+        List<V> list = context.getNamedParameterJdbcTemplate().query(sql, wheres, getVoRowMapper());
+        log.debug("result : " + JsonHelper.toJSonString(list));
+        return list;
+    }
+
     protected RowMapper<V> getVoRowMapper() {
         return new BeanPropertyRowMapper(){
             @Override

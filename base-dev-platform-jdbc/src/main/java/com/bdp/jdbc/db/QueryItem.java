@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class QueryItem {
+    @ApiModelProperty(value = "属性名称")
+    private String key;
     @ApiModelProperty(value = "查询类型")
     private Integer type;
     @ApiModelProperty(value = "值")
@@ -16,15 +18,18 @@ public class QueryItem {
 
     public QueryItem(){}
 
-    public QueryItem(Object value){
+    public QueryItem(String key,Object value){
         this.type = QType.EQUALS.getType();
+        this.key = key;
         this.value = value;
     }
-    public QueryItem(Integer type, Object value){
+    public QueryItem(String key,Integer type, Object value){
+        this.key = key;
         this.type = type;
         this.value = value;
     }
-    public QueryItem(Integer type, Object start, Object end){
+    public QueryItem(String key,Integer type, Object start, Object end){
+        this.key = key;
         this.type = type;
         this.start = start;
         this.end = end;

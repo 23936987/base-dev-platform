@@ -6,21 +6,25 @@ import com.bdp.helper.ReflectionHelper;
 import com.bdp.jdbc.annotation.Transient;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SaveCmd<E extends Entity> extends EntityCmd<E,Integer> {
-    private static Logger logger = LoggerFactory.getLogger(SaveCmd.class);
+public class BaseSaveListCmd<E extends Entity> extends BaseEntityCmd<E, Integer> {
+    private static Logger logger = LoggerFactory.getLogger(BaseSaveListCmd.class);
 
-    private E entity;
+    private List<Entity> list;
+    private Integer pageSize=100;
 
-    public SaveCmd(E entity) {
-        this.entity = entity;
+    public BaseSaveListCmd(List<Entity> list,Integer pageSize) {
+        this.list = list;
+        this.pageSize=pageSize;
     }
 
     @Override
@@ -40,19 +44,13 @@ public class SaveCmd<E extends Entity> extends EntityCmd<E,Integer> {
             String fieldName = f.getName();
             String columnName = getColumnName(f);
 
-
             Transient tran = f.getAnnotation(Transient.class);
             if (tran != null) {
                 continue;
             }
-
-            Object value = ReflectionHelper.getFieldValue(entity,fieldName);
-            if(value == null){
-                continue;
-            }
             columns += "," + columnName;
             columnsValues += ",:" + fieldName;
-            wheres.put(fieldName,value);
+
         }
 
         Assert.isTrue(columns != null || columns.length() > 1, "model没有属性");
@@ -61,10 +59,33 @@ public class SaveCmd<E extends Entity> extends EntityCmd<E,Integer> {
         insertSql = insertSql.replace("[COLUMNS]", columns.substring(1));
         insertSql = insertSql.replace("[COLUMNS_VALUES]", columnsValues.substring(1));
 
+        int total=list.size();
         logger.debug("sql : " + insertSql);
-        logger.debug("wheres : " + JsonHelper.toJSonString(entity));
-        Integer result =context.getNamedParameterJdbcTemplate().update(insertSql, wheres);
+        if (total > 0) {
+             Integer page = (total % pageSize == 0) ? (total /pageSize) : (total /pageSize + 1);
 
-        return result;
+            for (int i = 1; i <= page; i++) {
+                Integer start = (i -1) * pageSize;
+                Integer end = 0;
+                if(i == page) {
+                    end = total;
+                }else{
+                    end = start + pageSize;
+                }
+                List<Entity> rows = list.subList(start,end);
+                logger.debug("total=" + total+",page=" + page+",start=" + start + ",end=" + end +",rows : " + JsonHelper.toJSonString(rows));
+                batchSave(context,insertSql,rows);
+            }
+        }
+       return null;
+    }
+
+    private void batchSave(JdbcContext context,String insertSql, List<Entity> rows) {
+
+        Integer total = rows.size();
+        Map<String, Object>[] batchValues = new LinkedCaseInsensitiveMap[total];
+        batchValues = rows.toArray(batchValues);
+        context.getNamedParameterJdbcTemplate().batchUpdate(insertSql, batchValues);
+        rows.clear();
     }
 }

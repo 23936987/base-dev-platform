@@ -5,53 +5,53 @@ import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
-
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
-public class QueryVoCmd<V,E extends Entity> extends  EntityCmd<E,List<V>> {
+public class BaseQueryBySqlCmd<E extends Entity> extends BaseEntityCmd<E, List<E>> {
+    private static Logger logger = LoggerFactory.getLogger(BaseQueryBySqlCmd.class);
 
     private Map<String,Object> wheres;
     private String sql;
-    protected Class<V> clazz;
 
-
-    public void setClazz(Class<V> clazz,Class<E> entityClass){
-        this.clazz = clazz;
-        this.entityClass = entityClass;
-    }
-
-
-    public QueryVoCmd(String sql,Map<String, Object> wheres){
+    public BaseQueryBySqlCmd(String sql, Map<String, Object> wheres){
         this.wheres = wheres;
+        this.sql = sql;
     }
-
 
     @Override
-    public List<V> execute(JdbcContext context) throws Exception {
+    public List<E> execute(JdbcContext context) throws Exception {
 
-        log.debug("sql : " + sql);
-        log.debug("params : " + JsonHelper.toJSonString(wheres));
 
-        List<V> list = context.getNamedParameterJdbcTemplate().query(sql, wheres, getVoRowMapper());
-        log.debug("result : " + JsonHelper.toJSonString(list));
+        String query = getQuery();
+        sql = sql.replace("[queryString]",query.substring(1));
+
+        String tableName = getTableName();
+        sql = sql.replace("[TABLE]",tableName);
+
+        logger.debug("sql : " + sql);
+        logger.debug("params : " + JsonHelper.toJSonString(wheres));
+
+        List<E> list = context.getNamedParameterJdbcTemplate().query(sql, wheres, getEntityRowMapper());
+        logger.debug("result : " + JsonHelper.toJSonString(list));
         return list;
     }
 
-    protected RowMapper<V> getVoRowMapper() {
+
+    protected RowMapper<E> getEntityRowMapper() {
         return new BeanPropertyRowMapper(){
             @Override
-            public V mapRow(ResultSet rs, int rowNumber) throws SQLException {
+            public E mapRow(ResultSet rs, int rowNumber) throws SQLException {
                 try {
-                    V model = clazz.newInstance();
-                    List<Field> fields = ReflectionHelper.getDeclaredFields(clazz);
+                    E model = entityClass.newInstance();
+                    List<Field> fields = ReflectionHelper.getDeclaredFields(entityClass);
                     for (int i = 0; i < fields.size(); i++) {
                         Field f = fields.get(i);
                         String fieldName = f.getName();

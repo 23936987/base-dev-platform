@@ -5,25 +5,26 @@ import com.bdp.jdbc.db.JdbcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 
-public class ExecuteQueryForLongCmd implements Command<Long> {
-    private static Logger logger = LoggerFactory.getLogger(ExecuteQueryForLongCmd.class);
+public class QueryForMapListCmd implements Command<List<Map<String,Object>>> {
+    private static Logger logger = LoggerFactory.getLogger(QueryForMapListCmd.class);
     private String sql;
     private Map<String,Object> wheres;
 
-    public ExecuteQueryForLongCmd(String sql, Map<String, Object> wheres){
+    public QueryForMapListCmd(String sql, Map<String, Object> wheres){
         this.sql = sql;
         this.wheres = wheres;
     }
 
     @Override
-    public Long execute(JdbcContext context) throws Exception {
+    public List<Map<String,Object>> execute(JdbcContext context) throws Exception {
         logger.debug("sql : " + sql);
         logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Long result = context.getNamedParameterJdbcTemplate().queryForObject(sql,wheres,Long.class);
+        List<Map<String,Object>> result= context.getNamedParameterJdbcTemplate().queryForList(sql,wheres);
         logger.debug("result : " + result);
         return result;
     }

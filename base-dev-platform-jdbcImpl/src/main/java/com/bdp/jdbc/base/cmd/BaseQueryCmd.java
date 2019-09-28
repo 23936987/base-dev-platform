@@ -1,51 +1,77 @@
 package com.bdp.jdbc.base.cmd;
 
+import com.bdp.helper.BaseHelper;
 import com.bdp.helper.JsonHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.bdp.jdbc.db.WhereResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
+
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+@Slf4j
+public class BaseQueryCmd<E extends Entity> extends BaseEntityCmd<E,List<E>> {
 
-public class QueryBySqlCmd<E extends Entity> extends EntityCmd<E, List<E>> {
-    private static Logger logger = LoggerFactory.getLogger(QueryBySqlCmd.class);
+    private Map<String,Object> params;
+    private Integer pageNum;
+    private Integer pageSize;
+    private String orderBy;
 
-    private Map<String,Object> wheres;
-    private String sql;
-
-    public QueryBySqlCmd(String sql, Map<String, Object> wheres){
-        this.wheres = wheres;
-        this.sql = sql;
+    public BaseQueryCmd(Map<String, Object> params){
+        this.params = params;
+    }
+    public BaseQueryCmd(Map<String, Object> params, Integer pageNum, Integer pageSize){
+        this.params = params;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+    }
+    public BaseQueryCmd(Map<String, Object> params, String orderBy, Integer pageNum, Integer pageSize){
+        this.params = params;
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+        this.orderBy = orderBy;
     }
 
     @Override
     public List<E> execute(JdbcContext context) throws Exception {
 
-
-        String query = getQuery();
-        sql = sql.replace("[queryString]",query.substring(1));
-
+        String sql = "select [QUERY] from [TABLE]  t where 1=1 ";
         String tableName = getTableName();
         sql = sql.replace("[TABLE]",tableName);
+        String query = getQuery();
+        sql = sql.replace("[QUERY]",query.substring(1));
+        sql = sql.replace("[TABLE]",tableName);
 
-        logger.debug("sql : " + sql);
-        logger.debug("params : " + JsonHelper.toJSonString(wheres));
+        WhereResult whereResult =  getWhere(params);
+
+        Map<String,Object> wheres = whereResult.getWheres();
+        sql += whereResult.getSql();
+
+        if(BaseHelper.isNotEmpty(orderBy)){
+            sql += " value ";
+            wheres.put("orderBy",orderBy);
+        }
+        if(pageNum != null && pageSize != null){
+            int begin = (pageNum -1) * pageSize;
+            sql += " limit :begin,:pageSize ";
+            wheres.put("begin",begin);
+            wheres.put("pageSize",pageSize);
+        }
+
+        log.debug("sql : " + sql);
+        log.debug("params : " + JsonHelper.toJSonString(wheres));
 
         List<E> list = context.getNamedParameterJdbcTemplate().query(sql, wheres, getEntityRowMapper());
-        logger.debug("result : " + JsonHelper.toJSonString(list));
+        log.debug("result : " + JsonHelper.toJSonString(list));
         return list;
     }
-
-
-    protected RowMapper<E> getEntityRowMapper() {
+    protected BeanPropertyRowMapper getEntityRowMapper() {
         return new BeanPropertyRowMapper(){
             @Override
             public E mapRow(ResultSet rs, int rowNumber) throws SQLException {

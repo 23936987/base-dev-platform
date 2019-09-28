@@ -9,12 +9,12 @@ import org.springframework.jdbc.core.SingleColumnRowMapper;
 import java.util.Map;
 
 
-public class ExecuteQueryForMapCmd implements Command<Map<String,Object>> {
-    private static Logger logger = LoggerFactory.getLogger(ExecuteQueryForMapCmd.class);
+public class QueryForMapCmd implements Command<Map<String,Object>> {
+    private static Logger logger = LoggerFactory.getLogger(QueryForMapCmd.class);
     private String sql;
     private Map<String,Object> wheres;
 
-    public ExecuteQueryForMapCmd(String sql, Map<String, Object> wheres){
+    public QueryForMapCmd(String sql, Map<String, Object> wheres){
         this.sql = sql;
         this.wheres = wheres;
     }
