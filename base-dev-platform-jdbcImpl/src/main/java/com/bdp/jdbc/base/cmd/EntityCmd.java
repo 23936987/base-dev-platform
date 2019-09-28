@@ -7,7 +7,7 @@ import com.bdp.jdbc.annotation.DateColumn;
 import com.bdp.jdbc.annotation.RelationColumn;
 import com.bdp.jdbc.annotation.Table;
 import com.bdp.jdbc.db.QType;
-import com.bdp.jdbc.db.Query;
+import com.bdp.jdbc.db.QueryItem;
 import com.bdp.jdbc.db.WhereResult;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.cmd.Command;
@@ -90,8 +90,8 @@ public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
                             if(where == null){
                                 //where为null
                                 sql = getNullSql( sql, columnName);
-                            }else if(where instanceof Query){
-                            	Query query = (Query) where;
+                            }else if(where instanceof QueryItem){
+                            	QueryItem query = (QueryItem) where;
                             	if(query.getValue() == null) {
                                     sql = getNullSql( sql, columnName);
                                 }else if(!"".equals(query.getValue().toString().trim())){
@@ -100,9 +100,9 @@ public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
                                     sql = getQuerySql(wheres, sql, query, fieldName, columnName);
                                 }
                             }else if(where instanceof List){
-	                            List<Query> list = (List<Query>)where;
+	                            List<QueryItem> list = (List<QueryItem>)where;
 	                            for (int i = 0; i < list.size(); i++) {
-		                            Query query = list.get(i);
+		                            QueryItem query = list.get(i);
 		                            String name = fieldName +"_"+ i;
 		                            sql = getQuerySql(wheres, sql, query, name, columnName);
 	                            }
@@ -124,7 +124,7 @@ public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
     }
 
 
-	private String getQuerySql(Map<String, Object> wheres, String sql, Query query, String fieldName, String columnName) {
+	private String getQuerySql(Map<String, Object> wheres, String sql, QueryItem query, String fieldName, String columnName) {
 		//where 为 Query对象
 		Integer type = query.getType();
 		Object value = query.getValue();
@@ -156,9 +156,9 @@ public abstract class EntityCmd<E extends Entity,R> implements Command<R> {
 	}
 
 	private void setWhere(Map<String, Object> wheres, String key, Object where) {
-        if(where instanceof Query){
+        if(where instanceof QueryItem){
                 //where 为 Query对象
-                Query query = (Query) where;
+                QueryItem query = (QueryItem) where;
                 Object value = query.getValue();
                 wheres.put(key,value);
             }else{

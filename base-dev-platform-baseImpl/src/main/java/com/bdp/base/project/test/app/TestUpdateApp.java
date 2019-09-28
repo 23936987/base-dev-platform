@@ -1,10 +1,8 @@
 package com.bdp.base.project.test.app;
 
 import com.bdp.base.annotation.TransactionalPrimary;
-import com.bdp.base.project.test.convert.TestSaveConvert;
-import com.bdp.base.project.test.entity.dto.TestSaveDTO;
 import com.bdp.base.project.test.entity.po.TestEntity;
-import com.bdp.jdbc.base.app.BaseSaveApp;
+import com.bdp.jdbc.base.app.BaseUpdateApp;
 import com.bdp.jdbc.base.domain.BaseDomain;
 import com.bdp.jdbc.dto.RequestDTO;
 import com.bdp.jdbc.dto.ResponseDTO;
@@ -12,14 +10,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@Component("test.save")
-public class TestSaveApp extends BaseSaveApp<TestSaveDTO,TestEntity> {
+@Component("test.update")
+public class TestUpdateApp extends BaseUpdateApp<TestEntity> {
 
-    public TestSaveApp(){
-        this.dtoClass = TestSaveDTO.class;
-        this.converter=TestSaveConvert.INSTANCE;
+    public TestUpdateApp(){
     }
-    @Resource(name="test.saveDomain")
+    @Resource(name="test.updateDomain")
     @Override
     public void setDomain(BaseDomain domain) {
         super.setDomain(domain);

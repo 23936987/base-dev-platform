@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-@Slf4j
 public class UpdateCmd<E extends Entity> extends EntityCmd<E,Integer> {
     private static Logger logger = LoggerFactory.getLogger(UpdateCmd.class);
     private Map<String,Object> props;
@@ -62,11 +61,11 @@ public class UpdateCmd<E extends Entity> extends EntityCmd<E,Integer> {
 
         wheres.putAll(props);
 
-        log.debug("sql : " + sql);
-        log.debug("wheres : " + JsonHelper.toJSonString(wheres));
+        logger.debug("sql : " + sql);
+        logger.debug("wheres : " + JsonHelper.toJSonString(wheres));
 
-        Integer result = context.getJdbcTemplate().update(sql,wheres);
-        log.debug("result : " + result);
+        Integer result = context.getNamedParameterJdbcTemplate().update(sql,wheres);
+        logger.debug("result : " + result);
 
         //返回值处理
         return result;

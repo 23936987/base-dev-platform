@@ -1,7 +1,7 @@
 package com.bdp.jdbc.db;
 
 
-public enum  QType {
+public enum QType {
     EQUALS(0),
     GREATER(1),
     GREATER_EQ(2),

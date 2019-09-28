@@ -51,8 +51,6 @@ public class DataSourceConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
-
-
     @Bean("primaryJdbcContext")
     public JdbcContext primayJdbcContext(
             @Qualifier("primaryJdbcTemplate") JdbcTemplate jdbcTemplate,
