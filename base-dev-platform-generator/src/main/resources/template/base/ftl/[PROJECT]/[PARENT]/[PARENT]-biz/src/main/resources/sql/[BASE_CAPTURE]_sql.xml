@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<#include "/include/comment.ftl"/>
+
+
+表达式 放在 ${r'${r""}'} 引号中
+
+ <![CDATA[
+ ]]>
+
+  <if test='bomTypeId != null ' >
+
+   </if>
+
+  >=  &gt;=
+  <=  &lt;=
+-->
+<root>
+  
+</root>
