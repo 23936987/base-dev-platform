@@ -12,13 +12,13 @@ package com.bdp.base.project.test.controller;
 import com.bdp.base.annotation.TestSwagger;
 import com.bdp.base.client.ResponseBean;
 import com.bdp.base.client.ResultHandler;
-import com.bdp.base.project.test.entity.dto.TestQueryByIdDTO;
-import com.bdp.base.project.test.entity.dto.TestSaveDTO;
+import com.bdp.base.project.test.entity.dto.*;
 import com.bdp.helper.Constant;
 import com.bdp.jdbc.base.controller.BaseController;
-import com.bdp.jdbc.base.entity.dto.PaginationDTO;
+import com.bdp.jdbc.base.entity.dto.Pager;
 import com.bdp.jdbc.base.entity.dto.UpdateDTO;
-import com.bdp.jdbc.dto.RequestDTO;
+import com.bdp.jdbc.dto.RequestContext;
+import com.bdp.map.QuickValueMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.util.List;
 
 /***
  *
@@ -58,42 +58,47 @@ public class TestController extends BaseController implements ITestController {
     })
     @GetMapping("/queryById/{id}")
     @Override
-    public ResponseEntity<ResponseBean<TestQueryByIdDTO>> queryById(HttpServletRequest request, @PathVariable("id") String id) {
-        RequestDTO requestDTO = new RequestDTO();
+    public ResponseEntity<ResponseBean<TestQueryByIdResponseDTO>> queryById(HttpServletRequest request, @PathVariable("id") String id) {
+        RequestContext requestDTO = new RequestContext();
         requestDTO.setChannel(_BASE_ + ".queryById");
         requestDTO.setBody(Constant.ID,id);
 
-        return  ResultHandler.getInstance().callApi(request, requestDTO,responseDTO -> {
-            TestQueryByIdDTO testQueryResponseDTO = responseDTO.getBody().getObjectByKey(Constant.DTO, TestQueryByIdDTO.class);
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            TestQueryByIdResponseDTO testQueryResponseDTO = responseContext.getObjectByKey(Constant.RESULT, TestQueryByIdResponseDTO.class);
             return testQueryResponseDTO;
         });
     }
 
+
     @ApiOperation(value = "保存",notes = "测试")
     @PostMapping("/save")
     @Override
-    public ResponseEntity<ResponseBean<String>> save(HttpServletRequest request,  @RequestBody TestSaveDTO saveDTO) {
-        RequestDTO requestDTO = new RequestDTO();
+    public ResponseEntity<ResponseBean<TestSaveResponseDTO>> save(HttpServletRequest request, @RequestBody TestSaveDTO saveDTO) {
+        RequestContext requestDTO = new RequestContext();
         requestDTO.setChannel(_BASE_ + ".save");
         requestDTO.setBody(Constant.DTO,saveDTO);
 
-        return  ResultHandler.getInstance().callApi(request, requestDTO,responseDTO -> {
-            String id = responseDTO.getBody().getStringByKey("id");
-            return id;
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            String id = responseContext.getStringByKey(Constant.ID);
+            TestSaveResponseDTO responseDTO  = new TestSaveResponseDTO();
+            responseDTO.setId(id);
+            return responseDTO;
         });
     }
 
     @ApiOperation(value = "更新",notes = "测试")
     @PostMapping("/update")
     @Override
-    public ResponseEntity<ResponseBean<Integer>> update(HttpServletRequest request,@RequestBody UpdateDTO updateDTO) {
-        RequestDTO requestDTO = new RequestDTO();
+    public ResponseEntity<ResponseBean<TestUpdateResponseDTO>> update(HttpServletRequest request, @RequestBody UpdateDTO updateDTO) {
+        RequestContext requestDTO = new RequestContext();
         requestDTO.setChannel(_BASE_ + ".update");
         requestDTO.setBody(Constant.DTO,updateDTO);
 
-        return  ResultHandler.getInstance().callApi(request, requestDTO,responseDTO -> {
-            Integer result = responseDTO.getIntByKey(Constant.RESULT);
-            return result;
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            Integer result = responseContext.getIntByKey(Constant.RESULT);
+            TestUpdateResponseDTO responseDTO = new TestUpdateResponseDTO();
+            responseDTO.setResult(result);
+            return responseDTO;
         });
     }
 
@@ -103,14 +108,16 @@ public class TestController extends BaseController implements ITestController {
     })
     @PostMapping("/delete")
     @Override
-    public ResponseEntity<ResponseBean<Integer>> delete(HttpServletRequest request, String id) {
-        RequestDTO requestDTO = new RequestDTO();
+    public ResponseEntity<ResponseBean<TestDeleteResponseDTO>> delete(HttpServletRequest request, String id) {
+        RequestContext requestDTO = new RequestContext();
         requestDTO.setChannel(_BASE_ + ".delete");
         requestDTO.setBody(Constant.ID,id);
 
-        return  ResultHandler.getInstance().callApi(request, requestDTO,responseDTO -> {
-            Integer result = responseDTO.getIntByKey(Constant.RESULT);
-            return result;
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            Integer result = responseContext.getIntByKey(Constant.RESULT);
+            TestDeleteResponseDTO responseDTO = new TestDeleteResponseDTO();
+            responseDTO.setResult(result);
+            return responseDTO;
         });
     }
 
@@ -120,16 +127,38 @@ public class TestController extends BaseController implements ITestController {
     })
     @PostMapping("/pagination")
     @Override
-    public ResponseEntity<ResponseBean<Map<String,Object>>> pagination(HttpServletRequest request, @RequestBody PaginationDTO paginationDTO) {
-        RequestDTO requestDTO = new RequestDTO();
+    public ResponseEntity<ResponseBean<TestPaginationResponseDTO>> pagination(HttpServletRequest request, @RequestBody Pager pager) {
+        RequestContext requestDTO = new RequestContext();
         requestDTO.setChannel(_BASE_ + ".pagination");
-        requestDTO.setBody(Constant.DTO,paginationDTO);
+        requestDTO.setBody(Constant.PAGER,pager);
 
-        return  ResultHandler.getInstance().callApi(request, requestDTO,responseDTO -> {
-            Map<String,Object> res = responseDTO.getMapByKey(Constant.RESULT);
-            return res;
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            QuickValueMap qm = responseContext.getQuickValueMap(Constant.RESULT);
+            Long total = qm.getLongByKey(Constant.TOTAL);
+            List<TestPaginationDTO> rows = qm.getListByKey(Constant.ROWS,TestPaginationDTO.class);
+
+            TestPaginationResponseDTO responseDTO=new TestPaginationResponseDTO();
+            responseDTO.setTotal(total);
+            responseDTO.setRows(rows);
+            return responseDTO;
         });
     }
 
+    @ApiOperation(value = "查询列表",notes = "查询列表")
+    @PostMapping("/list")
+    @Override
+    public ResponseEntity<ResponseBean<TestListResponseDTO>> list(HttpServletRequest request, @RequestBody Pager pager) {
+        RequestContext requestDTO = new RequestContext();
+        requestDTO.setChannel(_BASE_ + ".list");
+        requestDTO.setBody(Constant.PAGER,pager);
+
+        return  ResultHandler.getInstance().callApi(request, requestDTO,responseContext -> {
+            List<TestListDTO> rows = responseContext.getListByKey(Constant.ROWS,TestListDTO.class);
+
+            TestListResponseDTO responseDTO=new TestListResponseDTO();
+            responseDTO.setRows(rows);
+            return responseDTO;
+        });
+    }
 }
 

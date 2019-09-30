@@ -8,10 +8,10 @@
  */
 package com.bdp.jdbc.db;
 
-import com.bdp.jdbc.dto.RequestDTO;
-import com.bdp.jdbc.dto.ResponseDTO;
+import com.bdp.jdbc.dto.RequestContext;
+import com.bdp.jdbc.dto.ResponseContext;
 
 @SuppressWarnings("unchecked")
 public interface App {
-     ResponseDTO execute(RequestDTO requestDTO) throws Exception;
+     ResponseContext execute(RequestContext requestDTO) throws Exception;
 }

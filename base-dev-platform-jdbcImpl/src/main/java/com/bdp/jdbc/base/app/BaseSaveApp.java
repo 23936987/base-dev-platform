@@ -4,8 +4,8 @@ import com.bdp.helper.Constant;
 import com.bdp.jdbc.base.convert.Converter;
 import com.bdp.jdbc.base.domain.BaseSaveDomain;
 import com.bdp.jdbc.base.entity.po.Entity;
-import com.bdp.jdbc.dto.RequestDTO;
-import com.bdp.jdbc.dto.ResponseDTO;
+import com.bdp.jdbc.dto.RequestContext;
+import com.bdp.jdbc.dto.ResponseContext;
 
 public class BaseSaveApp<V,E extends Entity> extends BaseApp<E> {
     protected Class<V> dtoClass;
@@ -13,12 +13,12 @@ public class BaseSaveApp<V,E extends Entity> extends BaseApp<E> {
 
 
     @Override
-    public ResponseDTO execute(RequestDTO requestDTO) throws Exception {
-        ResponseDTO responseDTO = new ResponseDTO();
+    public ResponseContext execute(RequestContext requestDTO) throws Exception {
+        ResponseContext responseContext = new ResponseContext();
         V  saveDTO = requestDTO.getObjectByKey(Constant.DTO,dtoClass);
         E entity = converter.dto2domain(saveDTO);
         String  id = ((BaseSaveDomain<E>)domain).save(entity);
-        responseDTO.setBody(Constant.ID,id);
-        return responseDTO;
+        responseContext.setBody(Constant.ID,id);
+        return responseContext;
     }
 }

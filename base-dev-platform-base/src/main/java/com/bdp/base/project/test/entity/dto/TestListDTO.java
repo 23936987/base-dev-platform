@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class TestQueryByIdDTO {
+public class TestListDTO {
     @ApiModelProperty(value = "主键")
     private String id;
     @ApiModelProperty(value = "编码")

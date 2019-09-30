@@ -1,11 +1,9 @@
 package com.genetor.sence.base;
 
 
-import com.alibaba.fastjson.JSON;
 import com.bdp.exception.Assert;
 import com.bdp.helper.BaseHelper;
 import com.bdp.helper.DateHelper;
-import com.bdp.helper.JsonHelper;
 import com.bdp.helper.StringHelper;
 import com.genetor.model.Field;
 import com.genetor.model.Table;
@@ -17,7 +15,11 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class BaseScene implements IScene {
@@ -63,8 +65,18 @@ public class BaseScene implements IScene {
 
 
         //初始化base
-	    data.put("base",table.getName());
-	    String baseCapture = StringHelper.captureName(table.getName());
+		String base="";
+		if(BaseHelper.isNotEmpty(config.getPrefix())){
+			base = table.getTable().replace(config.getPrefix(),"");
+		}else{
+			base = table.getTable();
+		}
+
+		base = StringHelper.parseTuo(base);
+
+
+	    data.put("base",base);
+	    String baseCapture = StringHelper.captureName(base);
 	    data.put("baseCapture",baseCapture);
 
         String exclude = (String)config.getExclude();
@@ -89,7 +101,7 @@ public class BaseScene implements IScene {
 	    //logger.info(JSON.toJSONString(data, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
 
         String scene = config.getScene();
-        String base =String.valueOf( data.get("base"));
+        String base =String.valueOf(data.get("base"));
         String project =String.valueOf( data.get("project"));
         String baseCapture =String.valueOf( data.get("baseCapture"));
         String outpath =String.valueOf( data.get("outpath"));
@@ -105,7 +117,8 @@ public class BaseScene implements IScene {
 				    String ftlName = fileName.substring(fileName.lastIndexOf("ftl") + 4);
 				    String distName = fileName.substring(fileName.lastIndexOf("ftl") + 4);
 				    distName = distName.replace("[BASE]",base);
-				    distName = distName.replace("[PARENT]",parent);
+				    distName = distName.replace("[PROJECT]",config.getProject());
+				    distName = distName.replace("[PARENT]",config.getParent());
 				    distName = distName.replace("[BASE_CAPTURE]",baseCapture);
 				    distName = outpath + distName;
 				    makeFile(ftlName,distName);

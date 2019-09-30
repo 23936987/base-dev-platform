@@ -8,8 +8,8 @@
  */
 package com.bdp.base.client;
 
-import com.bdp.jdbc.dto.ResponseDTO;
+import com.bdp.jdbc.dto.ResponseContext;
 
 public  interface AskListener<O> {
-     O ask(ResponseDTO requestDTO);
+     O ask(ResponseContext responseContext);
 }

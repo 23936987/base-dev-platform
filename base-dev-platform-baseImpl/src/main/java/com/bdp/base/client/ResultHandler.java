@@ -1,8 +1,8 @@
 package com.bdp.base.client;
 
 import com.bdp.jdbc.db.App;
-import com.bdp.jdbc.dto.RequestDTO;
-import com.bdp.jdbc.dto.ResponseDTO;
+import com.bdp.jdbc.dto.RequestContext;
+import com.bdp.jdbc.dto.ResponseContext;
 import com.bdp.common.helper.SpringContextHelper;
 import com.bdp.exception.Assert;
 import com.bdp.helper.DateHelper;
@@ -24,27 +24,27 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ResultHandler {
     private static Logger logger = LoggerFactory.getLogger(ResultHandler.class);
-    public <T> ResponseEntity<ResponseBean<T>> callApi(HttpServletRequest request, RequestDTO requestDTO,
+    public <T> ResponseEntity<ResponseBean<T>> callApi(HttpServletRequest request, RequestContext requestDTO,
                                                                    AskListener<T> listener){
         logger.info("in_params:" + JsonHelper.toJSonString(requestDTO));
         long start = System.currentTimeMillis();
 
-        ResponseDTO responseDTO  = null;
+        ResponseContext responseContext  = null;
         try {
-            responseDTO = callService(requestDTO);
+            responseContext = callService(requestDTO);
             long end = System.currentTimeMillis();
-            logger.info("out_params:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("out_params:" +JsonHelper.toJSonString(responseContext));
             logger.info("time_consuming:" + DateHelper.formatTime(end - start));
-           T object= listener.ask(responseDTO);
+           T object= listener.ask(responseContext);
           return ResponseBeanUtils.response_success(object);
         } catch (Exception e) {
             long end = System.currentTimeMillis();
-            logger.info("out_params:" +JsonHelper.toJSonString(responseDTO));
+            logger.info("out_params:" +JsonHelper.toJSonString(responseContext));
             logger.info("time_consuming:"+(end - start) +",time_consuming_cn"+ DateHelper.formatTime(end - start));
             return ResponseBeanUtils.response_fail(e);
         }
     }
-    private ResponseDTO callService(RequestDTO requestDTO) throws Exception {
+    private ResponseContext callService(RequestContext requestDTO) throws Exception {
         String channel = requestDTO.getChannel();
         Assert.isNotNull(channel,"channel ${0} is null",channel);
         App app = null;
@@ -55,8 +55,8 @@ public class ResultHandler {
             Assert.isNotNull(channel,"channel ${0} not exists]",channel);
         }
         Assert.isNotNull(channel,"channel ${0} not exists]",channel);
-        ResponseDTO responseDTO = app.execute(requestDTO);
-        return responseDTO;
+        ResponseContext responseContext = app.execute(requestDTO);
+        return responseContext;
     }
 
 

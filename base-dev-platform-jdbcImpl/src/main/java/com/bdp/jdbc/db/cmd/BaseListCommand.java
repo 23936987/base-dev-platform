@@ -1,6 +1,7 @@
 package com.bdp.jdbc.db.cmd;
 
-import com.bdp.helper.*;
+import com.bdp.helper.BaseHelper;
+import com.bdp.helper.JsonHelper;
 import com.bdp.jdbc.base.cmd.BaseEntityCmd;
 import com.bdp.jdbc.base.entity.dto.Pager;
 import com.bdp.jdbc.base.entity.po.Entity;
@@ -10,14 +11,14 @@ import com.bdp.jdbc.db.WhereResult;
 import com.bdp.jdbc.helper.BeanHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.SingleColumnRowMapper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BasePaginationCommand<V,E extends Entity> extends BaseEntityCmd<E, Pager<V>> {
-    private static Logger logger = LoggerFactory.getLogger(BasePaginationCommand.class);
+public class BaseListCommand<V,E extends Entity> extends BaseEntityCmd<E, List<V>> {
+    private static Logger logger = LoggerFactory.getLogger(BaseListCommand.class);
     private List<QueryItem> params;
     private Integer page;
     private Integer pageSize;
@@ -32,7 +33,7 @@ public class BasePaginationCommand<V,E extends Entity> extends BaseEntityCmd<E, 
         super.setClazz(entityClass);
     }
 
-    public BasePaginationCommand(String sql, String queryString, Pager pager, List<String> notWhere){
+    public BaseListCommand(String sql, String queryString, Pager pager, List<String> notWhere){
     	super();
     	this.params=pager.getParams();
     	this.sql = sql;
@@ -45,7 +46,7 @@ public class BasePaginationCommand<V,E extends Entity> extends BaseEntityCmd<E, 
 
 
     @Override
-    public  Pager<V> execute(JdbcContext context) throws Exception {
+    public  List<V> execute(JdbcContext context) throws Exception {
 
 	    //替换表名
         String tableName = getTableName();
@@ -68,18 +69,11 @@ public class BasePaginationCommand<V,E extends Entity> extends BaseEntityCmd<E, 
 	    Map<String,Object> wheres = whereResult.getWheres();
 	    sql = sql + whereResult.getSql();
 
-	    //查询总数
-        Long total= getCount(context,sql,wheres);
         //查询列表
         List<V> list = getList(context,sql,wheres);
 
-        Pager<V> result = new Pager<>();
-        result.setTotal(total);
-        result.setRows(list);
-        return result;
+        return list;
     }
-
-
 
     private  List<V>  getList(JdbcContext context, String sql,Map<String,Object> wheres) throws Exception {
 
@@ -96,16 +90,4 @@ public class BasePaginationCommand<V,E extends Entity> extends BaseEntityCmd<E, 
         return list;
 
     }
-
-    private Long getCount(JdbcContext context,String sql,Map<String,Object> wheres) throws Exception {
-        String countSql = "select count(*) cnt from ("+ sql +") v";
-
-        logger.debug("countSql : " + countSql);
-        logger.debug("params : " + JsonHelper.toJSonString(wheres));
-
-        Long count = context.getNamedParameterJdbcTemplate().queryForObject(countSql,wheres,new SingleColumnRowMapper<Long>());
-        return count;
-    }
-
-
 }

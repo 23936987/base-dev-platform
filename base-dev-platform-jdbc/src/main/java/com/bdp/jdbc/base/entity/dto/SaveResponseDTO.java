@@ -1,6 +1,7 @@
 package com.bdp.jdbc.base.entity.dto;
 
 import com.bdp.jdbc.dto.RequestDTO;
+import com.bdp.jdbc.dto.ResponseDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -16,11 +17,9 @@ import java.util.Map;
  */
 
 @Data
-public class UpdateDTO  extends RequestDTO {
+public class SaveResponseDTO extends ResponseDTO {
     @ApiModelProperty(value = "主键")
     private String id;
-    @ApiModelProperty(value = "属性列表,实体key为键,value为值")
-    private Map<String,Object> props;
 }
 
 

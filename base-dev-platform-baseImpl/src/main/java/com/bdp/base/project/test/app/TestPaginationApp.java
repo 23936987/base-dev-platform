@@ -1,8 +1,6 @@
 package com.bdp.base.project.test.app;
 
-import com.bdp.base.project.test.convert.TestQueryByIdConvert;
 import com.bdp.base.project.test.entity.dto.TestPaginationDTO;
-import com.bdp.base.project.test.entity.dto.TestQueryByIdDTO;
 import com.bdp.base.project.test.entity.po.TestEntity;
 import com.bdp.jdbc.base.app.BasePaginationApp;
 import com.bdp.jdbc.base.domain.BaseDomain;
