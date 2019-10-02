@@ -8,7 +8,6 @@ import com.genetor.common.DBFactory;
 import com.genetor.common.DBModel;
 import com.genetor.model.Field;
 import com.genetor.model.Table;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -102,8 +101,6 @@ public class DBTool {
         Object[] params = new Object[]{schema,tableName};
         List<Map<String,Object>>  list = DBService.queryForList(conn,sql,params);
 
-        boolean hasDate=false;
-        boolean hasBigDecimal=false;
 
         List<Field> fields = new ArrayList<Field>();
         if(list != null && list.size()>0){
@@ -120,7 +117,10 @@ public class DBTool {
                 String length_str = (String) res.get("DATA_LENGTH");
                 Integer length = null;
                 if(BaseHelper.isNotEmpty(length_str)){
-                    length=Integer.valueOf(String.valueOf( res.get("DATA_LENGTH")));
+                    try {
+                        length=Integer.valueOf(length_str);
+                    } catch (NumberFormatException e) {
+                    }
                 }
 
                 field.setColumn(name);

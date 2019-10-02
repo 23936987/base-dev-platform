@@ -1,0 +1,1 @@
+mvn install:install-file -DgroupId=Issues -DartifactId=beautyeye -Dversion=3.5 -Dpackaging=jar -Dfile=beautyeye_lnf.jar -DgeneratePom=true 

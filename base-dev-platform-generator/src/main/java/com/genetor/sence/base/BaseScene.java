@@ -25,7 +25,6 @@ import java.util.*;
 public class BaseScene implements IScene {
     private static Logger logger = LoggerFactory.getLogger(BaseScene.class);
     protected Map<String,Object> data = new HashMap<String, Object>();
-    protected  String _TEMPLATE_PATH_ ="/template/";
     private BaseConfig config;
 
     public BaseScene(BaseConfig config){
@@ -39,7 +38,6 @@ public class BaseScene implements IScene {
 
     private void _init(BaseConfig config) throws Exception {
         //读取配置文件
-
         FileHeper.dealPath(config.getOutpath());
 
        // data.putAll(JSON.parseObject(JsonHelper.toJSonString(config)));
@@ -98,28 +96,29 @@ public class BaseScene implements IScene {
 
     public void generator() throws Exception {
 
+
 	    //logger.info(JSON.toJSONString(data, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
 
         String scene = config.getScene();
         String base =String.valueOf(data.get("base"));
-        String project =String.valueOf( data.get("project"));
         String baseCapture =String.valueOf( data.get("baseCapture"));
         String outpath =String.valueOf( data.get("outpath"));
-        String parent =String.valueOf( data.get("parent"));
 
 	    String basePath = getClass().getResource("/template/"+scene+"/ftl/").getPath();
 	    List<String> fileNames = FileHeper.getAllFile(basePath,false);
 	    if(fileNames != null && fileNames.size()>0){
 		    for (int i = 0; i < fileNames.size(); i++) {
 			    String fileName = fileNames.get(i);
-
 			    if(fileName.indexOf("comment.ftl") == -1) {
 				    String ftlName = fileName.substring(fileName.lastIndexOf("ftl") + 4);
 				    String distName = fileName.substring(fileName.lastIndexOf("ftl") + 4);
 				    distName = distName.replace("[BASE]",base);
 				    distName = distName.replace("[PROJECT]",config.getProject());
+				    distName = distName.replace("[project]",config.getProject());
 				    distName = distName.replace("[PARENT]",config.getParent());
+				    distName = distName.replace("[parent]",config.getParent());
 				    distName = distName.replace("[BASE_CAPTURE]",baseCapture);
+				    distName = distName.replace("[baseCapture]",baseCapture);
 				    distName = outpath + distName;
 				    makeFile(ftlName,distName);
 			    }
@@ -138,9 +137,11 @@ public class BaseScene implements IScene {
 		OutputStreamWriter osw = null;
 		Configuration cfg = new Configuration();
 		cfg.setClassForTemplateLoading(BaseScene.class, "/template/"+scene+"/ftl/");
+		/*TemplateLoader ldr = new ClassTemplateLoader(BaseScene.class.getClassLoader(), "/template/"+scene+"/ftl/");
+		cfg.setTemplateLoader(ldr);*/
 		cfg.setDefaultEncoding("utf-8");
 		cfg.setObjectWrapper(new DefaultObjectWrapper());
-
+        cfg.setClassicCompatible(true);
 		Template temp = cfg.getTemplate(ftlPath);
 		temp.setLocale(Locale.US);
 		temp.setEncoding("utf-8");

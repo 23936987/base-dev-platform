@@ -1,4 +1,4 @@
-<#macro code isState=true isDelete=true>  
+<#macro code isState=true >
 	/* 基础字段 */
 	${更改键.en} varchar(50) not null comment '更改键', 
 	${创建时间.en} datetime default now()  comment '创建时间',
@@ -10,10 +10,7 @@
 	${排序.en} int(10) comment '排序',
 	${备注.en} varchar(500) comment '备注',
 <#if isState>
-	${状态.en} int(2) comment '2#状态#0 无效,1 生效#state_type',
+	${状态.en} int(2) comment '2#状态#0 无效,1 生效,2 删除#state_type',
 </#if>
-<#if isDelete>
-	${删除标志.en} int(2) comment '2#删除标志#0 无效,1 生效#delete_flag',
-</#if>	 
 </#macro>
  
