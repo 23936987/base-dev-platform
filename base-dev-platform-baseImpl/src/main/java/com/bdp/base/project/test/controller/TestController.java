@@ -23,6 +23,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +49,15 @@ public class TestController extends BaseController implements ITestController {
         this._BASE_ = "test";
     }
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+    @GetMapping("/hello/{name}")
+    public String hello(@PathVariable("name") String name){
+        redisTemplate.opsForValue().set("name",name);
+
+        String getName = redisTemplate.opsForValue().get("name");
+        return getName;
+    }
     /**
      * 按主键查询
      * @param id

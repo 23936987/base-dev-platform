@@ -30,4 +30,5 @@ public class BaseApplication {
 	public SpringContextHelper SpringContextHelper(){
 		return new SpringContextHelper();
 	}
+
 }
