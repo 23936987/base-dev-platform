@@ -1,8 +1,7 @@
-<#include "/include/comment.ftl"/>
-package com.bdp.${parent}.project.${base}.entity.po;
-import com.bdp.jdbc.annotation.*;
-import com.bdp.jdbc.base.entity.po.Entity;
 import lombok.Data;
+
+<#include"/include/comment.ftl"/>
+        package com.bdp.${parent}.project.${base}.entity.po;
 
 @Data
 @Table(name = "${clazz.table}", base = "${base}",nameCn="${clazz.nameCn}",label="${clazz.label}",comment="${clazz.comment}")

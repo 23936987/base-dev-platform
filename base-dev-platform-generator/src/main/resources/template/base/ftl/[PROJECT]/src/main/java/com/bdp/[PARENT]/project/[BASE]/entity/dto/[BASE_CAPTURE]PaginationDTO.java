@@ -1,8 +1,7 @@
-<#include "/include/comment.ftl"/>
-package com.bdp.${parent}.project.${base}.entity.dto;
-
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+<#include"/include/comment.ftl"/>
+        package com.bdp.${parent}.project.${base}.entity.dto;
 
 @Data
 public class ${baseCapture}PaginationDTO {
