@@ -1,4 +1,9 @@
 
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 't_test_base', '测试基础场景表');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'birth_date', '生日');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'times', '时刻');
+
+
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'sys_contrast', '中英对照表');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'name_en', '英文名称');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'name_cn', '中文名称');

@@ -11,18 +11,22 @@ public class ${baseCapture}ListDTO{
     private String id;
 <#list clazz.model_fields as field>
     @ApiModelProperty(value = "${field.nameCn}")
+    private ${field.javaType} ${field.name};
     <#if field.dictCode ??>
-        private String ${field.name}Name;
+    @ApiModelProperty(value = "${field.nameCn}名称")
+    private String ${field.name}Name;
     </#if>
     <#if field.relationId ??>
-        private String ${field.name}Name;
+    @ApiModelProperty(value = "${field.nameCn}名称")
+    private String ${field.name}Name;
     </#if>
     <#if field.dbtype == 'datetime'>
-        private String ${field.name}Name;
+    @ApiModelProperty(value = "${field.nameCn}名称")
+    private String ${field.name}Name;
     </#if>
     <#if field.dbtype == 'date'>
-        private String ${field.name}Name;
+    @ApiModelProperty(value = "${field.nameCn}名称")
+    private String ${field.name}Name;
     </#if>
-    private ${field.javaType} ${field.name};
 </#list>
 }

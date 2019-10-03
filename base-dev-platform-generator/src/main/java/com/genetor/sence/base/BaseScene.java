@@ -65,7 +65,7 @@ public class BaseScene implements IScene {
         //初始化base
 		String base="";
 		if(BaseHelper.isNotEmpty(config.getPrefix())){
-			base = table.getTable().replace(config.getPrefix(),"");
+			base = table.getTable().replaceFirst(config.getPrefix(),"");
 		}else{
 			base = table.getTable();
 		}

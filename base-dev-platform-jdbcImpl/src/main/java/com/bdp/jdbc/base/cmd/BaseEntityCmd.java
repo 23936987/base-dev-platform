@@ -4,21 +4,19 @@ import com.bdp.helper.BaseHelper;
 import com.bdp.helper.ReflectionHelper;
 import com.bdp.helper.StringHelper;
 import com.bdp.jdbc.annotation.DateColumn;
+import com.bdp.jdbc.annotation.DictColumn;
 import com.bdp.jdbc.annotation.RelationColumn;
 import com.bdp.jdbc.annotation.Table;
+import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.QueryItem;
 import com.bdp.jdbc.db.WhereResult;
-import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.cmd.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import java.beans.Transient;
 import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public abstract class BaseEntityCmd<E extends Entity,R> implements Command<R> {
@@ -357,12 +355,11 @@ public abstract class BaseEntityCmd<E extends Entity,R> implements Command<R> {
                 String format = dateColumn.format();
                 query += ",date_format(t."+columnName+",'"+format+"')" + fieldName + "Name";
             }
-	       /*
 	       DictColumn dictColumn = f.getAnnotation(DictColumn.class);
 	        if(dictColumn != null){
 		        String dictCode = dictColumn.dictCode();
 		        query += ",(select l.name from sys_dict d join sys_dict_list l on d.id=l.dict_id where d.code='"+dictCode+"' and l.code=t."+columnName+") " + fieldName + "Name";
-	        }*/
+	        }
 
 
 	        RelationColumn relationColumn = f.getAnnotation(RelationColumn.class);

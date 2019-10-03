@@ -29,9 +29,9 @@
         <module>base-dev-platform-jdbcImpl</module>
         <module>base-dev-platform-base</module>
         <module>base-dev-platform-baseImpl</module>
-      <!--  <module>base-dev-platform-generator</module>
-        <module>base-dev-platform-db-tools</module>
-        <module>base-dev-platform-delforeign</module>-->
+        <module>base-dev-platform-generator</module>
+        <!--  <module>base-dev-platform-db-tools</module>
+       <module>base-dev-platform-delforeign</module>-->
     </modules>
 	
 	
