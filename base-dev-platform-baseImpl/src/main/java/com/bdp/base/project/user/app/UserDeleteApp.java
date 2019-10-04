@@ -1,6 +1,6 @@
 /**
 * 基础场景-系统用户表-系统用户表
-* <p>完成日期：2019-10-04 10:08:20</p>
+* <p>完成日期：2019-10-04 13:15:04</p>
 * @varsion 1.0
 * @author hj
 */
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("user.delete")
+@TransactionalPrimary
 public class UserDeleteApp extends BaseDeleteApp<UserEntity> {
 
     public UserDeleteApp(){
@@ -27,9 +28,4 @@ public class UserDeleteApp extends BaseDeleteApp<UserEntity> {
         super.setDomain(domain);
     }
 
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
 }

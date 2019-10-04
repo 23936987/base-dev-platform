@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("${base}.delete")
+@TransactionalPrimary
 public class ${baseCapture}DeleteApp extends BaseDeleteApp<${baseCapture}Entity> {
 
     public ${baseCapture}DeleteApp(){
@@ -22,9 +23,4 @@ public class ${baseCapture}DeleteApp extends BaseDeleteApp<${baseCapture}Entity>
         super.setDomain(domain);
     }
 
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
 }

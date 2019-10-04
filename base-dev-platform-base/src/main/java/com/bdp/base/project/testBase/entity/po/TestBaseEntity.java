@@ -1,17 +1,19 @@
 /**
 * 基础场景-测试基础场景表-这是一个测试基础场景的示例
-* <p>完成日期：2019-10-02 19:31:08</p>
+* <p>完成日期：2019-10-04 13:15:19</p>
 * @varsion 1.0
 * @author hj
 */
+        
 package com.bdp.base.project.testBase.entity.po;
 import com.bdp.jdbc.annotation.*;
 import com.bdp.jdbc.base.entity.po.Entity;
 import lombok.Data;
+import com.bdp.jdbc.base.entity.po.BaseEntity;
 
 @Data
 @Table(name = "t_test_base", base = "testBase",nameCn="测试基础场景表",label="测试",comment="这是一个测试基础场景的示例")
-public class TestBaseEntity extends Entity {
+public class TestBaseEntity extends BaseEntity {
 /*********************************属性*********************************/
     @Column(nameCn = "编码",label = "编码",comment = "编码")
     private java.lang.String code;

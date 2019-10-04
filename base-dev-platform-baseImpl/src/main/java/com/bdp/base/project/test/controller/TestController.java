@@ -1,3 +1,9 @@
+/**
+* 基础场景-测试表现-测试基础框架功能
+* <p>完成日期：2019-10-04 13:12:42</p>
+* @varsion 1.0
+* @author hj
+*/
 package com.bdp.base.project.test.controller;
 
 /***
@@ -23,11 +29,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -49,15 +52,6 @@ public class TestController extends BaseController implements ITestController {
         this._BASE_ = "test";
     }
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-    @GetMapping("/hello/{name}")
-    public String hello(@PathVariable("name") String name){
-        redisTemplate.opsForValue().set("name",name);
-
-        String getName = redisTemplate.opsForValue().get("name");
-        return getName;
-    }
     /**
      * 按主键查询
      * @param id

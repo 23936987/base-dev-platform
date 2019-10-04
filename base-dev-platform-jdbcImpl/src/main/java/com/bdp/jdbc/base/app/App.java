@@ -6,7 +6,7 @@
  * @Date: 2019/9/21 20:16
  * @version : 1.0
  */
-package com.bdp.jdbc.db;
+package com.bdp.jdbc.base.app;
 
 import com.bdp.jdbc.dto.RequestContext;
 import com.bdp.jdbc.dto.ResponseContext;

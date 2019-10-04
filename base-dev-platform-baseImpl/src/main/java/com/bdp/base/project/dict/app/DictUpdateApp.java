@@ -1,6 +1,6 @@
 /**
 * 基础场景-数据字典表-数据字典表
-* <p>完成日期：2019-10-02 19:39:27</p>
+* <p>完成日期：2019-10-04 13:15:02</p>
 * @varsion 1.0
 * @author hj
 */
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("dict.update")
+@TransactionalPrimary
 public class DictUpdateApp extends BaseUpdateApp<DictEntity> {
 
     public DictUpdateApp(){
@@ -26,11 +27,5 @@ public class DictUpdateApp extends BaseUpdateApp<DictEntity> {
     public void setDomain(BaseDomain domain) {
         super.setDomain(domain);
     }
-
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
+ 
 }

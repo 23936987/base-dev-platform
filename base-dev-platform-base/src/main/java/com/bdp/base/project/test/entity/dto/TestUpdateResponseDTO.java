@@ -1,16 +1,14 @@
+/**
+* 基础场景-测试表现-测试基础框架功能
+* <p>完成日期：2019-10-04 13:12:42</p>
+* @varsion 1.0
+* @author hj
+*/
 package com.bdp.base.project.test.entity.dto;
 
 import com.bdp.jdbc.base.entity.dto.UpdateResponseDTO;
 import lombok.Data;
-
-/***
- *
- * @ClassName: TestUpdateResponseDTO
- * @Description: TODO
- * @Auther: yecao
- * @Date: 2019/9/30 7:07
- * @version : 1.0
- */
+import io.swagger.annotations.ApiModelProperty;
 @Data
 public class TestUpdateResponseDTO extends UpdateResponseDTO {
 }

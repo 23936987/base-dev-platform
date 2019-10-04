@@ -1,6 +1,6 @@
 /**
 * 基础场景-中英对照表-中英对照表
-* <p>完成日期：2019-10-01 08:14:13</p>
+* <p>完成日期：2019-10-04 13:15:01</p>
 * @varsion 1.0
 * @author hj
 */
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("contrast.update")
+@TransactionalPrimary
 public class ContrastUpdateApp extends BaseUpdateApp<ContrastEntity> {
 
     public ContrastUpdateApp(){
@@ -26,11 +27,5 @@ public class ContrastUpdateApp extends BaseUpdateApp<ContrastEntity> {
     public void setDomain(BaseDomain domain) {
         super.setDomain(domain);
     }
-
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
+ 
 }

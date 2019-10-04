@@ -1,8 +1,7 @@
-package com.bdp.jdbc.db.cmd;
+package com.bdp.jdbc.base.cmd;
 
 import com.bdp.helper.BaseHelper;
 import com.bdp.helper.JsonHelper;
-import com.bdp.jdbc.base.cmd.BaseEntityCmd;
 import com.bdp.jdbc.base.entity.dto.Pager;
 import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.JdbcContext;

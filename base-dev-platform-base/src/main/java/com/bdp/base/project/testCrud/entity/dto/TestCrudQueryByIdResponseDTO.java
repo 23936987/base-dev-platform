@@ -1,15 +1,13 @@
 /**
-* 基础场景-测试CRUD场景表-测试CRUD场景表
-* <p>完成日期：2019-10-04 10:21:07</p>
+* CRUD场景-测试CRUD场景表-测试CRUD场景表
+* <p>完成日期：2019-10-04 10:37:18</p>
 * @varsion 1.0
 * @author hj
 */
  package com.bdp.base.project.testCrud.entity.dto;
-import com.bdp.jdbc.annotation.*;
-import com.bdp.jdbc.base.entity.po.Entity;
-import lombok.Data;
 import com.bdp.jdbc.base.entity.dto.QueryByIdResponseDTO;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 @Data
 public class TestCrudQueryByIdResponseDTO extends QueryByIdResponseDTO {
 /*********************************属性*********************************/
@@ -36,9 +34,9 @@ public class TestCrudQueryByIdResponseDTO extends QueryByIdResponseDTO {
     @ApiModelProperty(value = "修改时间名称")
     private String modifyTimeName;
     @ApiModelProperty(value = "创建人")
-    private java.lang.Long createUser;
+    private java.lang.String createUser;
     @ApiModelProperty(value = "修改人")
-    private java.lang.Long modifyUser;
+    private java.lang.String modifyUser;
     @ApiModelProperty(value = "创建人名称")
     private java.lang.String createUserName;
     @ApiModelProperty(value = "修改人名称")

@@ -118,6 +118,9 @@ public class SenceFrame extends JFrame implements ActionListener {
             if("基础".equalsIgnoreCase(sence)){
                 this.next = new BaseSenceFrame(this,conn, dbModel);
             }
+            if("CRUD".equalsIgnoreCase(sence)){
+                this.next = new CrudSenceFrame(this,conn, dbModel);
+            }
             if(this.next == null) {
                 JOptionPane.showMessageDialog(null, "场景未支持,请耐心等待", "提示信息 ", JOptionPane.ERROR_MESSAGE);
                 return;

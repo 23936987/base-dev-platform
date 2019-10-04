@@ -1,7 +1,7 @@
 package com.bdp.jdbc.cache.domain;
 
 import com.bdp.jdbc.base.dao.CommonDao;
-import com.bdp.jdbc.db.Domain;
+import com.bdp.jdbc.base.domain.Domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

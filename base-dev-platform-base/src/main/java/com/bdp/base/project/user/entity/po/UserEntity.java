@@ -1,6 +1,6 @@
 /**
 * 基础场景-系统用户表-系统用户表
-* <p>完成日期：2019-10-04 10:08:20</p>
+* <p>完成日期：2019-10-04 13:15:04</p>
 * @varsion 1.0
 * @author hj
 */
@@ -9,10 +9,11 @@ package com.bdp.base.project.user.entity.po;
 import com.bdp.jdbc.annotation.*;
 import com.bdp.jdbc.base.entity.po.Entity;
 import lombok.Data;
+import com.bdp.jdbc.base.entity.po.BaseEntity;
 
 @Data
 @Table(name = "sys_user", base = "user",nameCn="系统用户表",label="系统用户表",comment="系统用户表")
-public class UserEntity extends Entity {
+public class UserEntity extends BaseEntity {
 /*********************************属性*********************************/
     @Column(nameCn = "手机号",label = "手机号",comment = "手机号")
     private java.lang.String phoneNo;

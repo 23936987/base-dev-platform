@@ -11,7 +11,6 @@ import com.bdp.jdbc.base.entity.po.Entity;
 import com.bdp.jdbc.db.QType;
 import com.bdp.jdbc.db.QueryItem;
 import com.bdp.jdbc.db.WhereResult;
-import com.bdp.jdbc.db.cmd.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

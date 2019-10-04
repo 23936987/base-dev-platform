@@ -1,6 +1,6 @@
 /**
 * 基础场景-测试基础场景表-这是一个测试基础场景的示例
-* <p>完成日期：2019-10-02 19:31:08</p>
+* <p>完成日期：2019-10-04 13:15:19</p>
 * @varsion 1.0
 * @author hj
 */
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("testBase.save")
+@TransactionalPrimary
 public class TestBaseSaveApp extends BaseSaveApp<TestBaseSaveDTO,TestBaseEntity> {
 
     public TestBaseSaveApp(){
@@ -31,10 +32,4 @@ public class TestBaseSaveApp extends BaseSaveApp<TestBaseSaveDTO,TestBaseEntity>
         super.setDomain(domain);
     }
 
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
 }

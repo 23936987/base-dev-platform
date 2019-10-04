@@ -2,8 +2,8 @@ package com.bdp.jdbc.base.dao.impl;
 
 import com.bdp.jdbc.base.dao.CommonDao;
 import com.bdp.jdbc.db.JdbcContext;
-import com.bdp.jdbc.db.cmd.QueryForMapCmd;
-import com.bdp.jdbc.db.cmd.QueryForMapListCmd;
+import com.bdp.jdbc.base.cmd.QueryForMapCmd;
+import com.bdp.jdbc.base.cmd.QueryForMapListCmd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;

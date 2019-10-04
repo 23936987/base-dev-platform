@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("${base}.save")
+@TransactionalPrimary
 public class ${baseCapture}SaveApp extends BaseSaveApp<${baseCapture}SaveDTO,${baseCapture}Entity> {
 
     public ${baseCapture}SaveApp(){
@@ -26,10 +27,4 @@ public class ${baseCapture}SaveApp extends BaseSaveApp<${baseCapture}SaveDTO,${b
         super.setDomain(domain);
     }
 
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
 }

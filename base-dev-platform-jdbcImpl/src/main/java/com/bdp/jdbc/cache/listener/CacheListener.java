@@ -1,7 +1,7 @@
 package com.bdp.jdbc.cache.listener;
 
 import com.bdp.common.helper.SpringContextHelper;
-import com.bdp.jdbc.db.App;
+import com.bdp.jdbc.base.app.App;
 import com.bdp.jdbc.dto.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

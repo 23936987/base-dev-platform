@@ -19,6 +19,8 @@ import java.util.Map;
 public class UpdateDTO  extends RequestDTO {
     @ApiModelProperty(value = "主键")
     private String id;
+    @ApiModelProperty(value = "更改键")
+    private String updateKey;
     @ApiModelProperty(value = "属性列表,实体key为键,value为值")
     private Map<String,Object> props;
 }

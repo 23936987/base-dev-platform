@@ -261,7 +261,8 @@ public class BaseSenceFrame extends JFrame implements ActionListener {
                     scene.generator();
                     JOptionPane.showMessageDialog(null, "生成代码成功", "提示信息 ", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "生成代码失败"+e1.getMessage(), "提示信息 ", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "生成代码失败", "提示信息 ", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
                 }
             }
 

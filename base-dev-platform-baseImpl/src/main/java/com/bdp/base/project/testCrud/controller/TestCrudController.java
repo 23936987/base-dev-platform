@@ -1,6 +1,6 @@
 /**
-* 基础场景-测试CRUD场景表-测试CRUD场景表
-* <p>完成日期：2019-10-04 10:21:07</p>
+* CRUD场景-测试CRUD场景表-测试CRUD场景表
+* <p>完成日期：2019-10-04 10:37:18</p>
 * @varsion 1.0
 * @author hj
 */
@@ -20,9 +20,9 @@ import com.bdp.base.client.ResponseBean;
 import com.bdp.base.client.ResultHandler;
 import com.bdp.base.project.testCrud.entity.dto.*;
 import com.bdp.helper.Constant;
-import com.bdp.jdbc.base.controller.BaseController;
 import com.bdp.jdbc.base.entity.dto.Pager;
 import com.bdp.jdbc.base.entity.dto.UpdateDTO;
+import com.bdp.jdbc.crud.controller.CrudController;
 import com.bdp.jdbc.dto.RequestContext;
 import com.bdp.map.QuickValueMap;
 import io.swagger.annotations.Api;
@@ -31,6 +31,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -46,7 +47,7 @@ import java.util.List;
 @Api("测试")
 @TestSwagger
 @RequestMapping("/testCrud")
-public class TestCrudController extends BaseController implements ITestCrudController {
+public class TestCrudController extends CrudController implements ITestCrudController {
 
     public TestCrudController(){
         this._BASE_ = "testCrud";

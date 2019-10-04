@@ -1,6 +1,6 @@
 package com.bdp.base.client;
 
-import com.bdp.jdbc.db.App;
+import com.bdp.jdbc.base.app.App;
 import com.bdp.jdbc.dto.RequestContext;
 import com.bdp.jdbc.dto.ResponseContext;
 import com.bdp.common.helper.SpringContextHelper;

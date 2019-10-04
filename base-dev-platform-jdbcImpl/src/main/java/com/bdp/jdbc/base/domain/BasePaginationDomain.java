@@ -1,15 +1,15 @@
 package com.bdp.jdbc.base.domain;
 
+import com.bdp.jdbc.base.cmd.BasePaginationCommand;
 import com.bdp.jdbc.base.entity.dto.Pager;
-import com.bdp.jdbc.base.entity.po.Entity;
+import com.bdp.jdbc.base.entity.po.BaseEntity;
 import com.bdp.jdbc.db.JdbcContext;
-import com.bdp.jdbc.db.cmd.BasePaginationCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasePaginationDomain<V,E extends Entity>  extends BaseDomain<E> {
+public abstract class BasePaginationDomain<V,E extends BaseEntity>  extends BaseDomain<E> {
     @Autowired
     protected JdbcContext jdbcContext;
     protected Class<V> clazz;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("${base}.update")
+@TransactionalPrimary
 public class ${baseCapture}UpdateApp extends BaseUpdateApp<${baseCapture}Entity> {
 
     public ${baseCapture}UpdateApp(){
@@ -21,11 +22,5 @@ public class ${baseCapture}UpdateApp extends BaseUpdateApp<${baseCapture}Entity>
     public void setDomain(BaseDomain domain) {
         super.setDomain(domain);
     }
-
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
+ 
 }

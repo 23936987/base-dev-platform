@@ -1,4 +1,4 @@
-package com.bdp.jdbc.db.cmd;
+package com.bdp.jdbc.base.cmd;
 
 import com.bdp.helper.JsonHelper;
 import com.bdp.jdbc.db.JdbcContext;

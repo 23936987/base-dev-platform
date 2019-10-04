@@ -1,9 +1,9 @@
 package com.bdp.jdbc.base.domain;
 
 import com.bdp.exception.Assert;
-import com.bdp.jdbc.base.entity.po.Entity;
+import com.bdp.jdbc.base.entity.po.BaseEntity;
 
-public class BaseSaveDomain<E extends Entity>  extends BaseDomain<E> {
+public abstract class BaseSaveDomain<E extends BaseEntity>  extends BaseDomain<E> {
     public   String save(E entity) throws Exception {
         Assert.isNotNull(entity,"entity为空");
         return dao.save(entity);

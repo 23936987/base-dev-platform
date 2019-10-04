@@ -1,6 +1,6 @@
 /**
 * 基础场景-数据字典表-数据字典表
-* <p>完成日期：2019-10-02 19:39:27</p>
+* <p>完成日期：2019-10-04 13:15:02</p>
 * @varsion 1.0
 * @author hj
 */
@@ -12,13 +12,12 @@ import com.bdp.base.project.dict.entity.dto.DictSaveDTO;
 import com.bdp.base.project.dict.entity.po.DictEntity;
 import com.bdp.jdbc.base.app.BaseSaveApp;
 import com.bdp.jdbc.base.domain.BaseDomain;
-import com.bdp.jdbc.dto.RequestContext;
-import com.bdp.jdbc.dto.ResponseContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 @Component("dict.save")
+@TransactionalPrimary
 public class DictSaveApp extends BaseSaveApp<DictSaveDTO,DictEntity> {
 
     public DictSaveApp(){
@@ -31,10 +30,4 @@ public class DictSaveApp extends BaseSaveApp<DictSaveDTO,DictEntity> {
         super.setDomain(domain);
     }
 
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
 }

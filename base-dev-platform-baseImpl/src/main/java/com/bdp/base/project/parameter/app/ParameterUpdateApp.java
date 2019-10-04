@@ -1,6 +1,6 @@
 /**
 * 基础场景-参数配置表-参数配置表
-* <p>完成日期：2019-10-04 10:08:18</p>
+* <p>完成日期：2019-10-04 13:15:03</p>
 * @varsion 1.0
 * @author hj
 */
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component("parameter.update")
+@TransactionalPrimary
 public class ParameterUpdateApp extends BaseUpdateApp<ParameterEntity> {
 
     public ParameterUpdateApp(){
@@ -26,11 +27,5 @@ public class ParameterUpdateApp extends BaseUpdateApp<ParameterEntity> {
     public void setDomain(BaseDomain domain) {
         super.setDomain(domain);
     }
-
-
-    @Override
-    @TransactionalPrimary
-    public ResponseContext execute(RequestContext requestDTO) throws Exception {
-        return super.execute(requestDTO);
-    }
+ 
 }

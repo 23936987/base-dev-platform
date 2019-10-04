@@ -3,7 +3,7 @@ package com.bdp.jdbc.cache.app;
 import com.alibaba.fastjson.JSON;
 import com.bdp.jdbc.cache.domain.DictListsDomain;
 import com.bdp.jdbc.cache.domain.DictsDomain;
-import com.bdp.jdbc.db.App;
+import com.bdp.jdbc.base.app.App;
 import com.bdp.jdbc.dto.RequestContext;
 import com.bdp.jdbc.dto.ResponseContext;
 import org.slf4j.Logger;
