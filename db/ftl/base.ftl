@@ -71,3 +71,23 @@ create table ${参数配置表.en}
 	primary key(${主键.en})
 ) DEFAULT CHARSET=utf8;
 alter table ${参数配置表.en}  comment '参数配置表';
+
+DROP TABLE IF EXISTS ${系统用户表.en};
+CREATE TABLE ${系统用户表.en}
+(
+    <@base.code/>
+    ${手机号.en} 		varchar(100) not null 		comment '手机号',
+    ${名称.en} 			varchar(100) not null 		comment '名称',
+    ${密码.en} 			VARCHAR(100) not null 		COMMENT '密码',
+    ${头像.en} 			text not null 				COMMENT '头像',
+    ${区域编码.en} 			VARCHAR(20) not null 		COMMENT '区域编码',
+    ${性别.en} 			int(1)  					COMMENT '2#性别#1 男 2 女#sex',
+    ${锁定.en} 			int(1) not null 			COMMENT '2#锁定#0 否 1 是#yesOrNo',
+    ${失败次数.en} 	int(10)  					COMMENT '失败次数',
+    ${邮箱.en} 			varchar(100) 				comment '邮箱',
+    ${管理员.en} 		int(1) not null default 0   COMMENT '2#管理员#0 否 1 是#yesOrNo',
+    <@basic.code />
+	/*约束*/
+	primary key(${主键.en})
+) DEFAULT CHARSET=utf8;
+ALTER TABLE ${系统用户表.en}  COMMENT '系统用户表';

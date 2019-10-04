@@ -49,3 +49,14 @@ INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'parent_id'
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'sys_parameter', '参数配置表');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'param_code', '参数编码');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'param_value', '参数值');
+
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'sys_user', '系统用户表');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'phone_no', '手机号');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'email', '邮箱');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'password', '密码');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'avatar', '头像');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'area_code', '区域编码');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'gender', '性别');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'locked', '锁定');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'fail_times', '失败次数');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'admin', '管理员');

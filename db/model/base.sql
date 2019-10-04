@@ -34,7 +34,7 @@ create table sys_dict (
 	id varchar(36) not null comment '主键',
 	code 		varchar(100) 	comment '编码',
 	name 		varchar(100) 	comment '名称',
-	types 		int(2) 			comment '2#类型#1 普通 2、其它表 #dict_type',
+	types 		int(2) 			comment '2#类型#1 普通 2、其它表 #dictType',
 	table_name 	varchar(20) 	comment '表名称',
 	value_field 		varchar(20) 	comment '值字段',
 	name_field 		varchar(20) 	comment '名称字段',
@@ -68,3 +68,32 @@ create table sys_parameter
 	primary key(id)
 ) DEFAULT CHARSET=utf8;
 alter table sys_parameter  comment '参数配置表';
+
+DROP TABLE IF EXISTS sys_user;
+CREATE TABLE sys_user
+(
+	id varchar(36) not null comment '主键',
+    phone_no 		varchar(100) not null 		comment '手机号',
+    name 			varchar(100) not null 		comment '名称',
+    password 			VARCHAR(100) not null 		COMMENT '密码',
+    avatar 			text not null 				COMMENT '头像',
+    area_code 			VARCHAR(20) not null 		COMMENT '区域编码',
+    gender 			int(1)  					COMMENT '2#性别#1 男 2 女#sex',
+    locked 			int(1) not null 			COMMENT '2#锁定#0 否 1 是#yesOrNo',
+    fail_times 	int(10)  					COMMENT '失败次数',
+    email 			varchar(100) 				comment '邮箱',
+    admin 		int(1) not null default 0   COMMENT '2#管理员#0 否 1 是#yesOrNo',
+	 update_key varchar(50) not null comment '更改键',
+	 create_time datetime default now()  comment '创建时间',
+	 modify_time datetime default now() comment '修改时间',
+	 create_user bigint(20) comment '创建人',
+	 modify_user bigint(20) comment '修改人',
+	 create_user_name varchar(100) comment '创建人名称',
+	 modify_user_name varchar(100) comment '修改人名称',
+	 seq int(10) comment '排序',
+	 remark varchar(500) comment '备注',
+	state int(2) comment '2#状态#0 无效,1 生效,2 删除#state_type',
+	/*约束*/
+	primary key(id)
+) DEFAULT CHARSET=utf8;
+ALTER TABLE sys_user  COMMENT '系统用户表';

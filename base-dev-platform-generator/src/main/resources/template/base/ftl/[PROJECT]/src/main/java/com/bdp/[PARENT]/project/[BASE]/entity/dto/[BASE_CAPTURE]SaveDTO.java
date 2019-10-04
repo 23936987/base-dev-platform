@@ -3,7 +3,7 @@ package com.bdp.${parent}.project.${base}.entity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
+import io.swagger.annotations.ApiModelProperty;
 @Data
 public class ${baseCapture}SaveDTO {
 /*********************************属性*********************************/

@@ -3,7 +3,7 @@ package com.bdp.${parent}.project.${base}.entity.dto;
 
 import com.bdp.jdbc.base.entity.dto.UpdateResponseDTO;
 import lombok.Data;
-
+import io.swagger.annotations.ApiModelProperty;
 @Data
 public class ${baseCapture}UpdateResponseDTO extends UpdateResponseDTO {
 }

@@ -1,8 +1,10 @@
+<#include "/include/comment.ftl"/>
+ package com.bdp.${parent}.project.${base}.entity.dto;
+import com.bdp.jdbc.annotation.*;
+import com.bdp.jdbc.base.entity.po.Entity;
 import lombok.Data;
-
-<#include"/include/comment.ftl"/>
-        package com.bdp.${parent}.project.${base}.entity.dto;
-
+import com.bdp.jdbc.base.entity.dto.QueryByIdResponseDTO;
+import io.swagger.annotations.ApiModelProperty;
 @Data
 public class ${baseCapture}QueryByIdResponseDTO extends QueryByIdResponseDTO {
 /*********************************属性*********************************/
