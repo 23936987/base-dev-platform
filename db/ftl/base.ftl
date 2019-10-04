@@ -17,16 +17,29 @@ create table ${测试基础场景表.en} (
 	/*约束*/
 	primary key(${主键.en})
 ) DEFAULT CHARSET=utf8;
-alter table ${测试基础场景表.en}  comment '测试基础场景表#测试#这是一个测试基础场景的示例';
+alter table ${测试基础场景表.en}  comment '测试基础场景表#测试基础#这是一个测试基础场景的示例';
 
+drop table if exists ${测试CRUD场景表.en};
+create table ${测试CRUD场景表.en} (
+	<@base.code/>
+	${编码.en} 		varchar(100) 	comment '编码',
+	${名称.en} 		varchar(100) 	comment '名称',
+	${生日.en} date comment '生日',
+	${时刻.en} time comment '时刻',
+	/*场景字段*/
+	<@basic.code />
+
+	/*约束*/
+	primary key(${主键.en})
+) DEFAULT CHARSET=utf8;
+alter table ${测试CRUD场景表.en}  comment '测试CRUD场景表#测试CRUD#测试CRUD场景表';
 
 drop table if exists ${中英对照表.en};
 create table ${中英对照表.en} ( 
 	<@base.code/>
 	${英文名称.en}  varchar(100) comment '英文名称',
 	${中文名称.en}  varchar(100) comment '中文名称',
-	/*场景字段*/ 
-
+	/*场景字段*/
 	/*约束*/ 
 	primary key(${主键.en})
 ) DEFAULT CHARSET=utf8;

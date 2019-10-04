@@ -1,5 +1,6 @@
 
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 't_test_base', '测试基础场景表');
+INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 't_test_crud', '测试CRUD场景表');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'birth_date', '生日');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'times', '时刻');
 
@@ -60,3 +61,6 @@ INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'gender', '
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'locked', '锁定');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'fail_times', '失败次数');
 INSERT INTO sys_contrast (id, name_en, name_cn) VALUES (md5(uuid()), 'admin', '管理员');
+
+
+
