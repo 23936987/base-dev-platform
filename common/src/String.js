@@ -1,9 +1,4 @@
-import {
-    isEmpty,
-    isNotEmpty, 
-    isArray, 
-    logger,
-} from './tools';
+
 
 /**
  *  去掉字符串两边空格
@@ -41,9 +36,9 @@ String.prototype.endWith = function (str) {
  *  替换字符串
  */
 String.prototype.format = function () {
-    let args = isArray(arguments[0]) ? arguments[0] : arguments;
-    let result = this;
-    for (let i = 0, len = args.length; i < len; i++) {
+    var args = isArray(arguments[0]) ? arguments[0] : arguments;
+    var result = this;
+    for (var i = 0, len = args.length; i < len; i++) {
         result = result.replace("{" + i + "}", args[i]);
     }
     return result;
@@ -98,7 +93,7 @@ String.prototype.deleteString = function (start, end) {
     }
     else {
         if (start > end) {
-            let temp = start;
+            var temp = start;
             start = end;
             end = temp;
         }
@@ -120,7 +115,7 @@ String.prototype.equal = function (str) {
         return false;
     }
     else {
-        for (let i = 0; i < this.length; i++) {
+        for (var i = 0; i < this.length; i++) {
             if (this.charAt(i) != str.charAt(i)) {
                 return false;
             }
@@ -133,8 +128,8 @@ String.prototype.equal = function (str) {
  *
  */
 String.prototype.equalIgnoreCase = function (str) {
-    let temp1 = this.toLowerCase();
-    let temp2 = str.toLowerCase();
+    var temp1 = this.toLowerCase();
+    var temp2 = str.toLowerCase();
     return temp1.equal(temp2);
 };
 /**
@@ -152,8 +147,8 @@ String.prototype.insert = function (ofset, subStr) {
  *
  */
 String.prototype.repeat = function(num) {
-    let tmpArr = [];
-    for ( let i = 0; i < num; i++){
+    var tmpArr = [];
+    for ( var i = 0; i < num; i++){
         tmpArr.push(this);
     }
     return tmpArr.join("");
@@ -181,8 +176,8 @@ String.prototype.setCharAt = function (index, subStr) {
  *
  */
 String.prototype.charLength = function () {
-    let temp = 0;
-    for (let i = 0; i < this.length; i++) {
+    var temp = 0;
+    for (var i = 0; i < this.length; i++) {
         if (this.charCodeAt(i) > 255) {
             temp += 2;
         }
@@ -216,7 +211,7 @@ String.prototype.right = function (n) {
  *  统计指定字符出现的次数
  */
 String.prototype.occurs = function(ch) {
-//  let re = eval("/[^"+ch+"]/g");
+//  var re = eval("/[^"+ch+"]/g");
 //  return this.replace(re, "").length;
     return this.split(ch).length-1;
 };

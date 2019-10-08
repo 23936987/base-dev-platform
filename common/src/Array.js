@@ -1,5 +1,4 @@
-
-let slice = Array.prototype.slice;
+var slice = Array.prototype.slice;
 
 /**
  *  数组长度
@@ -24,8 +23,8 @@ Array.prototype.clone = function () {
  *  按条件过渡数组
  */
 Array.prototype.filter = function (fun) {
-    let values = [];
-    for (let i = 0, len = this.length; i < len; i++) {
+    var values = [];
+    for (var i = 0, len = this.length; i < len; i++) {
         if (fun.call(null, this[i], i,this)) {
             values.push(this[i]);
         }
@@ -37,7 +36,7 @@ Array.prototype.filter = function (fun) {
  *  去空元素
  */
 Array.prototype.compact=function(){
-    let func = function(item,index,arrays){
+    var func = function(item,index,arrays){
         if(item == null || item == ''){
             return false;
         }
@@ -49,7 +48,7 @@ Array.prototype.compact=function(){
  *  如果数组中的每个元素都能通过给定的函数的测试，则返回true，反之false。
  */
 Array.prototype.every = function(fn) {
-    for ( let i=0, j=this.length; i < j; ++i ) {
+    for ( var i=0, j=this.length; i < j; ++i ) {
         if ( !fn.call(null,this[i], i, this) ) {
             return false;
         }
@@ -61,7 +60,7 @@ Array.prototype.every = function(fn) {
  */
 Array.prototype.some = function(fn) {
 
-    for ( let i=0, j=this.length; i < j; ++i ) {
+    for ( var i=0, j=this.length; i < j; ++i ) {
         if ( fn.call(null, this[i], i, this)) {
             return true;
         }
@@ -72,7 +71,7 @@ Array.prototype.some = function(fn) {
  *  遍历数组
  */
 Array.prototype.each=function( fun ){
-    for( let i=0,n=this.length;i<n;i++){
+    for( var i=0,n=this.length;i<n;i++){
         fun.call(null,this[i], i, this);
     }
 };
@@ -81,8 +80,8 @@ Array.prototype.each=function( fun ){
  *  让数组中的每一个元素调用给定的函数，然后把得到的结果放到新数组中返回
  */
 Array.prototype.map = function(fn) {
-    let a = [];
-    for ( let i=0, j=this.length; i < j; ++i ) {
+    var a = [];
+    for ( var i=0, j=this.length; i < j; ++i ) {
         a.push(fn.call(null, this[i], i, this));
     }
     return a;
@@ -93,7 +92,7 @@ Array.prototype.map = function(fn) {
  *  数组洗牌
  */
 Array.prototype.random = function () {
-    let tempArr = [], me = this, t;
+    var tempArr = [], me = this, t;
     while (me.length > 0) {
         t = Math.floor(Math.random() * me.length);
         tempArr[tempArr.length] = me[t];
@@ -134,9 +133,9 @@ Array.prototype.getMin = function () {
  *  去除数组中的重复项
  */
 Array.prototype.arrUnique = function () {
-    let reset = [], done = {};
-    for (let i = 0; i < this.length; i++) {
-        let temp = this[i];
+    var reset = [], done = {};
+    for (var i = 0; i < this.length; i++) {
+        var temp = this[i];
         if (!done[temp]) {
             done[temp] = true;
             reset.push(temp);
@@ -150,7 +149,7 @@ Array.prototype.arrUnique = function () {
  *  元素在数组中的位置
  */
 Array.prototype.indexOf = function (item) {
-    for (let i = 0, len = this.length; i < len; i++) {
+    for (var i = 0, len = this.length; i < len; i++) {
         if (this[i] == item) {
             return i;
         }
@@ -162,7 +161,7 @@ Array.prototype.indexOf = function (item) {
  *  按Id元素在数组中的位置
  */
 Array.prototype.indexOfById = function (id) {
-    for (let i = 0, len = this.length; i < len; i++) {
+    for (var i = 0, len = this.length; i < len; i++) {
         if (this[i].id == id) {
             return i;
         }
@@ -173,7 +172,7 @@ Array.prototype.indexOfById = function (id) {
  *  按条件元素在数组中的位置
  */
 Array.prototype.indexOfByFunc = function (func) {
-    for (let i = 0, len = this.length; i < len; i++) {
+    for (var i = 0, len = this.length; i < len; i++) {
         if (func.call(null,this[i], i, this)) {
             return i;
         }
@@ -185,7 +184,7 @@ Array.prototype.indexOfByFunc = function (func) {
  *  判断是否存在,通过元素的id
  */
 Array.prototype.getElementById=function(elementId){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(this[i].id== elementId){
             return this[i];
         }
@@ -195,7 +194,7 @@ Array.prototype.getElementById=function(elementId){
  *  判断是否存在,通过元素的id
  */
 Array.prototype.getElementByFunc=function(func){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(func.call(null,this[i], i, this)){
             return this[i];
         }
@@ -207,7 +206,7 @@ Array.prototype.getElementByFunc=function(func){
  *  确定某个元素是否在数组中
  */
 Array.prototype.contains=function(element){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(this[i]== element){
             return true;
         }
@@ -219,7 +218,7 @@ Array.prototype.contains=function(element){
  *  判断是否存在,通过元素的id
  */
 Array.prototype.containsById=function(elementId){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(this[i].id== elementId){
             return true;
         }
@@ -230,7 +229,7 @@ Array.prototype.containsById=function(elementId){
  *  确定某个元素是否在数组中
  */
 Array.prototype.containsByFunc=function(func){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(func.call(null,this[i], i, this)){
             return true;
         }
@@ -255,7 +254,7 @@ Array.prototype.addAt=function(index,item){
  *  给数组批量添加元素
  */
 Array.prototype.addAll = function (arr) {
-    for (let i = 0;i < arr.length; i++) {
+    for (var i = 0;i < arr.length; i++) {
         this.add(arr[i]);
     }
 };
@@ -271,7 +270,7 @@ Array.prototype.removeAt=function(index) {
  *  删除数组中的元素
  */
 Array.prototype.remove = function (item) {
-    let itemIndex = this.indexOf(item);
+    var itemIndex = this.indexOf(item);
     if (itemIndex >= 0) {
         this.splice(itemIndex, 1);
         return itemIndex;
@@ -283,7 +282,7 @@ Array.prototype.remove = function (item) {
  *  删除Array的元素,通过元素的Id
  */
 Array.prototype.removeById=function(elementId){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(this[i].id == elementId){
             this.splice(i,1);
         }
@@ -293,7 +292,7 @@ Array.prototype.removeById=function(elementId){
  *  删除Array的元素,通过元素的Id
  */
 Array.prototype.removeByFunc=function(func){
-    for(let i=0;i<this.length;i++){
+    for(var i=0;i<this.length;i++){
         if(func.call(null,this[i], i, this)){
             this.splice(i,1);
         }
@@ -304,7 +303,7 @@ Array.prototype.removeByFunc=function(func){
  *
  */
 Array.prototype.removeAll = function (arr) {
-    for (let i = 0, len = arr.length; i < len; i++) {
+    for (var i = 0, len = arr.length; i < len; i++) {
         this.remove(arr[i]);
     }
 };

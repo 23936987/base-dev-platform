@@ -19,11 +19,11 @@ function isNotEmpty(obj) {
 /**
  * @class type
  */
-let class2type = {}, toString = Object.prototype.toString;
+var class2type = {}, toString = Object.prototype.toString;
 (function () {
-    let typeArr = "Boolean,Number,String,Function,Array,Date,RegExp,Object".split(",");
-    for (let i = 0; i < typeArr.length; i++) {
-        let name = typeArr[i];
+    var typeArr = "Boolean,Number,String,Function,Array,Date,RegExp,Object".split(",");
+    for (var i = 0; i < typeArr.length; i++) {
+        var name = typeArr[i];
         class2type["[object " + name + "]"] = name.toLowerCase();
     }
 })();
@@ -146,8 +146,8 @@ function isObject(obj) {
  *
  * @return date 处理结果
  */
-let parseDate=function() {
-    let timeStr, format;
+var parseDate=function() {
+    var timeStr, format;
     if (arguments.length === 0) {
         return new Date();
     } else if (arguments.length === 1) {
@@ -162,56 +162,56 @@ let parseDate=function() {
         alert('参数错误');
         return;
     }
-    let yearExpr = /(yyyy)+|(YYYY)+|(yy)+|(YY)+/g;
-    let monthExpr = /(MM)+|(M)+/g;
-    let dateExpr = /(dd)+|(DD)+|(d)+|(D)+/g;
-    let hourExpr = /(HH)+|(H)+/g;
-    let miniteExpr = /(mm)+|(m)+/g;
-    let secondExpr = /(ss)+|(SS)|(s)+|(S)+/g;
+    var yearExpr = /(yyyy)+|(YYYY)+|(yy)+|(YY)+/g;
+    var monthExpr = /(MM)+|(M)+/g;
+    var dateExpr = /(dd)+|(DD)+|(d)+|(D)+/g;
+    var hourExpr = /(HH)+|(H)+/g;
+    var miniteExpr = /(mm)+|(m)+/g;
+    var secondExpr = /(ss)+|(SS)|(s)+|(S)+/g;
 
-    let getStr = function (expr) {
+    var getStr = function (expr) {
 
-        let arr = expr.exec(format);
+        var arr = expr.exec(format);
         if (!arr || arr.length === 0){
             return;
         }
-        let p = arr[0];
-        let start = format.indexOf(p);
+        var p = arr[0];
+        var start = format.indexOf(p);
         return timeStr.substr(start, p.length);
     };
 
-    let ret = new Date();
-    let year = getStr(yearExpr);
+    var ret = new Date();
+    var year = getStr(yearExpr);
     if (year) {
         ret.setYear(parseInt(year));
     } else {
         ret.setYear(1971);
     }
-    let month = getStr(monthExpr);
+    var month = getStr(monthExpr);
     if (month) {
         ret.setMonth(parseInt(month) - 1);
     } else {
         ret.setMonth(0);
     }
-    let date = getStr(dateExpr);
+    var date = getStr(dateExpr);
     if (date) {
         ret.setDate(parseInt(date));
     } else {
         ret.setDate(1);
     }
-    let hour = getStr(hourExpr);
+    var hour = getStr(hourExpr);
     if (hour) {
         ret.setHours(parseInt(hour));
     } else {
         ret.setHours(0);
     }
-    let minite = getStr(miniteExpr);
+    var minite = getStr(miniteExpr);
     if (minite) {
         ret.setMinutes(parseInt(minite));
     } else {
         ret.setMinutes(0);
     }
-    let second = getStr(secondExpr);
+    var second = getStr(secondExpr);
     if (second) {
         ret.setSeconds(parseInt(second));
     } else {
@@ -231,8 +231,8 @@ let parseDate=function() {
  *
  * @return String 处理结果
  */
-let formatDate=function() {
-    let time, format;
+var formatDate=function() {
+    var time, format;
     if (arguments.length === 0) {
         time = new Date();
         format = 'yyyy-MM-dd HH:mm:ss';
@@ -243,28 +243,28 @@ let formatDate=function() {
         time = arguments[0];
         format = arguments[1];
     }
-    let dateStr = format;
-    let yearExpr = /(yyyy)+|(YYYY)+|(yy)+|(YY)+/g;
-    let monthExpr = /(MM)+|(M)+/g;
-    let dateExpr = /(dd)+|(DD)+|(d)+|(D)+/g;
-    let hourExpr = /(HH)+|(H)+/g;
-    let miniteExpr = /(mm)+|(m)+/g;
-    let secondExpr = /(ss)+|(SS)|(s)+|(S)+/g;
+    var dateStr = format;
+    var yearExpr = /(yyyy)+|(YYYY)+|(yy)+|(YY)+/g;
+    var monthExpr = /(MM)+|(M)+/g;
+    var dateExpr = /(dd)+|(DD)+|(d)+|(D)+/g;
+    var hourExpr = /(HH)+|(H)+/g;
+    var miniteExpr = /(mm)+|(m)+/g;
+    var secondExpr = /(ss)+|(SS)|(s)+|(S)+/g;
 
-    let repStr = function (expr) {
-        let arr = expr.exec(format);
+    var repStr = function (expr) {
+        var arr = expr.exec(format);
         if (!arr || arr.length === 0){
             return;
         }
-        let p = arr[0];
-        let twobit = function (s) {
+        var p = arr[0];
+        var twobit = function (s) {
             s = s + '';
             return s.length < 2 ? "0" + s : s;
         };
         if (p && (p == 'yyyy' || p == 'YYYY')) {
             dateStr = dateStr.replace(p, time.getFullYear());
         } else if (p && (p == 'yy' || p == 'YY')) {
-            let yearStr = time.getYear() + '';
+            var yearStr = time.getYear() + '';
             dateStr = dateStr.replace(p, yearStr.substr(2));
         } else if (p && p == 'MM') {
             dateStr = dateStr.replace(p, twobit(time.getMonth() + 1));
@@ -311,17 +311,17 @@ let formatDate=function() {
  * @return String 处理结果
  */
 function serialize(obj) {
-    let str = '';
+    var str = '';
     if (isEmpty(obj)) {
         return str;
     }
-    for (let key in obj) {
-        let val = obj[key];
+    for (var key in obj) {
+        var val = obj[key];
 
         if (!isArray(val)) {
             str += '&' + key + '=' + val;
         } else {
-            for (let i = 0, len = val.length; i < len; i++) {
+            for (var i = 0, len = val.length; i < len; i++) {
                 str += '&' + key + '=' + val[i];
             }
         }
@@ -338,27 +338,27 @@ function serialize(obj) {
  * @return object 处理结果
  */
 function unSerialize(str) {
-    let result = {};
+    var result = {};
     if (isEmpty(str)) {
         return result;
     }
-    let params = str.split("&");
+    var params = str.split("&");
 
     if (isEmpty(params) || params.length === 0) {
         return result;
     }
 
-    for (let i = 0, len = params.length; i < len; i++) {
-        let param = params[i];
-        let arr = param.split("=");
+    for (var i = 0, len = params.length; i < len; i++) {
+        var param = params[i];
+        var arr = param.split("=");
 
-        let key = arr[0];
-        let val = arr[1];
+        var key = arr[0];
+        var val = arr[1];
 
         if (isEmpty(key) || isEmpty(val)) {
             continue;
         }
-        let old = result[key];
+        var old = result[key];
         if (isEmpty(old)) {
             result[key] = val;
             continue;
@@ -386,11 +386,11 @@ function unSerialize(str) {
  * @return object 处理结果
  */
 function getParameter(key, loc) {
-    let arr = [];
+    var arr = [];
     loc = loc || 0;
-    let patt = new RegExp(key + '=([^&]*)', "g");
-    let str = location.search.substring(1);
-    let result;
+    var patt = new RegExp(key + '=([^&]*)', "g");
+    var str = location.search.substring(1);
+    var result;
     while ((result = patt.exec(str)) != null) {
         arr.push(result[1]);
     }
@@ -419,14 +419,14 @@ function getQueryString(name)
  * @return string 处理结果
  */
 function uuid() {
-    let b = [], c = "0123456789ABCDEF".split("");
-    for (let a = 0; a < 36; a++) {
+    var b = [], c = "0123456789ABCDEF".split("");
+    for (var a = 0; a < 36; a++) {
         b[a] = Math.floor(Math.random() * 16);
     }
     b[14] = 4;
     b[19] = (b[19] & 3) | 8;
 
-    for (let i = 0; i < 36; i++) {
+    for (var i = 0; i < 36; i++) {
         b[i] = c[b[i]];
     }
     b[8] = b[13] = b[18] = b[23] = "-";
@@ -442,7 +442,7 @@ function uuid() {
  * @return string 处理结果
  */
 function guid(){
-    let str = uuid();
+    var str = uuid();
     str = str.replaceAll("-","");
     return str;
 }
@@ -452,7 +452,7 @@ function setLocalStorage(key,value){
         alert("浏览器不支持localstorage");
         return false;
     }else{
-        let storage=window.localStorage;
+        var storage=window.localStorage;
         storage.setItem(key,value);
     }
 }
@@ -462,12 +462,12 @@ function getLocalStorage(key){
         alert("浏览器不支持localstorage");
         return false;
     }else{
-        let storage=window.localStorage;
+        var storage=window.localStorage;
         return storage.getItem(key);
     }
 }
 function getTopWindow(){
-    let topWin=window;
+    var topWin=window;
     while(topWin.parent != topWin && isNotEmpty(topWin.parent.CC)){
         topWin = topWin.parent;
     }
@@ -483,9 +483,9 @@ function getTopWindow(){
  */
 
 function logger(msg,err){
-    let d = new Date();
-    let time = formatDate(d);
-    let info = time + " : " +d.getMilliseconds() + "  " + msg;
+    var d = new Date();
+    var time = formatDate(d);
+    var info = time + " : " +d.getMilliseconds() + "  " + msg;
 
 	if(err){
 		 console.info(info,err);
@@ -494,27 +494,3 @@ function logger(msg,err){
 	}
    
 }
-export {
-    isEmpty,
-    isNotEmpty,
-    isBoolean,
-    isNumber,
-    isString,
-    isFunction,
-    isArray,
-    isDate,
-    isRegExp,
-    isObject,
-    parseDate,
-    formatDate,
-    serialize,
-    unSerialize, 
-    getParameter,
-    getQueryString,
-    uuid,
-    guid,
-    logger,
-    setLocalStorage,
-    getLocalStorage,
-    getTopWindow
-};

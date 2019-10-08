@@ -81,7 +81,7 @@ Date.prototype.daysAgo = function(days) {
  */
 Date.prototype.monthBegin = function(offset) {
     offset = offset ? offset - 0 : 0;
-    let days = this.getDate() - 1 - offset;
+    var days = this.getDate() - 1 - offset;
     return this.daysAgo(days);
 };
 
@@ -94,8 +94,8 @@ Date.prototype.monthBegin = function(offset) {
  * @return void
  */
 Date.prototype.getDaysOfYear = function() {
-    let first_day = new Date(this.getFullYear(), 0, 1);
-    let micro_secs = this.getTime() - first_day.getTime();
+    var first_day = new Date(this.getFullYear(), 0, 1);
+    var micro_secs = this.getTime() - first_day.getTime();
     return parseInt(micro_secs / 8.64E7) + 1;
 };
 
@@ -107,10 +107,10 @@ Date.prototype.getDaysOfYear = function() {
  * @return void
  */
 Date.prototype.getWeeksOfYear = function(start) {
-    let offset = this.getDaysOfYear() - 1;
-    let remain = offset % 7;
+    var offset = this.getDaysOfYear() - 1;
+    var remain = offset % 7;
     if (remain > 0) {
-        let first_day = new Date(this.getFullYear(), 0, 1);
+        var first_day = new Date(this.getFullYear(), 0, 1);
         if (start) { //周一作为一周开始
             offset += (first_day.getDay() + 6) % 7;
         } else { //周日作为一周开始
@@ -127,7 +127,7 @@ Date.prototype.getWeeksOfYear = function(start) {
  * @return void
  */
 Date.prototype.getStartOfNextMonth = function(){
-    let newDate = new Date(this);
+    var newDate = new Date(this);
     newDate.setDate(15); //确保月数不会进位
     newDate.setMonth(this.getMonth()+1);
     newDate.setDate(1);
@@ -143,7 +143,7 @@ Date.prototype.getStartOfNextMonth = function(){
  * @return void
  */
 Date.prototype.getEndOfNextMonth = function(){
-    let newDate = new Date(this);
+    var newDate = new Date(this);
     newDate.setDate(15); //确保月数不会进位
     newDate.setMonth(this.getMonth() + 2); //加两个月
     newDate.setDate(0); //再退回上个月的最后一天
@@ -159,12 +159,12 @@ Date.prototype.getEndOfNextMonth = function(){
  * @return void
  */
 Date.prototype.plusMonths = function(num) {
-    let newDate = new Date(this);
+    var newDate = new Date(this);
     newDate.setMonth(this.getMonth() + num); //setMonth()会自动除以12
     //注意：此时，月数可能会自动进位，比如：1-31加上num=1的情况，会变成3-3（非闰年）或3-2（闰年），即2-31自动转换为下个月的某一天。
 
-    let currentMonth = this.getMonth() + this.getFullYear() * 12; //获得月的绝对值
-    let diff = (newDate.getMonth() + newDate.getFullYear() * 12) - currentMonth; //计算新旧两个月绝对值的差
+    var currentMonth = this.getMonth() + this.getFullYear() * 12; //获得月的绝对值
+    var diff = (newDate.getMonth() + newDate.getFullYear() * 12) - currentMonth; //计算新旧两个月绝对值的差
 
     if (diff != num) { //如果月绝对值的差和加上的月数不一样，说明月进位了，此时需要退一个月
         //setDate(0)表示变成上个月的最后一天
