@@ -1,0 +1,34 @@
+.form_wrap{
+    width:1000px;
+    height:auto;
+    border:1px solid #00f;
+    padding:20px;
+    margin:0 auto;
+    margin-top:50px;
+}
+
+.item_warap{
+    clear: both;
+    width:500px;
+    padding: 10px 0px;
+    border:1px solid #09f95f;
+}
+
+.form_item_valid {
+    text-align: left;
+    font-size:14px;
+    color:#f00;
+    padding:0 5px;
+}
+.form_item_memo{
+    text-align: left;
+    word-break:break-all;
+    font-size:14px;
+    line-height: 25px;
+    color:blue;
+    padding-left:25px;
+    background:url(../images/hint.png) no-repeat ;
+}
+.control-label{
+
+}

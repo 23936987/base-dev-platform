@@ -1,0 +1,46 @@
+.combo_pager_area{
+    position: absolute;
+    overflow: auto;
+    left:0px;
+    top: 0px;
+    bottom:30px;
+    width: 100%;
+}
+
+.combo_pager_area_bottom{
+    position: absolute;
+    height: 30px;
+    left:0px;
+    bottom:0px;
+    background-color: #eeeeee;
+    width: 100%;
+    text-align: right;
+}
+
+.combo_pager_area_bottom img{
+    border:none;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+
+.combo_pager_item{
+    width:auto;
+    height:25px;
+    line-height:25px;
+    cursor: pointer;
+    margin-left:1px;
+    margin-bottom: 0px;
+}
+.combo_pager_item:hover{
+    color: green;
+    background:#CDB5CD;
+}
+.combo_pager_item_selected{
+    color: #ffffff;
+    background:#808080!important;
+}
+.combo_pager_selected{
+    color: #ff0000;
+    background:#CDB5CD;
+}

@@ -1,0 +1,30 @@
+
+.combo_search{
+    width:100%;
+    height:25px;
+    border:none;
+    margin:0 auto;
+    position:relative;
+    overflow: hidden;
+}
+.combo_search_input{
+    width:100%;
+    height:25px;
+    line-height:25px;
+    border:none;
+    border-bottom:1px solid #ccc;
+    outline:none;
+    background:none;
+    padding-right:22px;
+    padding-left:3px;
+    box-sizing: border-box;
+}
+.combo_search_icon{
+    width:25px;
+    height:25px;
+    background:url(../images/search.png) no-repeat center;
+    position:absolute;
+    top:0;
+    right:0;
+    cursor:pointer;
+}

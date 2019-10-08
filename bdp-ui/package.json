@@ -1,0 +1,51 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp-jshint": "^2.0.4"
+  },
+  "jshintConfig": {
+    "shadow": true,
+    "bitwise": false,
+    "strict": false,
+    "undef": false,
+    "unused": false,
+    "immed": true,
+    "curly": true,
+    "eqeqeq": false,
+    "evil": true,
+    "forin": false,
+    "latedef": true,
+    "newcap": true,
+    "loopfunc": true,
+    "sub": true,
+    "predef": [
+      "MY_GLOBAL",
+      "ads"
+    ]
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "lodash": "^4.17.4",
+    "path": "^0.12.7",
+    "run-sequence": "^2.1.0",
+    "uglify-js": "^3.1.0",
+    "yargs": "^8.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp"
+  },
+  "author": "",
+  "license": "ISC"
+}
