@@ -5,6 +5,8 @@ var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
 var jshintConfig = packageJSON.jshintConfig;
 var minifyCss = require('gulp-clean-css');
+var uglify = require('gulp-uglify');
+
 
 var workPath = "./src";
 var distPath =  "./lib/bdp/";
@@ -39,6 +41,7 @@ var htmlPath=[
     workPath +  '/html/*.html',
 ]
 var jsPath=[
+    workPath + '/js/bdp.js',
     workPath + '/js/JsonDtoModel.js',
     workPath + '/js/cc.js',
     workPath + '/js/Core.js',
@@ -113,7 +116,7 @@ gulp.task('imgCopy', function() {
 gulp.task('cssCopy', function() {
     gulp.src(cssPath)
         .pipe(concat('bdp.css'))
-       .pipe(minifyCss())
+        .pipe(minifyCss())
         .pipe(gulp.dest(distPath +'css'));
 });
 gulp.task('htmlCopy', function() {
@@ -124,7 +127,7 @@ gulp.task('htmlCopy', function() {
 gulp.task('jsCopy', function() {
          gulp.src(jsPath)
         //.pipe(concat('cc.js'))
-       // .pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest(distPath +'js'));
 });
 

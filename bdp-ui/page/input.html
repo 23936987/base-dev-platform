@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="mainBodyContent">
+    <div id="content">
+
+        <form class="form-horizontal" role="form" id="form">
+            <table class="table able-striped table-bordered table-hover">
+                <thead>
+                </thead>
+                <tbody id="base_data_body">
+                <tr>
+                    <td  class="vertical_center horizontal_center">
+                        备注
+                    </td>
+                    <td style="position: relative">
+                        <div id="code"  class="cc-Text" required="true"  immediately="true" nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    </td>
+                    <td style="position: relative">
+                        <div id="name"  class="cc-Text" required="true" immediately="true"   nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10" >
+                    <input type="button" value="isValid" onclick="isValid()">
+                    <input type="button" value="editModel" onclick="editModel()">
+                    <input type="button" value="showModel" onclick="showModel()">
+                    <input type="button" value="setValue" onclick="setValue()">
+                    <input type="button" value="getValue" onclick="getValue()">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!--#include file="/base/common.shtml"-->
+<script type="text/javascript">
+    var onLoadSuccess = function(){
+        logger("------11---------")
+    };
+    $(function(){
+        _$.parser.parse(onLoadSuccess)
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+div.table-head{
+}
+div.table-head table{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+div.table-head table tr:hover{
+    background-color: #f5f5f5;
+}
+div.table-head table tr td{
+    border: 1px solid #ddd;
+    padding: 10px;
+    height: auto;
+    overflow: hidden;
+
+}
+div.table-head table tr td.table-head-nameCn{
+    text-align: center;
+    width: 100px;
+}
+div.table-head table tr td[table-head-postion-x]{
+    text-align: left;
+}
+div.table-head table tr td[table-head-postion-x]>div{
+    display: inline-block;/*!* 内容居中 *!*/
+    text-align: left;
+    width: 100%;
+    height: 100%;
+}

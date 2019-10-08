@@ -1,0 +1,19 @@
+.parent-center{
+    text-align: center;
+}
+.horizontal_center .FormItem ,.parent-center .FormItem{
+    margin: 0 auto;
+}
+.horizontal_left .FormItem{
+    text-align: left;
+}
+
+.horizontal_right .FormItem{
+    text-align: right;
+}
+.ui-DateTimePicker,.ui-Text,.ui-Number,.ui-Combo,.ui-ComboBox,.ui-ComboDynamic,.ui-ComboPager,.AddPopup{
+    display: inline-block;
+}
+.ui-ButtonAuth{
+    display: inline;
+}

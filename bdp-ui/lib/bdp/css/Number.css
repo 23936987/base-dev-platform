@@ -1,0 +1,36 @@
+.Number{
+    position: relative;
+    height:30px;
+    border:1px solid #ccc;
+}
+.sub_num,.add_num{
+    width:30px;
+    height:28px;
+    text-align: center;
+    line-height:30px;
+    cursor: pointer;
+    display: block;
+}
+.sub_num{
+    position: absolute;
+    left: 0px;
+    border-right:1px solid #ccc;
+}
+.add_num{
+    position: absolute;
+    right: 0px;
+    border-left:1px solid #ccc;
+}
+.sub_num:hover,.add_num:hover{
+    background-color:#eee;
+}
+.num_inp{
+    position: absolute;
+    left:30px;
+    height:28px;
+    line-height:28px;
+    text-align: center;
+    border:none;
+    outline:none;
+    padding:0px;
+}

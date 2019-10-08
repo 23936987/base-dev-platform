@@ -1,0 +1,29 @@
+
+<script type="text/javascript" src="/lib/json2.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery.cookie.js"></script>
+<script type="text/javascript" src="/lib/layer/layer.js"></script>
+
+<script type="text/javascript" src="/lib/handlebars/handlebars-v4.0.5.js"></script>
+<script type="text/javascript" src="/lib/handlebars/handlebars-extend.js"></script>
+
+<link async rel="stylesheet" href="/lib/materialdesign/css/materialdesignicons.min.css"/>
+<link href="/lib/pretty/pretty.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="/lib/lobibox/css/Lobibox.min.css">
+<script type="text/javascript" src="/lib/lobibox/js/lobibox.min.js"></script>
+
+<link type="text/css" href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script type="text/javascript" src="/lib/bootstrap/js/bootstrap.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/lib/showLoading/showLoading.css"/>
+<script type="text/javascript"  src="/lib/showLoading/jquery.showLoading.min.js"></script>
+
+<script type="text/javascript"  src="/lib/tableHead/js/tableHead.js"></script>
+<link rel="stylesheet" type="text/css" href="/lib/tableHead/css/tableHead.css"/>
+
+
+<script type="text/javascript"  src="/lib/common/common.js"></script>
+<link rel="stylesheet" type="text/css" href="/lib/bdp/css/bdp.css"/>
+<script type="text/javascript" src="/lib/bdp/js/bdp.js"></script>
