@@ -23,6 +23,7 @@ function getLocalStorage(key){
         return storage.getItem(key);
     }
 }
+
 function getTopWindow(){
     var topWin=window;
     while(topWin.parent != topWin && isNotEmpty(topWin.parent.CC)){
@@ -92,7 +93,6 @@ $.extend(_$,{
         }
     }
 });
-
 
 $.extend(_$,{
     /**
@@ -1298,7 +1298,6 @@ _$.Component.prototype = {
             _$.parser.onComponentComplete.call(_$.parser,_this);
         }
     },
-
     /**
      *  组件事件绑定
      *
