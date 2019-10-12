@@ -127,7 +127,7 @@ gulp.task('htmlCopy', function() {
 gulp.task('jsCopy', function() {
          gulp.src(jsPath)
         //.pipe(concat('cc.js'))
-        .pipe(uglify())
+       // .pipe(uglify())
         .pipe(gulp.dest(distPath +'js'));
 });
 

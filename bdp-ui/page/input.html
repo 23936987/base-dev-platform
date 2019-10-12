@@ -15,15 +15,26 @@
                 <tbody id="base_data_body">
                 <tr>
                     <td  class="vertical_center horizontal_center">
-                        备注
+                        编码
                     </td>
                     <td style="position: relative">
-                        <div id="code"  class="cc-Text" required="true"  immediately="true" nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                        <div id="code"  class="cc-Text" required="true"  immediately="true" nameCn="编码" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    </td>
+                    <td  class="vertical_center horizontal_center">
+                        名称
                     </td>
                     <td style="position: relative">
-                        <div id="name"  class="cc-Text" required="true" immediately="true"   nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                        <div id="name"  class="cc-Text" required="true" immediately="true"   model="1"validRules="xxxx:'','xxxx-msg':'[{0}]这是一个测xxxx校验'" initValue="dddddddddddddddd" nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
                     </td>
                 </tr>
+               <tr>
+                    <td  class="vertical_center horizontal_center">
+                        备注
+                    </td>
+                    <td>
+                        <div id="memo" class="cc-TextArea" style="width: 280px;height: 80px;" required="true" immediately="true"   nameCn="备注" validRules="" remark="备注是对表单的说明"  ></div>
+                    </td>
+               </tr>
                 </tbody>
             </table>
 
@@ -42,6 +53,34 @@
 
 <!--#include file="/base/common.shtml"-->
 <script type="text/javascript">
+    function isValid() {
+        var form = new _$.Form("#form");
+        var flag = form.isValid();
+        alert(flag)
+
+    }
+    function editModel() {
+        var name = _$.getById("name");
+        name.setModel(1)
+    }
+    function showModel() {
+        var name = _$.getById("name");
+        name.setModel(0)
+    }
+    function setValue() {
+        var form = new _$.Form("#form");
+        var data = {
+            "code":"11111",
+            "name":"bbbb",
+            "memo":"xxxxxxxxxxx"
+        }
+        form.setValue(data)
+    }
+    function getValue() {
+        var form = new _$.Form("#form");
+        var data = form.getValue();
+        alert(JSON.stringify(data))
+    }
     var onLoadSuccess = function(){
         logger("------11---------")
     };

@@ -33,6 +33,7 @@ function getTopWindow(){
 }
 
 $.extend(_$,{
+    basePath:"/lib/bdp/",
     parseInt:function(str){
         var res = parseInt(str);
         return isNaN(res)?0:res;
@@ -40,16 +41,7 @@ $.extend(_$,{
     parseFloat:function(str){
         var res = parseFloat(str);
         return isNaN(res)?0:res;
-    }
-});
-
-/**
- *  框架核心库
- *
- * @module CC
- */
-
-$.extend(_$,{
+    },
     /**
      *  解析选择器
      *
@@ -95,8 +87,40 @@ $.extend(_$,{
 });
 
 $.extend(_$,{
+    extendCommon:function(childClass,parentClass,interfaces,props){
+
+        var childProps = childClass.prototype;
+        var parentProps=null;
+        if(parentClass) {
+            parentProps = parentClass.prototype;
+        }
+        if(parentProps != null) {
+            for ( var key in parentProps) {
+                childProps[key] = parentProps[key];
+            }
+        }
+        if(interfaces != null && interfaces.length>0){
+            for(var i=0;i<interfaces.length;i++){
+                var func = interfaces[i];
+
+                var interfaceName = func.interfaceName;
+                var interfaceProps = func.prototype;
+                childClass[interfaceName] = interfaceProps;
+                if(interfaceProps){
+                    for ( var key2 in interfaceProps) {
+                        childProps[key2] = interfaceProps[key2];
+                    }
+                }
+            }
+        }
+        if (props) {
+            for ( var key1 in props) {
+                childProps[key1] = props[key1];
+            }
+        }
+    },
     /**
-     *  解析选择器
+     *  解析类继承体系
      *
      *  @for _$
      *  @method extend
@@ -121,7 +145,7 @@ $.extend(_$,{
             return;
         }
 
-        var childProps = childClass.prototype, parentProps = parentClass.prototype;
+         var parentProps = parentClass.prototype;
         if (childClass.superclass == parentProps) {
             return;
         }
@@ -129,30 +153,58 @@ $.extend(_$,{
         childClass.superclass = parentProps;
         childClass.superclass.constructor = parentClass;
 
-        for ( var key in parentProps) {
-            childProps[key] = parentProps[key];
-        }
-        if(interfaces != null && interfaces.length>0){
-            for(var i=0;i<interfaces.length;i++){
-                var func = interfaces[i];
-
-                var interfaceName = func.interfaceName;
-                var interfaceProps = func.prototype;
-                childClass[interfaceName] = interfaceProps;
-                if(interfaceProps){
-                    for ( var key2 in interfaceProps) {
-                        childProps[key2] = interfaceProps[key2];
-                    }
-                }
-            }
-        }
-        if (props) {
-            for ( var key1 in props) {
-                childProps[key1] = props[key1];
-            }
-        }
-        return childClass;
+         _$.extendCommon(childClass,parentClass,interfaces,props);
     },
+
+    extendLoad: function() {
+
+        var childClass, parentClassName,parentClass,interfaces,props;
+
+        childClass = arguments[0];
+        parentClassName = arguments[1];
+
+        if(arguments.length == 3){
+            props = arguments[2];
+            interfaces = [];
+        }else if(arguments.length == 4){
+            interfaces = arguments[2];
+            props = arguments[3];
+        }else{
+            alert("继承方法参数不对");
+            return;
+        }
+
+        parentClass =  _$.getClass(parentClassName);
+        if(parentClass != null) {
+            var childProps = childClass.prototype, parentProps = parentClass.prototype;
+            if (childClass.superclass == parentProps) {
+                return;
+            }
+
+            childClass.superclass = parentProps;
+            childClass.superclass.constructor = parentClass;
+
+            _$.extendCommon(childClass,parentClass,interfaces,props);
+
+        }else{
+            var res = {};
+            res[parentClassName]=_$.basePath+"js/"+parentClassName+".js";
+            _$._loadCssAndJs(res,function(){
+
+                parentClass =  _$.getClass(parentClassName);
+                var parentProps = parentClass.prototype;
+                if (childClass.superclass == parentProps) {
+                    return;
+                }
+
+                childClass.superclass = parentProps;
+                childClass.superclass.constructor = parentClass;
+
+                _$.extendCommon(childClass,parentClass,interfaces,props);
+            });
+        }
+    },
+
     implements:function () {
         var childClass,interfaces,props;
         if(arguments.length == 2){
@@ -166,28 +218,7 @@ $.extend(_$,{
             return;
         }
         childClass = arguments[0];
-        var childProps = childClass.prototype;
-
-        if(interfaces != null && interfaces.length>0){
-            for(var i=0;i<interfaces.length;i++){
-                var func = interfaces[i];
-
-                var interfaceName = func.interfaceName;
-                var interfaceProps = func.prototype;
-                childClass[interfaceName] = interfaceProps;
-                if(interfaceProps){
-                    for ( var key2 in interfaceProps) {
-                        childProps[key2] = interfaceProps[key2];
-                    }
-                }
-            }
-        }
-        if (props) {
-            for ( var key1 in props) {
-                childProps[key1] = props[key1];
-            }
-        }
-        return childClass;
+        _$.extendCommon(childClass,null,interfaces,props);
     }
 });
 $.extend(_$,{
@@ -196,7 +227,6 @@ $.extend(_$,{
     classes:{},
     _clsPre:"cc-",
     _uiPreCls:"ui-",
-    _RESOURCE_PATH_:"/lib/cc",
     /**
      *  注册控件对象到全局上下文中
      *
@@ -243,11 +273,15 @@ $.extend(_$,{
         return isEmpty(obj)?null:obj;
     },
     regClass:function(pluginName,func){
-        _$.parser.plugins.add(pluginName);
-        if(!_$.classes[pluginName]){
-            func.prototype.type = pluginName;
-            _$.classes[pluginName] = func;
+        if (func) {
+            if(!_$.classes[pluginName]){
+                func.prototype.type = pluginName;
+                _$.classes[pluginName] = func;
+            }
         }
+    },
+    regPlugins(arr){
+       _$.parser.plugins.addAll(arr);
     },
     getClass:function(pluginName){
         var func = _$.classes[pluginName];
@@ -537,7 +571,7 @@ $.extend(_$,{
             }
         },
         parse: function(){
-            var context = $("body");;
+            var context = $("body");
             var callback= function (processKey) {
             };
             if(arguments.length == 1){
@@ -595,21 +629,35 @@ $.extend(_$,{
             }
             // logger("控件数 " + _this.count);
             for(var componentName in components){
+
                 var list1 = components[componentName];
-                if(list1.size() === 0){
+                if(list1  == null || list1.size() == 0){
                     continue;
                 }
 
-                //  logger("控件名称["+componentName+"],数量 " + list1.size());
-                if(list1 !== null && list1.size()>0){
-                    list1.each(function(){
-                        var target = $(this);
-                        var Func =  _$.getClass(componentName);
-                        if(Func !== null){
-                            new Func(target,processKey);
-                        }
-                    });
-                }
+                list1.each(function(){
+                    var target = $(this);
+                    var Func =  _$.getClass(componentName);
+
+                    if(Func !== null){
+                        new Func(target,processKey);
+                    }else{
+                        (function (componentName) {
+                            var res = {};
+                            res[componentName]=_$.basePath+"js/"+componentName+".js";
+                            _$._loadCssAndJs(res,function(){
+                                var job1 = setInterval(function () {
+                                    Func =  _$.getClass(componentName);
+                                    if(!Func) {
+                                        return
+                                    }
+                                    clearInterval(job1);
+                                    new Func(target,processKey);
+                                },20)
+                            });
+                        })(componentName)
+                    }
+                });
             }
         }
     }
@@ -643,6 +691,397 @@ _$.Component = function(target,processKey){
     _$._loadCssAndJs(res,function(){
         _this._create();
     });
+};
+
+
+/**
+ *  组件加载完成
+ *
+ *  @for _$.Component
+ *  @property onloadsuccess
+ * @type Function
+ */
+
+/**
+ *  组件加载完成
+ *
+ *  @for _$.Component
+ *  @event onloadsuccess
+ * @param {Event} e 事件对象
+ */
+
+
+_$.Component.prototype = {
+    /**
+     * 组件载体上下文
+     @for _$.Component
+     @property el
+     *@type {Boolean}
+     @final
+     */
+    el:null,
+    /**
+     *  判断对象是否扩展自Component构造器
+     @for _$.Component
+     @property isComponent  {Boolean}
+     @final
+     */
+    isComponent : true,
+    /**
+     *  ID
+     *
+     *  @for _$.Component
+     *  @property id
+     * @type Function
+     */
+    id:"",
+    uid:"",
+
+    component:null,
+    _cls:_$._clsPre + "component",
+    /**
+     *  组件Class
+     *
+     *  @for _$.Component
+     *  @property _uiCls
+     * @type Function
+     */
+    _uiCls:_$._uiPreCls + "component",
+    _LOADING_:'loading',
+    _LOAD_SUCCESS_:'success',
+    _LOADING_:'loading',
+    _LOAD_:'loading',
+
+    /**
+     *  组件依赖的资源文件,
+     *
+     *  @for _$.Component
+     *  @method _require
+     */
+    _require:function(){
+        var res = {};
+        return res;
+    },
+    /**
+     *  组件加载状态,
+     *
+     *  @for _$.Component
+     *  @method getStatus
+     */
+    getStatus:function(){
+        var _this = this;
+        return _this._LOAD_;
+    },
+    /**
+     *  组件是否加载完成,
+     *
+     *  @for _$.Component
+     *  @method isLoaded
+     */
+    isLoaded : function () {
+        var _this = this;
+        return _this._LOAD_ == _this._LOAD_SUCCESS_;
+    },
+    /**
+     *  组件渲染入口,
+     *
+     *  @for _$.Component
+     *  @method _create
+     */
+    _create:function(){},
+    /**
+     *  组件属性申明,
+     *
+     *  @for _$.Component
+     *  @method _attrProps
+     */
+    _attrProps:function(){
+        return ['id', 'remark',"onloadsuccess",{"plugins":"object"}];
+    },
+    /**
+     *  组件默认配置,
+     *
+     *  @for _$.Component
+     *  @method _attrOpts
+     */
+    _attrOpts:function(){
+        return {
+            "onloadsuccess":function() {
+            },
+            "plugins":{}
+        };
+    },
+    /**
+     *  组件设置css样式,
+     *
+     *  @for _$.Component
+     *  @method _setStyle
+     */
+    _setStyle:function(){
+    },
+    /**
+     *  组件解析自定义事件
+     *
+     *  @for _$.Component
+     *  @method _getEvents
+     * @param {Array} keys 事件类型
+     * @static
+     */
+    _getEvents:function(keys){
+        var _this = this;
+        $.map(keys, function(p){
+            var func = _this.getOption(p);
+            if(isNotEmpty(func)){
+                func = _$.getFunctoin(func);
+                _this._on(p,func);
+            }
+        });
+    },
+    /**
+     *  组件渲染完成后回调
+     *
+     *  @for _$.Component
+     *  @method _loadSuccess
+     */
+    _loadSuccess:function(){
+        var _this=this;
+        if(!_this.isLoaded()){
+            _this._LOAD_ =  _this._LOAD_SUCCESS_;
+            _$.parser.onComponentComplete.call(_$.parser,_this);
+        }
+        _this._fire("onloadsuccess");
+    },
+    _loadSuccessNoEvent:function(){
+        var _this=this;
+        if(!_this.isLoaded()){
+            _this._LOAD_ =  _this._LOAD_SUCCESS_;
+            _$.parser.onComponentComplete.call(_$.parser,_this);
+        }
+    },
+    /**
+     *  组件事件绑定
+     *
+     *  @for _$.Component
+     *  @method _bindEvents
+     */
+    _bindEvents:function(){},
+    /**
+     *  组件事件触发
+     *
+     *  @for _$.Component
+     *  @method _fire
+     * @param {String} type 事件类型
+     * @param {Object} e 事件对象
+     */
+    _fire : function(type, e) {
+        var _this = this;
+        type = type.toLowerCase();
+        for(var eventKey in _this.events){
+            if(eventKey == type){
+                var event = _this.events[eventKey];
+                _this._fireByEvent(event,eventKey,e);
+            }else if(eventKey.indexOf(".") != -1){
+                var arr = eventKey.split(".");
+                if(arr[1] == type){
+                    var event = _this.events[eventKey];
+                    _this._fireByEvent(event,eventKey,e);
+                }
+            }
+        }
+    },
+    /**
+     *  组件事件按配置触发
+     *
+     *  @for _$.Component
+     *  @method _fireByEvent
+     * @param {String} event 组件事件存储配置
+     * @param {String} type 事件类型
+     * @param {Object} e 事件对象
+     */
+    _fireByEvent:function(event,type,e){
+        var _this = this;
+
+        if (event) {
+            if (!e) {
+                e = {};
+            }
+            if (e && e != _this) {
+                e.source = _this;
+                if (!e.type) {
+                    e.type = type;
+                }
+                e.name = _this.name || _this.name;
+                e.id = _this.id;
+                e.name = _this.id;
+                e.source=_this;
+            }
+            for ( var c = 0, a = event.length; c < a; c++) {
+                var item = event[c];
+                if (item) {
+                    item[0].apply(item[1], [ e ]);
+                }
+            }
+        }
+    },
+    /**
+     *  组件事件注册
+     *
+     *  @for _$.Component
+     *  @method _on
+     * @param {String} type 事件类型
+     * @param {Function} fn 事件处理器
+     * @param {Object} scope 事件作用域
+     */
+    _on : function(type, fn, scope) {
+        var _this = this;
+        if (typeof fn == "string") {
+            var func = _$.getFunctoin(fn,scope);
+            if (func) {
+                fn = func;
+            }
+        }
+        if (typeof fn != "function" || !type) {
+            return false;
+        }
+        type = type.toLowerCase();
+        var event = _this.events[type];
+        if (!event) {
+            event = _this.events[type] = [];
+        }
+        scope = scope || _this;
+        if (!_this._findListener(type, fn, scope)) {
+            event.push([ fn, scope ]);
+            _this.events[type]=event;
+        }
+        return _this;
+    },
+    /**
+     *  组件按事件前缀注销
+     *
+     *  @for _$.Component
+     *  @method _unPrefix
+     * @param {String} prefix 事件类型前缀
+     */
+    _unPrefix:function (prefix) {
+        var _this = this;
+        for(var eventKey in _this.events){
+            if(eventKey.indexOf(".") != -1){
+                var arr = eventKey.split(".");
+                if(arr[0] == prefix){
+                    delete _this.events[eventKey];
+                }
+            }
+        }
+    },
+    /**
+     *  组件按事件类型注销
+     *
+     *  @for _$.Component
+     *  @method _un
+     * @param {String} prefix 事件类型前缀
+     */
+    _un : function(type, fn, scope) {
+        var _this = this;
+        if (typeof fn != "function") {
+            return false;
+        }
+        type = type.toLowerCase();
+        var event = _this.events[type];
+        if (event) {
+            scope = scope || _this;
+            var item = _this._findListener(type, fn, scope);
+            if (item) {
+                event.remove(item);
+            }
+        }
+        return _this;
+    },
+    /**
+     *  查询事件处理器
+     *
+     *  @for _$.Component
+     *  @method _findListener
+     * @param {String} type 事件类型
+     * @param {Function} func 事件处理器
+     * @param {Object} scope 事件作用域
+     */
+    _findListener : function(type, func, scope) {
+
+        var _this = this;
+        type = type.toLowerCase();
+        scope = scope || _this;
+        var event = _this.events[type];
+        if (event) {
+            for ( var i = 0; i < event.length ; i++) {
+                var item = event[i];
+                if (item[0] == func && item[1] == scope) {
+                    return item;
+                }
+            }
+        }
+    },
+    /**
+     *  替换组件原Dom对象
+     *
+     *  @for _$.Component
+     *  @method _replaceNode
+     * @param {String} source 新html
+     */
+    _replaceNode:function(source){
+        var _this = this;
+        var template = Handlebars.compile(source);
+        var result = template(_this.options);
+        var element = $(result);
+        _this.el.replaceWith(element);
+        _this.el = element;
+        _this.el.addClass(_this._uiCls);
+        _this.el.attr("componentId",_this.uid);
+    },
+    /**
+     *  修改组件配置
+     *
+     *  @for _$.Component
+     *  @method setOption
+     * @param {String} key 配置key
+     * @param {Object} value 配置value
+     */
+    setOption:function(key,value){
+        var _this = this;
+        _this.options[key]=value;
+    },
+    /**
+     *  获取组件配置
+     *
+     *  @for _$.Component
+     *  @method getOption
+     * @param {String} key 配置key
+     */
+    getOption:function(key){
+        var _this = this;
+        var value = _this.options[key];
+        return value;
+    },
+    /**
+     *  组件toString方法
+     *
+     *  @for _$.Component
+     *  @method toString
+     */
+    toString:function(){
+        var _this = this;
+        return _this.id;
+    },
+    /**
+     *  组件销毁方法
+     *
+     *  @for _$.Component
+     *  @method destroy
+     */
+    destroy : function() {
+        var _this = this;
+        this.el.remove();
+        _$.unReg(_this);
+    }
 };
 
 /**
@@ -1118,411 +1557,19 @@ $.extend(_$,{
     }
 });
 
-/*
  _$.validator.addMethod("xxxx",function(params){
- return  _$.validator.zeroHandler(params,function(val){
- if (isNaN(val)) {
- return false;
- }
- val = parseFloat(val);
- if (val > 10) {
- return true;
- }
- return false;
- });
+     return  _$.validator.zeroHandler(params,function(val){
+         if (isNaN(val)) {
+            return false;
+         }
+         val = parseFloat(val);
+         if (val > 10) {
+            return true;
+         }
+         return false;
+     });
  },"[{0}]这是一个测试校验");
- */
 
-
-/**
- *  组件加载完成
- *
- *  @for _$.Component
- *  @property onloadsuccess
- * @type Function
- */
-
-/**
- *  组件加载完成
- *
- *  @for _$.Component
- *  @event onloadsuccess
- * @param {Event} e 事件对象
- */
-
-
-_$.Component.prototype = {
-    /**
-     * 组件载体上下文
-     @for _$.Component
-     @property el
-     *@type {Boolean}
-     @final
-     */
-    el:null,
-    /**
-     *  判断对象是否扩展自Component构造器
-     @for _$.Component
-     @property isComponent  {Boolean}
-     @final
-     */
-    isComponent : true,
-    /**
-     *  ID
-     *
-     *  @for _$.Component
-     *  @property id
-     * @type Function
-     */
-    id:"",
-    uid:"",
-
-    component:null,
-    _cls:_$._clsPre + "component",
-    /**
-     *  组件Class
-     *
-     *  @for _$.Component
-     *  @property _uiCls
-     * @type Function
-     */
-    _uiCls:_$._uiPreCls + "component",
-    _LOADING_:'loading',
-    _LOAD_SUCCESS_:'success',
-    _LOADING_:'loading',
-    _LOAD_:'loading',
-
-    /**
-     *  组件依赖的资源文件,
-     *
-     *  @for _$.Component
-     *  @method _require
-     */
-    _require:function(){
-        var res = {};
-        return res;
-    },
-    /**
-     *  组件加载状态,
-     *
-     *  @for _$.Component
-     *  @method getStatus
-     */
-    getStatus:function(){
-        var _this = this;
-        return _this._LOAD_;
-    },
-    /**
-     *  组件是否加载完成,
-     *
-     *  @for _$.Component
-     *  @method isLoaded
-     */
-    isLoaded : function () {
-        var _this = this;
-        return _this._LOAD_ == _this._LOAD_SUCCESS_;
-    },
-    /**
-     *  组件渲染入口,
-     *
-     *  @for _$.Component
-     *  @method _create
-     */
-    _create:function(){},
-    /**
-     *  组件属性申明,
-     *
-     *  @for _$.Component
-     *  @method _attrProps
-     */
-    _attrProps:function(){
-        return ['id', 'remark',"onloadsuccess",{"plugins":"object"}];
-    },
-    /**
-     *  组件默认配置,
-     *
-     *  @for _$.Component
-     *  @method _attrOpts
-     */
-    _attrOpts:function(){
-        return {
-            "onloadsuccess":function() {
-            },
-            "plugins":{}
-        };
-    },
-    /**
-     *  组件设置css样式,
-     *
-     *  @for _$.Component
-     *  @method _setStyle
-     */
-    _setStyle:function(){
-    },
-    /**
-     *  组件解析自定义事件
-     *
-     *  @for _$.Component
-     *  @method _getEvents
-     * @param {Array} keys 事件类型
-     * @static
-     */
-    _getEvents:function(keys){
-        var _this = this;
-        $.map(keys, function(p){
-            var func = _this.getOption(p);
-            if(isNotEmpty(func)){
-                func = _$.getFunctoin(func);
-                _this._on(p,func);
-            }
-        });
-    },
-    /**
-     *  组件渲染完成后回调
-     *
-     *  @for _$.Component
-     *  @method _loadSuccess
-     */
-    _loadSuccess:function(){
-        var _this=this;
-        if(!_this.isLoaded()){
-            _this._LOAD_ =  _this._LOAD_SUCCESS_;
-            _$.parser.onComponentComplete.call(_$.parser,_this);
-        }
-        _this._fire("onloadsuccess");
-    },
-    _loadSuccessNoEvent:function(){
-        var _this=this;
-        if(!_this.isLoaded()){
-            _this._LOAD_ =  _this._LOAD_SUCCESS_;
-            _$.parser.onComponentComplete.call(_$.parser,_this);
-        }
-    },
-    /**
-     *  组件事件绑定
-     *
-     *  @for _$.Component
-     *  @method _bindEvents
-     */
-    _bindEvents:function(){},
-    /**
-     *  组件事件触发
-     *
-     *  @for _$.Component
-     *  @method _fire
-     * @param {String} type 事件类型
-     * @param {Object} e 事件对象
-     */
-    _fire : function(type, e) {
-        var _this = this;
-        type = type.toLowerCase();
-        for(var eventKey in _this.events){
-            if(eventKey == type){
-                var event = _this.events[eventKey];
-                _this._fireByEvent(event,eventKey,e);
-            }else if(eventKey.indexOf(".") != -1){
-                var arr = eventKey.split(".");
-                if(arr[1] == type){
-                    var event = _this.events[eventKey];
-                    _this._fireByEvent(event,eventKey,e);
-                }
-            }
-        }
-    },
-    /**
-     *  组件事件按配置触发
-     *
-     *  @for _$.Component
-     *  @method _fireByEvent
-     * @param {String} event 组件事件存储配置
-     * @param {String} type 事件类型
-     * @param {Object} e 事件对象
-     */
-    _fireByEvent:function(event,type,e){
-        var _this = this;
-
-        if (event) {
-            if (!e) {
-                e = {};
-            }
-            if (e && e != _this) {
-                e.source = _this;
-                if (!e.type) {
-                    e.type = type;
-                }
-                e.name = _this.name || _this.name;
-                e.id = _this.id;
-                e.name = _this.id;
-                e.source=_this;
-            }
-            for ( var c = 0, a = event.length; c < a; c++) {
-                var item = event[c];
-                if (item) {
-                    item[0].apply(item[1], [ e ]);
-                }
-            }
-        }
-    },
-    /**
-     *  组件事件注册
-     *
-     *  @for _$.Component
-     *  @method _on
-     * @param {String} type 事件类型
-     * @param {Function} fn 事件处理器
-     * @param {Object} scope 事件作用域
-     */
-    _on : function(type, fn, scope) {
-        var _this = this;
-        if (typeof fn == "string") {
-            var func = _$.getFunctoin(fn,scope);
-            if (func) {
-                fn = func;
-            }
-        }
-        if (typeof fn != "function" || !type) {
-            return false;
-        }
-        type = type.toLowerCase();
-        var event = _this.events[type];
-        if (!event) {
-            event = _this.events[type] = [];
-        }
-        scope = scope || _this;
-        if (!_this._findListener(type, fn, scope)) {
-            event.push([ fn, scope ]);
-            _this.events[type]=event;
-        }
-        return _this;
-    },
-    /**
-     *  组件按事件前缀注销
-     *
-     *  @for _$.Component
-     *  @method _unPrefix
-     * @param {String} prefix 事件类型前缀
-     */
-    _unPrefix:function (prefix) {
-        var _this = this;
-        for(var eventKey in _this.events){
-            if(eventKey.indexOf(".") != -1){
-                var arr = eventKey.split(".");
-                if(arr[0] == prefix){
-                    delete _this.events[eventKey];
-                }
-            }
-        }
-    },
-    /**
-     *  组件按事件类型注销
-     *
-     *  @for _$.Component
-     *  @method _un
-     * @param {String} prefix 事件类型前缀
-     */
-    _un : function(type, fn, scope) {
-        var _this = this;
-        if (typeof fn != "function") {
-            return false;
-        }
-        type = type.toLowerCase();
-        var event = _this.events[type];
-        if (event) {
-            scope = scope || _this;
-            var item = _this._findListener(type, fn, scope);
-            if (item) {
-                event.remove(item);
-            }
-        }
-        return _this;
-    },
-    /**
-     *  查询事件处理器
-     *
-     *  @for _$.Component
-     *  @method _findListener
-     * @param {String} type 事件类型
-     * @param {Function} func 事件处理器
-     * @param {Object} scope 事件作用域
-     */
-    _findListener : function(type, func, scope) {
-
-        var _this = this;
-        type = type.toLowerCase();
-        scope = scope || _this;
-        var event = _this.events[type];
-        if (event) {
-            for ( var i = 0; i < event.length ; i++) {
-                var item = event[i];
-                if (item[0] == func && item[1] == scope) {
-                    return item;
-                }
-            }
-        }
-    },
-    /**
-     *  替换组件原Dom对象
-     *
-     *  @for _$.Component
-     *  @method _replaceNode
-     * @param {String} source 新html
-     */
-    _replaceNode:function(source){
-        var _this = this;
-        var template = Handlebars.compile(source);
-        var result = template(_this.options);
-        var element = $(result);
-        _this.el.replaceWith(element);
-        _this.el = element;
-        _this.el.addClass(_this._uiCls);
-        _this.el.attr("componentId",_this.uid);
-    },
-    /**
-     *  修改组件配置
-     *
-     *  @for _$.Component
-     *  @method setOption
-     * @param {String} key 配置key
-     * @param {Object} value 配置value
-     */
-    setOption:function(key,value){
-        var _this = this;
-        _this.options[key]=value;
-    },
-    /**
-     *  获取组件配置
-     *
-     *  @for _$.Component
-     *  @method getOption
-     * @param {String} key 配置key
-     */
-    getOption:function(key){
-        var _this = this;
-        var value = _this.options[key];
-        return value;
-    },
-    /**
-     *  组件toString方法
-     *
-     *  @for _$.Component
-     *  @method toString
-     */
-    toString:function(){
-        var _this = this;
-        return _this.id;
-    },
-    /**
-     *  组件销毁方法
-     *
-     *  @for _$.Component
-     *  @method destroy
-     */
-    destroy : function() {
-        var _this = this;
-        this.el.remove();
-        _$.unReg(_this);
-    }
-};
 /**
  * @class Form
  * @constructor
@@ -1840,10 +1887,7 @@ _$.extend(_$.FormItem,_$.Component,{
      *  @for _$.FormItem
      *  @method _editModel
      */
-    _showModel:function(flag){
-        if(isEmpty(flag)){
-            flag = true
-        }
+    _showModel:function(){
         var _this = this;
         _this.setOption("model",_SHOW_);
         _this._clearEdit();
@@ -1853,16 +1897,19 @@ _$.extend(_$.FormItem,_$.Component,{
         _this.el.addClass("FormItem");
         _this.component = $(".showDiv",_this.el);
         _this._bindChangeEvents();
-        if(flag){
-            _this._init();
-        }else{
-            _this._initSetModel();
-        }
+        _this._init();
     },
-    _initSetModel:function () {
+    /**
+     *  清空编辑模式,
+     *
+     *  @for _$.FormItem
+     *  @method _clearEdit
+     */
+    _clearEdit:function(){
         var _this = this;
-        if (isNotEmpty(_this.value)) {
-            _this.setValue(_this.value,false);
+        if(_this.component){
+            _this.component.unbind();
+            _this.component.remove();
         }
     },
     /**
@@ -1877,6 +1924,7 @@ _$.extend(_$.FormItem,_$.Component,{
             _this.component.remove();
         }
     },
+
     selectText:function (jq) {
         var _this = this;
         var val = jq.val() +"";
@@ -1917,19 +1965,6 @@ _$.extend(_$.FormItem,_$.Component,{
         }
     },
     /**
-     *  清空编辑模式,
-     *
-     *  @for _$.FormItem
-     *  @method _clearEdit
-     */
-    _clearEdit:function(){
-        var _this = this;
-        if(_this.component){
-            _this.component.unbind();
-            _this.component.remove();
-        }
-    },
-    /**
      *  初始化组件,
      *
      *  @for _$.FormItem
@@ -1937,14 +1972,18 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     _init:function(){
         var _this = this;
-        var initValue= _this.options["initValue"];
-        if(isNotEmpty(initValue)){
-            _this.setValue(initValue);
-            _this.orgiValue = initValue;
+        if(isNotEmpty(_this.value)) {
+            _this.setValue(_this.value);
+        }else{
+            var initValue= _this.options["initValue"];
+            if(isNotEmpty(initValue)){
+                _this.setValue(initValue);
+                _this.orgiValue = initValue;
+            }
         }
+
         _this._loadSuccess();
     },
-
     /**
      *  表单name属性
      *
@@ -2116,7 +2155,6 @@ _$.extend(_$.FormItem,_$.Component,{
         var _this = this;
         _this.setValue(_this.orgiValue);
     },
-
     /**
      *  组件设置值,
      *
@@ -2150,7 +2188,7 @@ _$.extend(_$.FormItem,_$.Component,{
 
         if(change){
             var event = {};
-            event.value = _this.getValue();
+            event.value = _this.value;
             _this._fire("onchange",event);
         }
     },
@@ -2286,12 +2324,21 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     setModel:function(model){
         var _this = this;
-
         if(_this.options.model == _SHOW_ && model == _EDITABLE_){
-            _this._editModel(false);
+            _this._editModel();
         }else if(_this.options.model == _EDITABLE_ &&  model == _SHOW_){
-            _this._showModel(false);
+            _this._showModel();
         }
+    },
+    /**
+     * 为控件绑定事件
+     *
+     *  @for _$.FormItem
+     *  @method _bindChangeEvents
+     */
+    _bindEvents:function(){
+        var _this = this;
+        _this._bindChangeEvents();
     },
     /**
      * 组件绑定onchange事件
@@ -2302,10 +2349,6 @@ _$.extend(_$.FormItem,_$.Component,{
     _bindChangeEvents:function () {
         var _this = this;
         _$.FormItem.superclass._getEvents.call(_this, ["onchange"]);
-    },
-    _bindEvents:function(){
-        var _this = this;
-        _this._bindChangeEvents();
     },
     destroy : function() {
         var _this = this;
@@ -2318,133 +2361,4 @@ _$.extend(_$.FormItem,_$.Component,{
     }
 });
 
-/**
- * 文本输入框组件
- *
- * @class Text
- * @constructor
- * @submodule form
- * @extends _$.FormItem
- * @param {String,nodeType,jquery} target 选择器
- * @param {String} processKey 解析器key
- * @namespace _$
- */
-_$.Text=function (target,processKey){
-    var _this = this;
-    _$.Text.superclass.constructor.call(_this,target,processKey);
-};
-_$.regClass("Text",_$.Text);
-
-_$.extend(_$.Text,_$.FormItem, {
-    _cls:_$._clsPre + "Text",
-    _uiCls:_$._uiPreCls + "Text",
-    _attrProps:function(){
-        var _this = this;
-        var properties = _$.Text.superclass._attrProps.call(_this);
-        properties.addAll(["onfocus","oninput","onblur","inputStyle","type"]);
-        return properties;
-    },
-    _attrOpts:function(){
-        var _this = this;
-        var opts = _$.Text.superclass._attrOpts.call(_this);
-        return $.extend(true,opts,{
-            type:"text"
-        });
-    },
-    _editModel:function(flag){
-        var _this = this;
-        if(isEmpty(flag)){
-            flag = true
-        }
-        _this.setOption("model",_EDITABLE_);
-        _this._clearShow();
-        var source='<input type="{{type}}" class="Text"/>';
-        _this._replaceNode(source);
-        _this.component = $(".Text",_this.el);
-        _this._setStyle();
-        _this._bindEvents();
-        if(flag){
-            _this._init();
-        }else{
-            _this._initSetModel();
-        }
-    },
-    _bindEvents:function(){
-        var _this = this;
-        _$.Text.superclass._bindEvents.call(_this);
-        _$.Text.superclass._getEvents.call(_this, ["onfocus","oninput","onblur"]);
-        if(_this._isEdit()){
-            var event = {
-            };
-            event['value'] = _this.getValue();
-            _this.component.bind("focus",function(e){
-                _this._focusHandler(event);
-            });
-            _this.component.bind("input propertychange",function(){
-                _this._inputHandler(event);
-            });
-            _this.component.bind("blur",function(){
-                _this._blurHandler(event);
-            });
-        }
-    },
-    /**
-     *  blur事件处理器
-     *
-     *  @for _$.Text
-     *  @method _blurHandler
-     * @param {Object} event  事件对象
-     */
-    _blurHandler:function(event){
-        var _this = this;
-        var immediately = _this.getOption("immediately");
-        if(immediately){
-            _this.isValid(false);
-        }
-
-        _this._fire("onblur",event);
-        _this._fire("onchange",event);
-    },
-    /**
-     *  input事件处理器
-     *
-     *  @for _$.Text
-     *  @method _inputHandler
-     * @param {Object} event  事件对象
-     */
-    _inputHandler:function(event){
-        var _this = this;
-        _this._fire("oninput",event)
-    },
-    /**
-     *  focus 事件处理器
-     *
-     *  @for _$.Text
-     *  @method _focusHandler
-     * @param {Object} event  事件对象
-     */
-    _focusHandler:function(event){
-        var _this = this;
-        _this._fire("onfocus",event)
-    },
-    _setStyle:function(){
-        var _this = this;
-        _$.Text.superclass._setStyle.call(_this);
-
-        var height = _this.getOption("height");
-        if(height){
-            _this.component.height(height);
-        }
-        var inputStyle = _this.getOption('inputStyle');
-        if(isNotEmpty(inputStyle)){
-            _$.css(_this.component,inputStyle)
-        }
-    },
-    getValue:function(){
-        var _this = this;
-        if(_this._isEdit()){
-            _this._sync();
-        }
-        return _this.value;
-    },
-});
+_$.regPlugins(["Text","TextArea"]);
