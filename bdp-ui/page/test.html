@@ -5,16 +5,28 @@
     <title>Title</title>
     <!--#include file="/base/common.shtml"-->
     <script type="text/javascript">
-        var dtd=$.Deferred();
-        var wait=function(dtd){
+        var wait=function(){
+            var dtd=$.Deferred();
             var tasks=function(){
-                alert("执行完毕！");
                 dtd.resolve();
             };
             setTimeout(tasks,5000);
-            return dtd;
+            return dtd.promise();
         };
-        $.when(wait(dtd))
+
+        var wait1=function(){
+            var dtd=$.Deferred();
+            var tasks=function(){
+                dtd.resolve();
+            };
+            setTimeout(tasks,2000);
+            return dtd.promise();
+        };
+
+        var arr = [];
+        arr.push(wait())
+        arr.push(wait1())
+        $.when(arr)
             .done(function(){alert("success");})
             .fail(function(){alert("error")});
     </script>

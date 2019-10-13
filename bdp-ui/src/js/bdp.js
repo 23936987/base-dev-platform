@@ -88,7 +88,6 @@ $.extend(_$,{
 
 $.extend(_$,{
     extendCommon:function(childClass,parentClass,interfaces,props){
-
         var childProps = childClass.prototype;
         var parentProps=null;
         if(parentClass) {
@@ -349,7 +348,6 @@ $.extend(_$,{
         if(keys != null && keys.length>0){
             var length = keys.length;
             var count=0;
-
             keys.each(function(key){
                 var obj = urls[key];
                 var url="";
