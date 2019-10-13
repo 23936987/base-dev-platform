@@ -1116,38 +1116,8 @@ $.extend(_$,{
         addMethod:function(name,func,msg){
             _$.validator.methods[name] = func;
             _$.validator.messages[name] = msg;
-
         },
         messages:{
-            required: "[{0}]必填",
-            email: "[{0}]必须是有效的电子邮件地址",
-            password:"[{0}]必须由6-20位字母数字组成",
-            mobile:"[{0}]必须是有效的手机号",
-            tel:"[{0}]必须是有效的座机号",
-            url: "[{0}]必须是有效的网址",
-            account: "[{0}]必须是由6-10位字母和数字组成",
-            money:"[{0}]必须是有效的金钱格式",
-            number:"[{0}]必须是数字",
-            integer: "[{0}]必须是正整数",
-            positive: "[{0}]必须是整数",
-            natural:'[{0}]必须是自然数',
-            min: "[{0}]必须大于{1}",
-            minEq: "[{0}]必须大于等于{1}",
-            max: "[{0}]必须小于{1}",
-            maxEq: "[{0}]必须小于等于{1}",
-            minLength: "[{0}]必须大于{1}个字符",
-            maxLength: "[{0}]必须小于{1}个字符",
-            minLengthEq: "[{0}]必须大于等于{1}个字符",
-            maxLengthEq: "[{0}]必须小于等于{1}个字符",
-            rangeLength: "[{0}]长度必须是大{1},小于{2}",
-            rangeLengthEq: "[{0}]长度必须是大于{1},小于等于{2}",
-            range:"[{0}]必须大于{1},小于{2}",
-            rangeEq:"[{0}]必须是大于等于{1},小于等于{2}",
-            equalTo:"[{0}]必须等于[{1}] ",
-            greaterThan:"[{0}]必须大于[{1}] " ,
-            greaterEqThan:"[{0}]必须大于等于[{1}] " ,
-            lessThan:"[{0}]必须大于[{1}] " ,
-            lessEqThan:"[{0}]必须大于[{1}] " ,
         },
         format:function(source, params ) {
             var _this = this;
@@ -1172,6 +1142,7 @@ $.extend(_$,{
             return source;
         },
         zeroHandler:function(params,func,names,type){
+
             var value=params["value"];
             var nameCn=params["nameCn"];
             var validMsg=params["validMsg"];
@@ -1268,307 +1239,288 @@ $.extend(_$,{
             return 0;
         },
         methods: {
-            'required': function (params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    return isNotEmpty(val);
-                },null,'required');
-
-            },
-            'email': function(params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-                    return reg.test(val);
-                });
-            },
-            'password': function(params){
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^[A-Za-z0-9]{6,20}$/;
-                    return reg.test(val);
-                });
-            },
-
-            'mobile': function (params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^1\d{10}$/;
-                    return reg.test(val);
-                });
-            },
-            'tel': function(params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^0\d{2,3}-?\d{7,8}$/;
-                    return reg.test(val);
-                });
-            },
-            'url': function(params){
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^((https|http|ftp|rtsp|mms)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
-                    return reg.test(val);
-                });
-            },
-            'account': function(params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^[a-z0-9A-z]\w{5,9}$/;
-                    return reg.test(val);
-                });
-            },
-            'money': function(params){
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /(^-?[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
-                    return reg.test(val);
-                });
-            },
-            number: function(params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^(\-|\+)?\d+(\.\d+)?$/;
-                    return reg.test(val);
-                });
-            },
-            'integer': function (params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^[1-9]\d*$/;
-                    return reg.test(val);
-                });
-            },
-            'positive': function (params){
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^-?\d+$/;
-                    return reg.test(val);
-                });
-            },
-            'natural': function(params) {
-                return  _$.validator.zeroHandler(params,function(val){
-                    var reg = /^\d+$/;
-                    return reg.test(val);
-                });
-            },
-            'min': function(params) {
-                return  _$.validator.oneHandler(params,function(val,num){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val > num) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'minEq': function (params) {
-                return  _$.validator.oneHandler(params,function(val,num){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val >= num) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'max': function (params) {
-                return  _$.validator.oneHandler(params,function(val,num){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val < num) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'maxEq': function (params) {
-                return  _$.validator.oneHandler(params,function(val,num){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val <= num) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'minLength': function (params) {
-                return  _$.validator.oneHandler(params,function(val,min){
-                    var str = (val + "").trim();
-                    if (str.length <= min) {
-                        return false;
-                    }
-                    return true;
-                });
-            },
-            'maxLength': function (params) {
-                return  _$.validator.oneHandler(params,function(val,max){
-                    var str = (val + "").trim();
-                    if (str.length >= max) {
-                        return false;
-                    }
-                    return true;
-                });
-            },
-
-            'minLengthEq': function (params) {
-                return  _$.validator.oneHandler(params,function(val,min){
-                    var str = (val + "").trim();
-                    if (str.length < min) {
-                        return false;
-                    }
-                    return true;
-                });
-            },
-            'maxLengthEq': function(params) {
-
-                return  _$.validator.oneHandler(params,function(val,max){
-                    var str = (val + "").trim();
-                    if (str.length > max) {
-                        return false;
-                    }
-                    return true;
-                });
-            },
-            'rangeLength': function (params) {
-                return  _$.validator.twoHandler(params,function(val,min,max){
-                    var str = (val + "").trim();
-                    if (str.length < max && str.length > min) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'rangeLengthEq': function (params) {
-                return  _$.validator.twoHandler(params,function(val,min,max){
-
-                    var str = (val + "").trim();
-                    if (str.length <= max && str.length >= min) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'range': function (params) {
-                return  _$.validator.twoHandler(params,function(val,min,max){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val < max && val > min) {
-                        return false;
-                    }
-                    return true;
-                });
-            },
-            'rangeEq': function (params) {
-                return  _$.validator.twoHandler(params,function(val,min,max){
-                    if (isNaN(val)) {
-                        return false;
-                    }
-                    val = parseFloat(val);
-                    if (val <= max && val >= min) {
-                        return true;
-                    }
-                    return false;
-                });
-            },
-            'greaterEqThan': function (params){
-                var ruleValue=params["ruleValue"];
-                var arr = ruleValue.split(",");
-
-                if(arr.length == 1){
-                    var compareTo = arr[0];
-                    var objTo = _$.getById(compareTo)
-                    var valueTo = objTo.getValue();
-
-                    var nameCn=params["nameCn"];
-                    var nameCnTo = objTo.getOption("nameCn");
-
-                    var names = [nameCn,nameCnTo];
-                    return  _$.validator.zeroHandler(params,function(val){
-                        return _$.validator.compareTo(val,valueTo) >= 0;
-                    },names);
-                }else if(arr.length == 2){
-                    var compareTo = arr[0];
-                    var format = arr[1];
-                    var objTo = _$.getById(compareTo)
-                    var valueTo = objTo.getValue();
-
-                    var nameCn=params["nameCn"];
-                    var nameCnTo = objTo.getOption("nameCn");
-
-                    var names = [nameCn,nameCnTo];
-                    return  _$.validator.zeroHandler(params,function(val){
-                        return _$.validator.compareTo(val,valueTo,format) >= 0;
-                    },names);
-
-                }
-            },
-            'greaterThan': function (params){
-                var ruleValue=params["ruleValue"];
-                var arr = ruleValue.split(",");
-
-                if(arr.length == 1){
-                    var compareTo = arr[0];
-                    var objTo = _$.getById(compareTo)
-                    var valueTo = objTo.getValue();
-
-                    var nameCn=params["nameCn"];
-                    var nameCnTo = objTo.getOption("nameCn");
-
-                    var names = [nameCn,nameCnTo];
-                    return  _$.validator.zeroHandler(params,function(val){
-                        return _$.validator.compareTo(val,valueTo) > 0;
-                    },names);
-                }else if(arr.length == 2){
-                    var compareTo = arr[0];
-                    var format = arr[1];
-                    var objTo = _$.getById(compareTo)
-                    var valueTo = objTo.getValue();
-
-                    var nameCn=params["nameCn"];
-                    var nameCnTo = objTo.getOption("nameCn");
-
-                    var names = [nameCn,nameCnTo];
-                    return  _$.validator.zeroHandler(params,function(val){
-                        return _$.validator.compareTo(val,valueTo,format) > 0;
-                    },names);
-
-                }
-            },
-
-            'equalTo': function (params){
-                var ruleValue=params["ruleValue"];
-                var arr = ruleValue.split(",");
-
-                var compareTo = arr[0];
-                var objTo = _$.getById(compareTo)
-                var valueTo = objTo.getValue();
-
-                var nameCn=params["nameCn"];
-                var nameCnTo = objTo.getOption("nameCn");
-
-                var names = [nameCn,nameCnTo];
-                return  _$.validator.zeroHandler(params,function(val){
-
-                    return _$.validator.compareTo(val,valueTo) == 0;
-                },names);
-
-            }
         }
     }
 });
 
- _$.validator.addMethod("xxxx",function(params){
-     return  _$.validator.zeroHandler(params,function(val){
-         if (isNaN(val)) {
+
+_$.validator.addMethod("required",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        return isNotEmpty(val);
+    },null,"required");
+},"[{0}]必填");
+_$.validator.addMethod("email",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是有效的电子邮件地址");
+_$.validator.addMethod("password",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^[A-Za-z0-9]{6,20}$/;
+        return reg.test(val);
+    });
+},"[{0}]必须由6-20位字母数字组成");
+_$.validator.addMethod("mobile",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^1\d{10}$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是有效的手机号");
+_$.validator.addMethod("tel",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^0\d{2,3}-?\d{7,8}$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是有效的座机号");
+_$.validator.addMethod("url",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^((https|http|ftp|rtsp|mms)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是有效的网址");
+_$.validator.addMethod("account",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^[a-z0-9A-z]\w{5,9}$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是由6-10位字母和数字组成");
+_$.validator.addMethod("money",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /(^-?[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+        return reg.test(val);
+    });
+},"[{0}]必须是有效的金钱格式");
+_$.validator.addMethod("number",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^(\-|\+)?\d+(\.\d+)?$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是数字");
+_$.validator.addMethod("integer",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^[1-9]\d*$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是正整数");
+_$.validator.addMethod("positive",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^-?\d+$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是整数");
+_$.validator.addMethod("natural",function(params){
+    return  _$.validator.zeroHandler(params,function(val){
+        var reg = /^\d+$/;
+        return reg.test(val);
+    });
+},"[{0}]必须是自然数");
+_$.validator.addMethod("min",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
+        if (isNaN(val)) {
             return false;
-         }
-         val = parseFloat(val);
-         if (val > 10) {
+        }
+        val = parseFloat(val);
+        if (val > num) {
             return true;
-         }
-         return false;
-     });
- },"[{0}]这是一个测试校验");
+        }
+        return false;
+    });
+},"[{0}]必须大于{1}");
+_$.validator.addMethod("minEq",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
+        if (isNaN(val)) {
+            return false;
+        }
+        val = parseFloat(val);
+        if (val >= num) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]必须大于等于{1}");
+_$.validator.addMethod("max",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
+        if (isNaN(val)) {
+            return false;
+        }
+        val = parseFloat(val);
+        if (val < num) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]必须小于{1}");
+_$.validator.addMethod("maxEq",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
+        if (isNaN(val)) {
+            return false;
+        }
+        val = parseFloat(val);
+        if (val <= num) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]必须小于等于{1}");
+_$.validator.addMethod("minLength",function(params){
+    return  _$.validator.oneHandler(params,function(val,min){
+        var str = (val + "").trim();
+        if (str.length <= min) {
+            return false;
+        }
+        return true;
+    });
+},"[{0}]必须大于{1}个字符");
+_$.validator.addMethod("maxLength",function(params){
+    return  _$.validator.oneHandler(params,function(val,max){
+        var str = (val + "").trim();
+        if (str.length >= max) {
+            return false;
+        }
+        return true;
+    });
+},"[{0}]必须小于{1}个字符");
+_$.validator.addMethod("minLengthEq",function(params){
+    return  _$.validator.oneHandler(params,function(val,min){
+        var str = (val + "").trim();
+        if (str.length < min) {
+            return false;
+        }
+        return true;
+    });
+},"[{0}]必须大于等于{1}个字符");
+_$.validator.addMethod("maxLengthEq",function(params){
+    return  _$.validator.oneHandler(params,function(val,max){
+        var str = (val + "").trim();
+        if (str.length > max) {
+            return false;
+        }
+        return true;
+    });
+},"[{0}]必须小于等于{1}个字符");
+_$.validator.addMethod("rangeLength",function(params){
+    return  _$.validator.twoHandler(params,function(val,min,max){
+        var str = (val + "").trim();
+        if (str.length < max && str.length > min) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]长度必须是大{1},小于{2}");
+_$.validator.addMethod("rangeLengthEq",function(params){
+    return  _$.validator.twoHandler(params,function(val,min,max){
+
+        var str = (val + "").trim();
+        if (str.length <= max && str.length >= min) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]长度必须是大于{1},小于等于{2}");
+_$.validator.addMethod("range",function(params){
+    return  _$.validator.twoHandler(params,function(val,min,max){
+        if (isNaN(val)) {
+            return false;
+        }
+        val = parseFloat(val);
+        if (val < max && val > min) {
+            return false;
+        }
+        return true;
+    });
+},"[{0}]必须大于{1},小于{2}");
+_$.validator.addMethod("rangeEq",function(params){
+    return  _$.validator.twoHandler(params,function(val,min,max){
+        if (isNaN(val)) {
+            return false;
+        }
+        val = parseFloat(val);
+        if (val <= max && val >= min) {
+            return true;
+        }
+        return false;
+    });
+},"[{0}]必须是大于等于{1},小于等于{2}");
+_$.validator.addMethod("greaterEqThan",function(params){
+    var ruleValue=params["ruleValue"];
+    var arr = ruleValue.split(",");
+
+    if(arr.length == 1){
+        var compareTo = arr[0];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            return _$.validator.compareTo(val,valueTo) >= 0;
+        },names);
+    }else if(arr.length == 2){
+        var compareTo = arr[0];
+        var format = arr[1];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            return _$.validator.compareTo(val,valueTo,format) >= 0;
+        },names);
+    }
+},"[{0}]必须大于等于[{1}]");
+_$.validator.addMethod("greaterThan",function(params){
+    var ruleValue=params["ruleValue"];
+    var arr = ruleValue.split(",");
+
+    if(arr.length == 1){
+        var compareTo = arr[0];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            return _$.validator.compareTo(val,valueTo) > 0;
+        },names);
+    }else if(arr.length == 2){
+        var compareTo = arr[0];
+        var format = arr[1];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            return _$.validator.compareTo(val,valueTo,format) > 0;
+        },names);
+    }
+},"[{0}]必须大于[{1}]");
+_$.validator.addMethod("equalTo",function(params){
+    var ruleValue=params["ruleValue"];
+    var arr = ruleValue.split(",");
+
+    var compareTo = arr[0];
+    var objTo = _$.getById(compareTo)
+    var valueTo = objTo.getValue();
+
+    var nameCn=params["nameCn"];
+    var nameCnTo = objTo.getOption("nameCn");
+
+    var names = [nameCn,nameCnTo];
+    return  _$.validator.zeroHandler(params,function(val){
+
+        return _$.validator.compareTo(val,valueTo) == 0;
+    },names);
+},"[{0}]必须等于[{1}]");
 
 /**
  * @class Form
@@ -1940,6 +1892,7 @@ _$.extend(_$.FormItem,_$.Component,{
             obj.setSelectionRange(0,len);
         }
     },
+
     _elHeight:function () {
         var _this = this;
         var height =_this.getOption('height');
@@ -2261,10 +2214,7 @@ _$.extend(_$.FormItem,_$.Component,{
             return true;
         }
         var validRules =_this.getOption("validRules");
-        var nameCn = _this.getOption("nameCn");
         var required = _this.getOption("required");
-
-        var required_msg = _this.getOption("required-msg");
 
         if(validRules){
             var rules = [];

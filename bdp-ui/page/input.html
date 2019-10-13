@@ -24,7 +24,13 @@
                         名称
                     </td>
                     <td style="position: relative">
-                        <div id="name"  class="cc-Text" required="true" immediately="true"   model="1"validRules="xxxx:'','xxxx-msg':'[{0}]这是一个测xxxx校验'" initValue="dddddddddddddddd" nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                        <div id="name"  class="cc-Text" required="true" immediately="true"   model="1"  nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    </td>
+                    <td  class="vertical_center horizontal_center">
+                        数字
+                    </td>
+                    <td style="position: relative">
+                        <div id="email"  class="cc-Text" required="true" immediately="true"   model="1"validRules="min:5"  nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
                     </td>
                 </tr>
                <tr>
@@ -55,9 +61,9 @@
 <script type="text/javascript">
     function isValid() {
         var form = new _$.Form("#form");
-        var flag = form.isValid();
-        alert(flag)
-
+        form.isValid(function (flag) {
+            alert(flag)
+        });
     }
     function editModel() {
         var name = _$.getById("name");
