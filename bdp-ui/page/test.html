@@ -8,7 +8,7 @@
         var wait=function(){
             var dtd=$.Deferred();
             var tasks=function(){
-                dtd.resolve();
+                dtd.resolve("aaa");
             };
             setTimeout(tasks,5000);
             return dtd.promise();
@@ -17,7 +17,7 @@
         var wait1=function(){
             var dtd=$.Deferred();
             var tasks=function(){
-                dtd.resolve();
+                dtd.resolve("bbb");
             };
             setTimeout(tasks,2000);
             return dtd.promise();
@@ -26,9 +26,15 @@
         var arr = [];
         arr.push(wait())
         arr.push(wait1())
-        $.when(arr)
-            .done(function(){alert("success");})
-            .fail(function(){alert("error")});
+        $.when.apply(this,arr)
+        .done(function(){
+            for (var i = 0; i < arguments.length; i++) {
+                alert(arguments[i])
+            }
+        })
+        .fail(function(){
+            dtd.reject(err)
+        });
     </script>
 </head>
 <body>

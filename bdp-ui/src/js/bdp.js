@@ -279,7 +279,7 @@ $.extend(_$,{
             }
         }
     },
-    regPlugins(arr){
+    regPlugins:function(arr){
        _$.parser.plugins.addAll(arr);
     },
     getClass:function(pluginName){
@@ -1091,6 +1091,8 @@ _$.Component.prototype = {
 $.extend(_$,{
     "validator":{
         execute:function(id,name,value,nameCn,rule){
+
+            var dtd=$.Deferred();
             var _this = this;
             var type = rule["type"];
             var validMsg = isEmpty(rule["msg"]) ? _this.messages[type] : rule["msg"];
@@ -1107,8 +1109,14 @@ $.extend(_$,{
                 "validMsg":validMsg
             };
 
-
-            return handler.call(null,params);
+            $.when(handler.call(window,params))
+            .done(function(res){
+                dtd.resolve(res);
+            })
+            .fail(function(err){
+                dtd.reject(err)
+            });
+            return dtd.promise();
 
         },
         addMethod:function(name,func,msg){
@@ -1140,50 +1148,69 @@ $.extend(_$,{
             return source;
         },
         zeroHandler:function(params,func,names,type){
-
+            var dtd=$.Deferred();
             var value=params["value"];
             var nameCn=params["nameCn"];
             var validMsg=params["validMsg"];
-            var state = true;
-            var info = "";
+
 
             if (isEmpty(value) && type != 'required') {
-                state = true;
+                var res = {
+                    "state":true,
+                    "info":""
+                };
+                dtd.resolve(res);
             }else{
-                if (!func.call(null,value)) {
-                    state = false;
+                $.when(func.call(null,value))
+                .done(function(state){
                     if(isEmpty(names)){
                         names = [nameCn]
                     }
-                    info = _$.validator.format(validMsg, names);
-                }
+                    var info = _$.validator.format(validMsg, names);
+                    var res = {
+                        "state":state,
+                        "info":info
+                    };
+                    dtd.resolve(res);
+                })
+                .fail(function(err){
+                    dtd.reject(err)
+                });
             }
-            return {
-                "state":state,
-                "info":info
-            };
+
+
+            return dtd.promise();
         },
         oneHandler:function(params,func){
             var value=params["value"];
             var nameCn=params["nameCn"];
             var param=params["ruleValue"];
             var validMsg=params["validMsg"];
+            var dtd=$.Deferred();
 
-            var state = true;
-            var info = "";
             if (isEmpty(value)) {
-                state = true;
+                var res = {
+                    "state":true,
+                    "info":""
+                };
+                dtd.resolve(res);
             }else{
-                if (!func.call(null,value,param)) {
-                    state = false;
+                $.when(func.call(null,value,param))
+                .done(function(state){
                     var  names = [nameCn,param];
-                    info = _$.validator.format(validMsg, names);
-                }
+                    var info = _$.validator.format(validMsg, names);
+
+                    var res = {
+                        "state":state,
+                        "info":info
+                    };
+                    dtd.resolve(res);
+                })
+                .fail(function(err){
+                    dtd.reject(err)
+                });
             }
-            return {
-                "state":state,
-                "info":info
-            };
+            return dtd.promise();
         },
         twoHandler:function(params,func){
 
@@ -1191,26 +1218,35 @@ $.extend(_$,{
             var nameCn=params["nameCn"];
             var ruleValue=params["ruleValue"];
             var validMsg=params["validMsg"];
-            var state = true;
-            var info = "";
+            var dtd=$.Deferred();
 
             if (isEmpty(value)) {
-                state = true;
+                var res = {
+                    "state":true,
+                    "info":""
+                };
+                dtd.resolve(res);
             }else{
                 var arr = ruleValue.split(",");
                 var param1 = arr[0];
                 var param2 = arr[1];
 
-                if (!func.call(null,value,param1,param2)) {
-                    state = false;
-                    var names = [nameCn,param1,param2];
-                    info = _$.validator.format(validMsg, names);
-                }
+                $.when(func.call(null,value,param1,param2))
+                    .done(function(state){
+                        var names = [nameCn,param1,param2];
+                        var info = _$.validator.format(validMsg, names);
+
+                        var res = {
+                            "state":state,
+                            "info":info
+                        };
+                        dtd.resolve(res);
+                    })
+                    .fail(function(err){
+                        dtd.reject(err)
+                    });
+
             }
-            return {
-                "state":state,
-                "info":info
-            };
         },
         compareTo:function (val1,val2,format) {
             if(isNotEmpty(format)){
@@ -1243,201 +1279,301 @@ $.extend(_$,{
 
 
 _$.validator.addMethod("required",function(params){
-    return  _$.validator.zeroHandler(params,function(val){
-        return isNotEmpty(val);
+   return _$.validator.zeroHandler(params,function(val){
+       var dtd=$.Deferred();
+       var flag = isNotEmpty(val);
+       dtd.resolve(flag);
+       return dtd.promise();
     },null,"required");
 },"[{0}]必填");
 _$.validator.addMethod("email",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-        return reg.test(val);
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是有效的电子邮件地址");
 _$.validator.addMethod("password",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[A-Za-z0-9]{6,20}$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须由6-20位字母数字组成");
 _$.validator.addMethod("mobile",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^1\d{10}$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是有效的手机号");
 _$.validator.addMethod("tel",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^0\d{2,3}-?\d{7,8}$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是有效的座机号");
 _$.validator.addMethod("url",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^((https|http|ftp|rtsp|mms)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是有效的网址");
 _$.validator.addMethod("account",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[a-z0-9A-z]\w{5,9}$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是由6-10位字母和数字组成");
 _$.validator.addMethod("money",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /(^-?[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是有效的金钱格式");
 _$.validator.addMethod("number",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^(\-|\+)?\d+(\.\d+)?$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是数字");
 _$.validator.addMethod("integer",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[1-9]\d*$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是正整数");
 _$.validator.addMethod("positive",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^-?\d+$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是整数");
 _$.validator.addMethod("natural",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^\d+$/;
-        return reg.test(val);
+
+        var dtd=$.Deferred();
+        var flag = reg.test(val);
+        dtd.resolve(flag);
+        return dtd.promise();
     });
 },"[{0}]必须是自然数");
 _$.validator.addMethod("min",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
+        var dtd=$.Deferred();
+
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val > num) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]必须大于{1}");
 _$.validator.addMethod("minEq",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
+        var dtd=$.Deferred();
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val >= num) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]必须大于等于{1}");
 _$.validator.addMethod("max",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
+        var dtd=$.Deferred();
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val < num) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]必须小于{1}");
 _$.validator.addMethod("maxEq",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
+        var dtd=$.Deferred();
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val <= num) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]必须小于等于{1}");
 _$.validator.addMethod("minLength",function(params){
     return  _$.validator.oneHandler(params,function(val,min){
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length <= min) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
+        }else{
+            dtd.resolve(true);
+            return dtd.promise();
         }
-        return true;
     });
 },"[{0}]必须大于{1}个字符");
 _$.validator.addMethod("maxLength",function(params){
     return  _$.validator.oneHandler(params,function(val,max){
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length >= max) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
+        }else{
+            dtd.resolve(true);
+            return dtd.promise();
         }
-        return true;
     });
 },"[{0}]必须小于{1}个字符");
 _$.validator.addMethod("minLengthEq",function(params){
     return  _$.validator.oneHandler(params,function(val,min){
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length < min) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
+        }else{
+            dtd.resolve(true);
+            return dtd.promise();
         }
-        return true;
     });
 },"[{0}]必须大于等于{1}个字符");
 _$.validator.addMethod("maxLengthEq",function(params){
     return  _$.validator.oneHandler(params,function(val,max){
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length > max) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
+        }else{
+            dtd.resolve(true);
+            return dtd.promise();
         }
-        return true;
     });
 },"[{0}]必须小于等于{1}个字符");
 _$.validator.addMethod("rangeLength",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length < max && str.length > min) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]长度必须是大{1},小于{2}");
 _$.validator.addMethod("rangeLengthEq",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
-
+        var dtd=$.Deferred();
         var str = (val + "").trim();
         if (str.length <= max && str.length >= min) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]长度必须是大于{1},小于等于{2}");
 _$.validator.addMethod("range",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
+        var dtd=$.Deferred();
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val < max && val > min) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
+        }else{
+            dtd.resolve(true);
+            return dtd.promise();
         }
-        return true;
     });
 },"[{0}]必须大于{1},小于{2}");
 _$.validator.addMethod("rangeEq",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
+        var dtd=$.Deferred();
         if (isNaN(val)) {
-            return false;
+            dtd.resolve(false);
+            return dtd.promise();
         }
         val = parseFloat(val);
         if (val <= max && val >= min) {
-            return true;
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
         }
-        return false;
     });
 },"[{0}]必须是大于等于{1},小于等于{2}");
 _$.validator.addMethod("greaterEqThan",function(params){
@@ -1454,7 +1590,10 @@ _$.validator.addMethod("greaterEqThan",function(params){
 
         var names = [nameCn,nameCnTo];
         return  _$.validator.zeroHandler(params,function(val){
-            return _$.validator.compareTo(val,valueTo) >= 0;
+            var dtd=$.Deferred();
+            var result =_$.validator.compareTo(val,valueTo) >= 0;
+            dtd.resolve(result);
+            return dtd.promise();
         },names);
     }else if(arr.length == 2){
         var compareTo = arr[0];
@@ -1467,7 +1606,11 @@ _$.validator.addMethod("greaterEqThan",function(params){
 
         var names = [nameCn,nameCnTo];
         return  _$.validator.zeroHandler(params,function(val){
-            return _$.validator.compareTo(val,valueTo,format) >= 0;
+            var dtd=$.Deferred();
+            var result =_$.validator.compareTo(val,valueTo,format) >= 0;
+            dtd.resolve(result);
+            return dtd.promise();
+
         },names);
     }
 },"[{0}]必须大于等于[{1}]");
@@ -1485,7 +1628,10 @@ _$.validator.addMethod("greaterThan",function(params){
 
         var names = [nameCn,nameCnTo];
         return  _$.validator.zeroHandler(params,function(val){
-            return _$.validator.compareTo(val,valueTo) > 0;
+            var dtd=$.Deferred();
+            var result = _$.validator.compareTo(val,valueTo) > 0;
+            dtd.resolve(result);
+            return dtd.promise();
         },names);
     }else if(arr.length == 2){
         var compareTo = arr[0];
@@ -1498,10 +1644,90 @@ _$.validator.addMethod("greaterThan",function(params){
 
         var names = [nameCn,nameCnTo];
         return  _$.validator.zeroHandler(params,function(val){
-            return _$.validator.compareTo(val,valueTo,format) > 0;
+            var dtd=$.Deferred();
+            var result = _$.validator.compareTo(val,valueTo,format) > 0;
+            dtd.resolve(result);
+            return dtd.promise();
+
         },names);
     }
 },"[{0}]必须大于[{1}]");
+_$.validator.addMethod("lessEqThan",function(params){
+    var ruleValue=params["ruleValue"];
+    var arr = ruleValue.split(",");
+
+    if(arr.length == 1){
+        var compareTo = arr[0];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            var dtd=$.Deferred();
+            var result =_$.validator.compareTo(val,valueTo) <= 0;
+            dtd.resolve(result);
+            return dtd.promise();
+        },names);
+    }else if(arr.length == 2){
+        var compareTo = arr[0];
+        var format = arr[1];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            var dtd=$.Deferred();
+            var result =_$.validator.compareTo(val,valueTo,format) <= 0;
+            dtd.resolve(result);
+            return dtd.promise();
+
+        },names);
+    }
+},"[{0}]必须小于等于[{1}]");
+_$.validator.addMethod("lessThan",function(params){
+    var ruleValue=params["ruleValue"];
+    var arr = ruleValue.split(",");
+
+    if(arr.length == 1){
+        var compareTo = arr[0];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            var dtd=$.Deferred();
+            var result = _$.validator.compareTo(val,valueTo) < 0;
+            dtd.resolve(result);
+            return dtd.promise();
+        },names);
+    }else if(arr.length == 2){
+        var compareTo = arr[0];
+        var format = arr[1];
+        var objTo = _$.getById(compareTo)
+        var valueTo = objTo.getValue();
+
+        var nameCn=params["nameCn"];
+        var nameCnTo = objTo.getOption("nameCn");
+
+        var names = [nameCn,nameCnTo];
+        return  _$.validator.zeroHandler(params,function(val){
+            var dtd=$.Deferred();
+            var result = _$.validator.compareTo(val,valueTo,format) < 0;
+            dtd.resolve(result);
+            return dtd.promise();
+
+        },names);
+    }
+},"[{0}]必须小于[{1}]");
 _$.validator.addMethod("equalTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1515,8 +1741,10 @@ _$.validator.addMethod("equalTo",function(params){
 
     var names = [nameCn,nameCnTo];
     return  _$.validator.zeroHandler(params,function(val){
-
-        return _$.validator.compareTo(val,valueTo) == 0;
+        var dtd=$.Deferred();
+        var result = _$.validator.compareTo(val,valueTo) == 0;
+        dtd.resolve(result);
+        return dtd.promise();
     },names);
 },"[{0}]必须等于[{1}]");
 
@@ -1715,18 +1943,36 @@ _$.Form.prototype = {
     },
     isValid:function(hiddenFlag){
         var _this = this;
+        var dtd=$.Deferred();
+
         $("#validDiv").empty();
         hiddenFlag = hiddenFlag || false;
         _this.validState = true;
+
         var formItems = _this.getFields();
+
+        var arr = [];
         for(var i=0;i<formItems.length;i++){
             var obj = formItems[i];
-            var flag = obj.isValid(hiddenFlag);
-            if(_this.validState && !flag){
-                _this.validState = flag;
-            }
+            arr.push(obj.isValid(hiddenFlag));
         }
-        return _this.validState;
+
+        $.when.apply(this,arr)
+        .done(function(){
+            for (var i = 0; i < arguments.length; i++) {
+                var flag = arguments[i];
+               if(_this.validState && !flag){
+                   _this.validState = flag;
+                   break;
+               }
+            }
+            dtd.resolve(_this.validState);
+        })
+        .fail(function(err){
+            dtd.reject(err)
+        });
+
+        return dtd.promise();
     }
 };
 /**
@@ -2053,10 +2299,13 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     _validateItem:function(rule){
         var _this = this;
+
         var value = _this.getValue();
         var nameCn = _this.getOption("nameCn");
         var id = _this.id;
         var name = _this.getOption("name");
+
+
         return  _$.validator.execute(id,name,value,nameCn,rule);
     },
     /**
@@ -2176,28 +2425,45 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     validate:function (rules){
         var _this = this;
-        var v_flag = true;
-        var errMsg = [];
-
+        var dtd=$.Deferred();
         if(isNotEmpty(rules) && rules.length >= 0){
-
+            var arr=[];
             rules.each(function(rule){
-                var res = _this._validateItem(rule);
-
-                var state = res["state"];
-                var info = res["info"];
-
-                if(v_flag && !state){
-                    v_flag = state;
-                    errMsg.add(info);
-                }
+                arr.push(_this._validateItem(rule))
             });
-        }
+            $.when.apply(this,arr)
+                .done(function(){
+                    var v_flag = true;
+                    var errMsg = [];
+                    for (var i = 0; i < arguments.length; i++) {
+                        var res =  arguments[i];
+                        var state = res["state"];
+                        var info = res["info"];
 
-        return {
-            "flag": v_flag,
-            "errMsg": errMsg
-        };
+                        if(v_flag && !state){
+                            v_flag = state;
+                            errMsg.add(info);
+                        }
+                    }
+                    var result ={
+                        "flag": v_flag,
+                        "errMsg": errMsg
+                    };
+                    dtd.resolve(result);
+                })
+                .fail(function(err){
+                    dtd.reject(err)
+                });
+        }else{
+            setTimeout(function () {
+                var result ={
+                    "flag": true,
+                    "errMsg": []
+                };
+                dtd.resolve(result);
+            },50)
+        }
+        return dtd.promise();
     },
     /**
      * 组件校验,
@@ -2207,7 +2473,7 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     isValid:function(hiddenFlag){
         var _this = this;
-
+        var dtd=$.Deferred();
         if(!_this._isEdit() || !hiddenFlag  &&  !_this.el.is(":visible")){
             return true;
         }
@@ -2236,14 +2502,23 @@ _$.extend(_$.FormItem,_$.Component,{
                 }
             }
 
+            $.when(_this.validate(rules))
+            .done(function(res){
+                var flag = res.flag;
+                _this.errMsg = res.errMsg;
+                _this.setValid(flag);
+                dtd.resolve(flag);
+            })
+            .fail(function(err){
+                dtd.reject(err)
+            });
 
-            var res = _this.validate(rules);
-            var flag = res.flag;
-            _this.errMsg = res.errMsg;
-            _this.setValid(flag);
-            return flag;
+        }else{
+            setTimeout(function () {
+                dtd.resolve(true);
+            },50)
         }
-        return true;
+        return dtd.promise();
     },
     /**
      * 组件获取修改后的值,

@@ -6,8 +6,8 @@ var concat = require('gulp-concat');
 var jshintConfig = packageJSON.jshintConfig;
 var minifyCss = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
-
-
+var sourceMap = require('gulp-sourcemaps');
+var gutil = require('gulp-util');
 var workPath = "./src";
 var distPath =  "./lib/bdp/";
 
@@ -126,9 +126,19 @@ gulp.task('htmlCopy', function() {
 
 gulp.task('jsCopy', function() {
          gulp.src(jsPath)
+         .pipe(sourceMap.init())
         //.pipe(concat('cc.js'))
-       // .pipe(uglify())
-        .pipe(gulp.dest(distPath +'js'));
+        //.pipe(uglify())
+             .pipe(uglify({
+                     mangle:true,
+                     compress: true
+                 }
+             ))
+             .on('error', function (err) {
+                 gutil.log(gutil.colors.red('[Error]'), err.toString());
+             })
+             .pipe(sourceMap.write(distPath + 'maps'))
+             .pipe(gulp.dest(distPath +'js'));
 });
 
 gulp.task('default', function() {
