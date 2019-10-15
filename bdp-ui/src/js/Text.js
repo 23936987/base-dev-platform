@@ -39,7 +39,7 @@ _$.extend(_$.Text,_$.FormItem, {
         if(_this._isEdit()){
             var event = {
             };
-            event['value'] = _this.value;
+            event['value'] = _this.getValue();
             _this.component.bind("focus",function(e){
                 _this._focusHandler(event);
             });
