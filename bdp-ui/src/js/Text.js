@@ -31,17 +31,7 @@ _$.extend(_$.Text,_$.FormItem, {
             type:"text"
         });
     },
-    _editModel:function(){
-        var _this = this;
-        _this.setOption("model",_EDITABLE_);
-        _this._clearShow();
-        var source='<input type="{{type}}" class="Text"/>';
-        _this._replaceNode(source);
-        _this.component = $(".Text",_this.el);
-        _this._setStyle();
-        _this._bindEvents();
-        _this._init();
-    },
+
     _bindEvents:function(){
         var _this = this;
         _$.Text.superclass._bindEvents.call(_this);

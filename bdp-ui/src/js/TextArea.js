@@ -11,13 +11,7 @@
  */
 _$.TextArea=function (target,processKey){
     var _this = this;
-
-    var job1 = setInterval(function () {
-        if(_$.TextArea != null && _$.TextArea.superclass != null) {
-            clearInterval(job1);
-            _$.TextArea.superclass.constructor.call(_this,target,processKey);
-        }
-    },20)
+    _$.TextArea.superclass.constructor.call(_this,target,processKey);
 };
 _$.regClass("TextArea",_$.TextArea);
 

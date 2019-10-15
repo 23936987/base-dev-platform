@@ -644,13 +644,12 @@ $.extend(_$,{
                             var res = {};
                             res[componentName]=_$.basePath+"js/"+componentName+".js";
                             _$._loadCssAndJs(res,function(){
-                                var job1 = setInterval(function () {
+                                var time1 = setInterval(function () {
                                     Func =  _$.getClass(componentName);
-                                    if(!Func) {
-                                        return
+                                    if(Func != null && Func.superclass != null) {
+                                        clearInterval(time1);
+                                        new Func(target,processKey);
                                     }
-                                    clearInterval(job1);
-                                    new Func(target,processKey);
                                 },20)
                             });
                         })(componentName)
@@ -1395,7 +1394,7 @@ _$.validator.addMethod("natural",function(params){
         return dtd.promise();
     });
 },"[{0}]必须是自然数");
-_$.validator.addMethod("min",function(params){
+_$.validator.addMethod("greaterThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
 
@@ -1413,7 +1412,7 @@ _$.validator.addMethod("min",function(params){
         }
     });
 },"[{0}]必须大于{1}");
-_$.validator.addMethod("minEq",function(params){
+_$.validator.addMethod("greaterEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         if (isNaN(val)) {
@@ -1430,7 +1429,7 @@ _$.validator.addMethod("minEq",function(params){
         }
     });
 },"[{0}]必须大于等于{1}");
-_$.validator.addMethod("max",function(params){
+_$.validator.addMethod("lessThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         if (isNaN(val)) {
@@ -1447,7 +1446,7 @@ _$.validator.addMethod("max",function(params){
         }
     });
 },"[{0}]必须小于{1}");
-_$.validator.addMethod("maxEq",function(params){
+_$.validator.addMethod("lessEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         if (isNaN(val)) {
@@ -1464,58 +1463,59 @@ _$.validator.addMethod("maxEq",function(params){
         }
     });
 },"[{0}]必须小于等于{1}");
-_$.validator.addMethod("minLength",function(params){
-    return  _$.validator.oneHandler(params,function(val,min){
+
+_$.validator.addMethod("lengthGreaterThan",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         var str = (val + "").trim();
-        if (str.length <= min) {
-            dtd.resolve(false);
+        if (str.length > num) {
+            dtd.resolve(true);
             return dtd.promise();
         }else{
-            dtd.resolve(true);
+            dtd.resolve(false);
             return dtd.promise();
         }
     });
 },"[{0}]必须大于{1}个字符");
-_$.validator.addMethod("maxLength",function(params){
-    return  _$.validator.oneHandler(params,function(val,max){
+_$.validator.addMethod("lengthGreaterEqThan",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         var str = (val + "").trim();
-        if (str.length >= max) {
-            dtd.resolve(false);
-            return dtd.promise();
-        }else{
+        if (str.length >= num) {
             dtd.resolve(true);
             return dtd.promise();
-        }
-    });
-},"[{0}]必须小于{1}个字符");
-_$.validator.addMethod("minLengthEq",function(params){
-    return  _$.validator.oneHandler(params,function(val,min){
-        var dtd=$.Deferred();
-        var str = (val + "").trim();
-        if (str.length < min) {
-            dtd.resolve(false);
-            return dtd.promise();
         }else{
-            dtd.resolve(true);
+            dtd.resolve(false);
             return dtd.promise();
         }
     });
 },"[{0}]必须大于等于{1}个字符");
-_$.validator.addMethod("maxLengthEq",function(params){
-    return  _$.validator.oneHandler(params,function(val,max){
+_$.validator.addMethod("lengthGreaterThan",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
         var str = (val + "").trim();
-        if (str.length > max) {
-            dtd.resolve(false);
+        if (str.length < num) {
+            dtd.resolve(true);
             return dtd.promise();
         }else{
-            dtd.resolve(true);
+            dtd.resolve(false);
             return dtd.promise();
         }
     });
-},"[{0}]必须小于等于{1}个字符");
+},"[{0}]必须小于{1}个字符");
+_$.validator.addMethod("lengthGreaterEqThan",function(params){
+    return  _$.validator.oneHandler(params,function(val,num){
+        var dtd=$.Deferred();
+        var str = (val + "").trim();
+        if (str.length <= num) {
+            dtd.resolve(true);
+            return dtd.promise();
+        }else{
+            dtd.resolve(false);
+            return dtd.promise();
+        }
+    });
+},"[{0}]必须大于等于{1}个字符");
 _$.validator.addMethod("rangeLength",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
         var dtd=$.Deferred();
@@ -1551,10 +1551,10 @@ _$.validator.addMethod("range",function(params){
         }
         val = parseFloat(val);
         if (val < max && val > min) {
-            dtd.resolve(false);
+            dtd.resolve(true);
             return dtd.promise();
         }else{
-            dtd.resolve(true);
+            dtd.resolve(false);
             return dtd.promise();
         }
     });
@@ -1576,7 +1576,7 @@ _$.validator.addMethod("rangeEq",function(params){
         }
     });
 },"[{0}]必须是大于等于{1},小于等于{2}");
-_$.validator.addMethod("greaterEqThan",function(params){
+_$.validator.addMethod("greaterEqThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
 
@@ -1614,7 +1614,7 @@ _$.validator.addMethod("greaterEqThan",function(params){
         },names);
     }
 },"[{0}]必须大于等于[{1}]");
-_$.validator.addMethod("greaterThan",function(params){
+_$.validator.addMethod("greaterThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
 
@@ -1652,7 +1652,7 @@ _$.validator.addMethod("greaterThan",function(params){
         },names);
     }
 },"[{0}]必须大于[{1}]");
-_$.validator.addMethod("lessEqThan",function(params){
+_$.validator.addMethod("lessEqThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
 
@@ -1690,7 +1690,7 @@ _$.validator.addMethod("lessEqThan",function(params){
         },names);
     }
 },"[{0}]必须小于等于[{1}]");
-_$.validator.addMethod("lessThan",function(params){
+_$.validator.addMethod("lessThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
 
@@ -2584,4 +2584,4 @@ _$.extend(_$.FormItem,_$.Component,{
     }
 });
 
-_$.regPlugins(["Text","TextArea"]);
+_$.regPlugins(["TextInput","TextArea","Hidden"]);

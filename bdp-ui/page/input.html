@@ -18,22 +18,31 @@
                         编码
                     </td>
                     <td style="position: relative">
-                        <div id="code"  class="cc-Text" required="true"  immediately="true" nameCn="编码" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                        <div id="id"  class="cc-Hidden"  nameCn="id"   initValue="1" ></div>
+                        <div id="code"  class="cc-TextInput" required="true"  immediately="true" nameCn="编码" style="width:200px;height:30px;"   initValue="" data-options="" ></div>
                     </td>
 
                     <td  class="vertical_center horizontal_center">
                         名称
                     </td>
                     <td style="position: relative">
-                        <div id="name"  class="cc-Text" required="true" immediately="true"  validRules="lessEqThan:'code,yyyy-MM-dd'"  model="1"  nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                        <div id="name"  class="cc-TextInput" required="true" immediately="true"    model="1"  nameCn="用户名" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
                     </td>
 
-                    <!--<td  class="vertical_center horizontal_center">
+                    <td  class="vertical_center horizontal_center">
                         数字
                     </td>
                     <td style="position: relative">
-                        <div id="email"  class="cc-Text" required="true" immediately="true"   model="1"validRules="min:10"  nameCn="数字" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
-                    </td>-->
+                        <div id="email"  class="cc-TextInput" required="true" immediately="true"   model="1" validRules="greaterThan:10"  nameCn="数字" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="vertical_center horizontal_center">
+                        备注
+                    </td>
+                    <td>
+                        <div id="memo" class="cc-TextArea" style="width: 280px;height: 80px;"  immediately="true" required="true"  nameCn="备注" ></div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -53,6 +62,7 @@
 
 <!--#include file="/base/common.shtml"-->
 <script type="text/javascript">
+
     function isValid() {
         var form = new _$.Form("#form");
         form.isValid().done(function (flag) {
@@ -73,6 +83,7 @@
     function setValue() {
         var form = new _$.Form("#form");
         var data = {
+            "id":uuid(),
             "code":"11111",
             "name":"bbbb",
             "memo":"xxxxxxxxxxx"
