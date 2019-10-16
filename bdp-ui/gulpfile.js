@@ -31,8 +31,8 @@ gulp.task('imgCopy', function() {
 
 gulp.task('cssCopy', function() {
     gulp.src( workPath +'/css/*.css')
-        .pipe(concat('bdp.css'))
-        .pipe(minifyCss())
+        //.pipe(concat('bdp.css'))
+       // .pipe(minifyCss())
         .pipe(gulp.dest(distPath +'css'));
 });
 gulp.task('htmlCopy', function() {

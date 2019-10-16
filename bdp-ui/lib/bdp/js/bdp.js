@@ -683,7 +683,6 @@ $.extend(_$,{
                             res[componentName+"Js"]=_$.basePath+"js/"+componentName+".js";
                             res[componentName+"Css"]=_$.basePath+"css/"+componentName+".css";
 
-
                             _$._loadCssAndJs(res,function(){
                                 var time1 = setInterval(function () {
                                     Func =  _$.getClass(componentName);
@@ -2441,6 +2440,9 @@ _$.extend(_$.FormItem,_$.Component,{
 
         if(_this.validState){
             _this.errMsg=[];
+            _this.component.removeClass("validClass");
+        }else{
+            _this.component.addClass("validClass");
         }
         this._showErrMsg();
     },
