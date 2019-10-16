@@ -5,7 +5,7 @@
     <title>Title</title>
     <!--#include file="/base/common.shtml"-->
     <script type="text/javascript">
-        var wait=function(){
+       /* var wait=function(){
             var dtd=$.Deferred();
             var tasks=function(){
                 dtd.resolve("aaa");
@@ -34,10 +34,10 @@
         })
         .fail(function(){
             dtd.reject(err)
-        });
+        });*/
     </script>
 </head>
 <body>
-
+<input onkeyup="this.value=this.value.replace(/\D/g,'')" onblur="this.value=this.value.replace(/\D/g,'')">
 </body>
 </html>

@@ -19,7 +19,7 @@ _$.extendLoad(_$.Hidden,"Text", {
     _cls:_$._clsPre + "Hidden",
     _uiCls:_$._uiPreCls + "Hidden",
     _create :function(){
-        var _this = this;
+       /* var _this = this;
         var source='<div id="{{id}}" ><input type="hidden" class="Hidden" /> </div>';
 
         var template = Handlebars.compile(source);
@@ -30,7 +30,19 @@ _$.extendLoad(_$.Hidden,"Text", {
         _this.el.addClass(_this._uiCls);
         _this.el.attr("componentId",_this.uid);
         _this.component = $(".Hidden",_this.el);
+        _this._init();*/
+
+
+
+        var _this = this;
+        var source='<input type="hidden" class="Hidden" />';
+        _this._replaceNode(source);
+        _this.component = $(".TextInput",_this.el);
+        _this.el.attr("componentId",_this.uid);
+        _this.component = $(".Hidden",_this.el);
         _this._init();
+        _this.el.attr("formId",_this.id);
+
     },
     setValue:function(value) {
         var _this = this;

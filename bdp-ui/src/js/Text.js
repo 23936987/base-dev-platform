@@ -39,14 +39,16 @@ _$.extend(_$.Text,_$.FormItem, {
         if(_this._isEdit()){
             var event = {
             };
-            event['value'] = _this.getValue();
             _this.component.bind("focus",function(e){
+                event['value'] = _this.getValue();
                 _this._focusHandler(event);
             });
             _this.component.bind("input propertychange",function(){
+                event['value'] = _this.getValue();
                 _this._inputHandler(event);
             });
             _this.component.bind("blur",function(){
+                event['value'] = _this.getValue();
                 _this._blurHandler(event);
             });
         }

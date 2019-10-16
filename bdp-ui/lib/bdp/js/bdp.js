@@ -473,15 +473,16 @@ $.extend(_$,{
     parser:{
         parseOptions: function(target,properties){
             var options = {};
-            var s = $.trim(target.attr('data-options'));
-            if (s){
-                if (s.substring(0, 1) != '{'){
-                    s = '{' + s + '}';
+            var dataOptions = $.trim(target.attr('data-options'));
+            if (isNotEmpty(dataOptions)){
+                if (dataOptions.substring(0, 1) != '{'){
+                    dataOptions = '{' + dataOptions + '}';
                 }
-                options = (new Function('return ' + s))();
+                dataOptions = (new Function('return ' + dataOptions))();
+                $.extend(true,options,dataOptions)
             }
 
-            $.map(['width','height','minWidth','maxWidth','minHeight','maxHeight'], function(p){
+            $.map(['width','height'], function(p){
                 var pv = $.trim(target[0].style[p] || '');
                 if (pv){
                     if (pv.indexOf('%') == -1){
@@ -493,6 +494,42 @@ $.extend(_$,{
                     options[p] = pv;
                 }
             });
+
+            var validRules = $.trim(target.attr('validRules'));
+            if (isNotEmpty(validRules)){
+                if (validRules.substring(0, 1) != '{'){
+                    validRules = '{' + validRules + '}';
+                }
+                validRules = (new Function('return ' + validRules))();
+                options["validRules"]=validRules;
+            }else{
+                options["validRules"]={};
+            }
+            var vtype = $.trim(target.attr('vtype'));
+            if(isNotEmpty(vtype)){
+                var validRules = isEmpty(options["validRules"])?{}:options["validRules"];
+
+                if(vtype.indexOf(";") == -1 && vtype.indexOf(":") == -1){
+                    validRules[vtype] = true;
+                }else {
+                    var arr = vtype.split(";");
+                    if(arr != null && arr.length>0){
+                        for (var i = 0; i < arr.length; i++) {
+                            var item = arr[i];
+                            if(isNotEmpty(item)){
+                                if(item.indexOf(":") == -1) {
+                                    validRules[item] = true;
+                                }else {
+                                    var validItem = '{' + item + '}';
+                                    validItem = (new Function('return ' + validItem))();
+                                    $.extend(true,validRules,validItem);
+                                }
+                            }
+                        }
+                    }
+                }
+                options["validRules"]=validRules;
+            }
 
             if (properties){
                 var opts = {};
@@ -537,6 +574,7 @@ $.extend(_$,{
                 }
                 $.extend(options, opts);
             }
+
             return options;
         },
         processList:{},
@@ -642,7 +680,10 @@ $.extend(_$,{
                     }else{
                         (function (componentName) {
                             var res = {};
-                            res[componentName]=_$.basePath+"js/"+componentName+".js";
+                            res[componentName+"Js"]=_$.basePath+"js/"+componentName+".js";
+                            res[componentName+"Css"]=_$.basePath+"css/"+componentName+".css";
+
+
                             _$._loadCssAndJs(res,function(){
                                 var time1 = setInterval(function () {
                                     Func =  _$.getClass(componentName);
@@ -2033,7 +2074,6 @@ _$.extend(_$.FormItem,_$.Component,{
      *@type {Boolean}
      */
     validState:true,
-    initialization:false,
     setFormData:function (values,formId) {
         var _this = this;
         _this.formData[formId] = values;
@@ -2056,7 +2096,6 @@ _$.extend(_$.FormItem,_$.Component,{
         }else{
             _this._showModel();
         }
-        _this.initialization=true;
         _this.el.attr("formId",_this.id);
     },
     /**
@@ -2118,22 +2157,6 @@ _$.extend(_$.FormItem,_$.Component,{
         var _this = this;
         if(_this.component){
             _this.component.remove();
-        }
-    },
-
-    selectText:function (jq) {
-        var _this = this;
-        var val = jq.val() +"";
-        var len = val.length;
-        var obj =jq[0];
-        if(navigator.userAgent.indexOf("MSIE") > -1){
-            var range = document.selection.createRange();
-            var textRange = obj.createTextRange();
-            textRange.moveStart('character',len);
-            textRange.collapse();
-            textRange.select();
-        }else{
-            obj.setSelectionRange(0,len);
         }
     },
 
@@ -2224,13 +2247,6 @@ _$.extend(_$.FormItem,_$.Component,{
      * @type {Number}
      */
     /**
-     *  表单验证条件,参照_$.Validate
-     *
-     *  @for _$.FormItem
-     *  @property  validRules
-     * @type {JSON}
-     */
-    /**
      *  表单setValue格式化方法
      *
      *  @for _$.FormItem
@@ -2256,7 +2272,7 @@ _$.extend(_$.FormItem,_$.Component,{
         var _this = this;
         var properties = _$.FormItem.superclass._attrProps.call(_this);
         properties.addAll(['name',"onchange",'initValue','nameCn',"required-msg","qtype",
-            {'required':'boolean','immediately':'boolean',model: 'number',validRules:'json',userData:'json',"setValueFormat":"function","returnValue":"boolean"}]);
+            {'required':'boolean','immediately':'boolean',model: 'number',userData:'json',"setValueFormat":"function","returnValue":"boolean","changeOnInit":"boolean","index":"number"}]);
         return properties;
     },
     _attrOpts:function(){
@@ -2265,6 +2281,7 @@ _$.extend(_$.FormItem,_$.Component,{
         return $.extend(true,opts,{
             model:1,
             returnValue:true,
+            changeOnInit:false,
             immediately:false,
             "setValueFormat":function(data,value){
                 return value;
@@ -2317,7 +2334,7 @@ _$.extend(_$.FormItem,_$.Component,{
     _showErrMsg:function(){
         var _this = this;
         $(".form_item_valid",_this.el).html( _this.errMsg.join(","));
-        $("#validDiv").append( _this.errMsg.join(","));
+        $("#validDiv").append(_this.errMsg.join(",") + "," );
         _this._elHeight();
     },
     /**
@@ -2368,7 +2385,6 @@ _$.extend(_$.FormItem,_$.Component,{
         if(isEmpty(change)){
             change = true;
         }
-        var _this = this;
         if(isEmpty(value)){
             _this.value = null;
 
@@ -2385,11 +2401,22 @@ _$.extend(_$.FormItem,_$.Component,{
                 _this.component.html(value);
             }
         }
-
         if(change){
+            this.fireOnChange();
+        }
+    },
+    /**
+     *
+     * 触发onchange事件
+     */
+    fireOnChange:function(){
+        var _this = this;
+        var changeOnInit = _this.getOption("changeOnInit");
+
+        if (this.isLoaded() || changeOnInit) {
             var event = {};
-            event.value = _this.value;
-            _this._fire("onchange",event);
+            event.value = this.getValue();
+            _this._fire("onchange", event);
         }
     },
     /**
@@ -2440,9 +2467,11 @@ _$.extend(_$.FormItem,_$.Component,{
                         var state = res["state"];
                         var info = res["info"];
 
-                        if(v_flag && !state){
+                        if(!state){
                             v_flag = state;
-                            errMsg.add(info);
+                            if(isNotEmpty(info)){
+                                errMsg.add(info);
+                            }
                         }
                     }
                     var result ={

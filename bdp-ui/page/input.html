@@ -19,7 +19,7 @@
                     </td>
                     <td style="position: relative">
                         <div id="id"  class="cc-Hidden"  nameCn="id"   initValue="1" ></div>
-                        <div id="code"  class="cc-TextInput" required="true"  immediately="true" nameCn="编码" style="width:200px;height:30px;"   initValue="" data-options="" ></div>
+                        <div id="code"  class="cc-TextInput" required="true"  immediately="true" nameCn="编码" style="width:200px;height:30px;"   d="" data-options=""  onchange="onchangeHandler"></div>
                     </td>
 
                     <td  class="vertical_center horizontal_center">
@@ -32,8 +32,8 @@
                     <td  class="vertical_center horizontal_center">
                         数字
                     </td>
-                    <td style="position: relative">
-                        <div id="email"  class="cc-TextInput" required="true" immediately="true"   model="1" validRules="greaterThan:10"  nameCn="数字" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
+                    <td style="position: relative"> <!-- validRules="greaterThan:10"  -->
+                        <div id="email"  class="cc-TextInput" required="true" immediately="true"   model="1"  vtype="integer;greaterThan:10;'greaterThan-msg':'[{0}]必须大于{1}'" nameCn="数字" style="width:200px;height:30px;"   initValue="" data-options=""   ></div>
                     </td>
                 </tr>
                 <tr>
@@ -46,7 +46,9 @@
                 </tr>
                 </tbody>
             </table>
+            <
 
+            </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10" >
                     <input type="button" value="isValid" onclick="isValid()">
@@ -62,11 +64,13 @@
 
 <!--#include file="/base/common.shtml"-->
 <script type="text/javascript">
-
+   function onchangeHandler(e) {
+      // alert(e.value)
+   }
     function isValid() {
         var form = new _$.Form("#form");
         form.isValid().done(function (flag) {
-            alert("  ==== " + flag)
+            logger("  ==== " + flag)
         })
         .fail(function(err){
             logger(err)
@@ -86,6 +90,7 @@
             "id":uuid(),
             "code":"11111",
             "name":"bbbb",
+            "email":"cccc",
             "memo":"xxxxxxxxxxx"
         }
         form.setValue(data)
