@@ -15,7 +15,6 @@ _$._loadCssAndJs({
     "ComboSearchCss":_$.basePath + "css/ComboSearch.css"
 });
 
-
 _$.ComboSearch = function (target, processKey) {
     var _this = this;
     _$.ComboSearch.superclass.constructor.call(_this, target, processKey);
@@ -36,8 +35,6 @@ _$.extend(_$.ComboSearch, _$.Combo, {
         var opts = _$.ComboSearch.superclass._attrOpts.call(_this);
         return $.extend(true, opts, {
         });
-    },
-    _searchByTxt: function (searchTxt) {
     },
     _initPanel: function () {
         var _this = this;
@@ -86,6 +83,8 @@ _$.extend(_$.ComboSearch, _$.Combo, {
         }else{
             _this._searchByTxt("");
         }
+    },
+    _searchByTxt: function (searchTxt) {
     },
     _setPanelArea:function(width,height){
         var _this = this;

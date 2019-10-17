@@ -321,7 +321,19 @@ _$.extend(_$.Combo,_$.FormItem, {
     _showPanel:function () {
     },
     _comboDelete:function () {
-    }
+    },
+    setValid:function(flag){
+        var _this = this;
+        _this.validState = flag;
+
+        if(_this.validState){
+            _this.errMsg=[];
+            _this.combo_show.removeClass("validClass");
+        }else{
+            _this.combo_show.addClass("validClass");
+        }
+        this._showErrMsg();
+    },
 });
 
 var hideComboPanel=function(comboId){
@@ -333,10 +345,17 @@ var hideComboPanel=function(comboId){
     if(multiple || (isNotEmpty(combo.show_more) && combo.show_more.is(":visible"))){
         combo._hideMore();
     }
+    var validState = combo.validState;
+    if(validState){
+        combo_show.css({
+            "border-bottom":"1px solid #ccc"
+        });
+    }else{
+        combo_show.css({
+            "border-bottom":"1px solid #ff0000"
+        });
+    }
 
-    combo_show.css({
-        "border-bottom":"1px solid #ccc"
-    });
     panel.slideUp(speed);
 
     if(!multiple) {
@@ -378,9 +397,18 @@ var showComboPanel=function(comboId){
         var comboId2 = $(this).attr("comboId");
         hideComboPanel(comboId2);
     });
+
+
     combo_show.css({
-        "border-bottom":"0px solid #ccc"
+        "border-bottom":"0px"
     });
+    var validState = combo.validState;
+    if(validState){
+        panel.removeClass("validClass");
+    }else{
+        panel.addClass("validClass");
+    }
+
     if(!multiple) {
         combo.show_arrow.removeClass("icon_down").addClass("icon_up");
     }

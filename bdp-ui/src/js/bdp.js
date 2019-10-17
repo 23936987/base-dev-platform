@@ -1550,6 +1550,6 @@ _$.Form.prototype = {
     }
 };
 
-_$.regPlugins(["TextInput","TextArea","Hidden","Combo","ComboSearch"],{
+_$.regPlugins(["TextInput","TextArea","Hidden","Combo","ComboSearch","ComboBox","ComboData"],{
 
 });

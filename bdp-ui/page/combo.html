@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Combo</title>
 </head>
 <body>
 <div id="mainBodyContent">
@@ -28,6 +28,22 @@
                         <div id="combosearch"  class="cc-ComboSearch" required="true"  immediately="true" nameCn="combosearch" style="width:200px;height:30px;" ></div>
                     </td>
 
+                    <td  class="vertical_center horizontal_center">
+                        ComboBox
+                    </td>
+                    <td style="position: relative">
+                        <div id="combobox"  class="cc-ComboBox" required="true"  immediately="true" nameCn="combosearch" data="sexData"
+                             idField="code" textField="name"
+                             style="width:200px;height:30px;" ></div>
+                    </td>
+                    <td  class="vertical_center horizontal_center">
+                        combodata
+                    </td>
+                    <td style="position: relative">
+                        <div id="combodata"  class="cc-ComboData" required="true"  immediately="true" nameCn="ComboData" data="sexData"
+                             idField="code" textField="name" style="width:200px;height:30px;" ></div>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
@@ -47,6 +63,10 @@
 
 <!--#include file="/base/common.shtml"-->
 <script type="text/javascript">
+    var sexData = [
+        {"code":"01","name":"男"},
+        {"code":"02","name":"女"},
+    ];
    function onchangeHandler(e) {
       // alert(e.value)
    }

@@ -398,6 +398,13 @@ _$.extend(_$.FormItem,_$.Component,{
      */
     fireOnChange:function(){
         var _this = this;
+
+
+        var immediately = _this.getOption("immediately");
+        if(immediately){
+            _this.isValid(false);
+        }
+
         var changeOnInit = _this.getOption("changeOnInit");
 
         if (this.isLoaded() || changeOnInit) {
