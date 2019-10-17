@@ -9,13 +9,18 @@
  * @param {String} processKey 解析器key
  * @namespace _$
  */
+_$._loadCssAndJs({
+    "TextJs":_$.basePath + "js/Text.js",
+    "TextAreaCss":_$.basePath + "css/TextArea.css"
+});
 _$.TextArea=function (target,processKey){
     var _this = this;
     _$.TextArea.superclass.constructor.call(_this,target,processKey);
 };
 _$.regClass("TextArea",_$.TextArea);
 
-_$.extendLoad(_$.TextArea,"Text", {
+//_$.extendLoad(_$.TextArea,"Text", {
+_$.extend(_$.TextArea,_$.Text, {
     _cls:_$._clsPre + "TextArea",
     _uiCls:_$._uiPreCls + "TextArea",
     _editModel:function(){

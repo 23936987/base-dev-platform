@@ -186,6 +186,7 @@ $.extend(_$,{
             _$.extendCommon(childClass,parentClass,interfaces,props);
 
         }else{
+
             var res = {};
             res[parentClassName]=_$.basePath+"js/"+parentClassName+".js";
             _$._loadCssAndJs(res,function(){
@@ -279,8 +280,9 @@ $.extend(_$,{
             }
         }
     },
-    regPlugins:function(arr){
-       _$.parser.plugins.addAll(arr);
+    regPlugins:function(plugins,resources){
+       _$.parser.plugins=plugins;
+       _$.parser.resources=resources;
     },
     getClass:function(pluginName){
         var func = _$.classes[pluginName];
@@ -344,6 +346,10 @@ $.extend(_$,{
     },
     _loadCssAndJs:function(urls,func){
         var _this = this;
+        if (!func){
+            func = function () {
+            }
+        }
         var keys = _this.getKeys(urls);
         if(keys != null && keys.length>0){
             var length = keys.length;
@@ -441,7 +447,7 @@ $.extend(_$,{
     _loadJs:function(key,url,func){
         var _this = this;
         _this.jsLoaded[key] = _this._LOADING_;
-        var script = document.createElement("script");
+        /*var script = document.createElement("script");
         script.setAttribute("type", "text/javascript");
         script.src = url;
         document.getElementsByTagName("head")[0].appendChild(script);
@@ -450,7 +456,21 @@ $.extend(_$,{
                 _this.jsLoaded[key] = _this._SUCCESES_;
                 func.call(window);
             }
-        }
+        }*/
+
+        var jsObj = $.ajax({
+                url:url,
+                async: false
+            })
+        ;
+        var jsStr = jsObj.responseText;
+        eval(jsStr)
+
+        _this.jsLoaded[key] = _this._SUCCESES_;
+
+      /*  setTimeout(function () {
+            func.call(window);
+        },20);*/
     },
     _loadCss:function(key,url,func){
         var _this = this;
@@ -466,6 +486,17 @@ $.extend(_$,{
                 func.call(window);
             }
         }
+/*
+        var cssObj = $.ajax({
+                url:url,
+                async: false
+            })
+        ;
+        var cssStr = cssObj.responseText;
+        eval(cssStr);
+
+        _this.cssLoaded[key] = _this._SUCCESES_;
+        func.call(window);*/
     }
 });
 
@@ -579,6 +610,7 @@ $.extend(_$,{
         },
         processList:{},
         plugins:[],
+        resources:{},
         getProgress:function (processKey) {
             var process =  this.processList[processKey];
             return process;
@@ -647,6 +679,7 @@ $.extend(_$,{
                 return;
             }
             var components = {};
+
             for(var i=0; i<_$.parser.plugins.length; i++){
                 var name = _$.parser.plugins[i];
                 var list = $('.' + _$._clsPre + name, context);
@@ -680,18 +713,18 @@ $.extend(_$,{
                     }else{
                         (function (componentName) {
                             var res = {};
-                            res[componentName+"Js"]=_$.basePath+"js/"+componentName+".js";
-                            res[componentName+"Css"]=_$.basePath+"css/"+componentName+".css";
 
-                            _$._loadCssAndJs(res,function(){
-                                var time1 = setInterval(function () {
-                                    Func =  _$.getClass(componentName);
-                                    if(Func != null && Func.superclass != null) {
-                                        clearInterval(time1);
-                                        new Func(target,processKey);
-                                    }
-                                },20)
-                            });
+                            var path = _$.parser.resources[componentName];
+                            if(isEmpty(path)){
+                                path = _$.basePath;
+                            }
+
+                            res[componentName+"Js"]=path + "js/"+componentName+".js";
+                            _$._loadCssAndJs(res);
+                            Func =  _$.getClass(componentName);
+                            if(Func != null && Func.superclass != null) {
+                                new Func(target,processKey);
+                            }
                         })(componentName)
                     }
                 });
@@ -700,426 +733,6 @@ $.extend(_$,{
     }
 });
 
-/**
- * UI组件顶层父类
- *
- * @class Component
- * @constructor
- * @param {String,nodeType,jquery} target 选择器
- * @param {String} processKey 解析器key
- * @namespace _$
- */
-_$.Component = function(target,processKey){
-    var _this = this;
-    _this.processKey = processKey;
-    target = _$.getTarget(target);
-    _this.events={};
-    _this.el = target;
-    _this.uid = uuid();
-    _this.id = target.attr("id");
-
-    var opts = _this._attrOpts();
-    var properties = _this._attrProps();
-    _this.options = $.extend(true,opts,_$.parser.parseOptions(target,properties));
-
-    _$.reg(_this);
-    var res = _this._require();
-    _this._getEvents.call(_this, ["onloadsuccess"]);
-    _$._loadCssAndJs(res,function(){
-        _this._create();
-    });
-};
-
-
-/**
- *  组件加载完成
- *
- *  @for _$.Component
- *  @property onloadsuccess
- * @type Function
- */
-
-/**
- *  组件加载完成
- *
- *  @for _$.Component
- *  @event onloadsuccess
- * @param {Event} e 事件对象
- */
-
-
-_$.Component.prototype = {
-    /**
-     * 组件载体上下文
-     @for _$.Component
-     @property el
-     *@type {Boolean}
-     @final
-     */
-    el:null,
-    /**
-     *  判断对象是否扩展自Component构造器
-     @for _$.Component
-     @property isComponent  {Boolean}
-     @final
-     */
-    isComponent : true,
-    /**
-     *  ID
-     *
-     *  @for _$.Component
-     *  @property id
-     * @type Function
-     */
-    id:"",
-    uid:"",
-
-    component:null,
-    _cls:_$._clsPre + "component",
-    /**
-     *  组件Class
-     *
-     *  @for _$.Component
-     *  @property _uiCls
-     * @type Function
-     */
-    _uiCls:_$._uiPreCls + "component",
-    _LOADING_:'loading',
-    _LOAD_SUCCESS_:'success',
-    _LOADING_:'loading',
-    _LOAD_:'loading',
-
-    /**
-     *  组件依赖的资源文件,
-     *
-     *  @for _$.Component
-     *  @method _require
-     */
-    _require:function(){
-        var res = {};
-        return res;
-    },
-    /**
-     *  组件加载状态,
-     *
-     *  @for _$.Component
-     *  @method getStatus
-     */
-    getStatus:function(){
-        var _this = this;
-        return _this._LOAD_;
-    },
-    /**
-     *  组件是否加载完成,
-     *
-     *  @for _$.Component
-     *  @method isLoaded
-     */
-    isLoaded : function () {
-        var _this = this;
-        return _this._LOAD_ == _this._LOAD_SUCCESS_;
-    },
-    /**
-     *  组件渲染入口,
-     *
-     *  @for _$.Component
-     *  @method _create
-     */
-    _create:function(){},
-    /**
-     *  组件属性申明,
-     *
-     *  @for _$.Component
-     *  @method _attrProps
-     */
-    _attrProps:function(){
-        return ['id', 'remark',"onloadsuccess",{"plugins":"object"}];
-    },
-    /**
-     *  组件默认配置,
-     *
-     *  @for _$.Component
-     *  @method _attrOpts
-     */
-    _attrOpts:function(){
-        return {
-            "onloadsuccess":function() {
-            },
-            "plugins":{}
-        };
-    },
-    /**
-     *  组件设置css样式,
-     *
-     *  @for _$.Component
-     *  @method _setStyle
-     */
-    _setStyle:function(){
-    },
-    /**
-     *  组件解析自定义事件
-     *
-     *  @for _$.Component
-     *  @method _getEvents
-     * @param {Array} keys 事件类型
-     * @static
-     */
-    _getEvents:function(keys){
-        var _this = this;
-        $.map(keys, function(p){
-            var func = _this.getOption(p);
-            if(isNotEmpty(func)){
-                func = _$.getFunctoin(func);
-                _this._on(p,func);
-            }
-        });
-    },
-    /**
-     *  组件渲染完成后回调
-     *
-     *  @for _$.Component
-     *  @method _loadSuccess
-     */
-    _loadSuccess:function(){
-        var _this=this;
-        if(!_this.isLoaded()){
-            _this._LOAD_ =  _this._LOAD_SUCCESS_;
-            _$.parser.onComponentComplete.call(_$.parser,_this);
-        }
-        _this._fire("onloadsuccess");
-    },
-    _loadSuccessNoEvent:function(){
-        var _this=this;
-        if(!_this.isLoaded()){
-            _this._LOAD_ =  _this._LOAD_SUCCESS_;
-            _$.parser.onComponentComplete.call(_$.parser,_this);
-        }
-    },
-    /**
-     *  组件事件绑定
-     *
-     *  @for _$.Component
-     *  @method _bindEvents
-     */
-    _bindEvents:function(){},
-    /**
-     *  组件事件触发
-     *
-     *  @for _$.Component
-     *  @method _fire
-     * @param {String} type 事件类型
-     * @param {Object} e 事件对象
-     */
-    _fire : function(type, e) {
-        var _this = this;
-        type = type.toLowerCase();
-        for(var eventKey in _this.events){
-            if(eventKey == type){
-                var event = _this.events[eventKey];
-                _this._fireByEvent(event,eventKey,e);
-            }else if(eventKey.indexOf(".") != -1){
-                var arr = eventKey.split(".");
-                if(arr[1] == type){
-                    var event = _this.events[eventKey];
-                    _this._fireByEvent(event,eventKey,e);
-                }
-            }
-        }
-    },
-    /**
-     *  组件事件按配置触发
-     *
-     *  @for _$.Component
-     *  @method _fireByEvent
-     * @param {String} event 组件事件存储配置
-     * @param {String} type 事件类型
-     * @param {Object} e 事件对象
-     */
-    _fireByEvent:function(event,type,e){
-        var _this = this;
-
-        if (event) {
-            if (!e) {
-                e = {};
-            }
-            if (e && e != _this) {
-                e.source = _this;
-                if (!e.type) {
-                    e.type = type;
-                }
-                e.name = _this.name || _this.name;
-                e.id = _this.id;
-                e.name = _this.id;
-                e.source=_this;
-            }
-            for ( var c = 0, a = event.length; c < a; c++) {
-                var item = event[c];
-                if (item) {
-                    item[0].apply(item[1], [ e ]);
-                }
-            }
-        }
-    },
-    /**
-     *  组件事件注册
-     *
-     *  @for _$.Component
-     *  @method _on
-     * @param {String} type 事件类型
-     * @param {Function} fn 事件处理器
-     * @param {Object} scope 事件作用域
-     */
-    _on : function(type, fn, scope) {
-        var _this = this;
-        if (typeof fn == "string") {
-            var func = _$.getFunctoin(fn,scope);
-            if (func) {
-                fn = func;
-            }
-        }
-        if (typeof fn != "function" || !type) {
-            return false;
-        }
-        type = type.toLowerCase();
-        var event = _this.events[type];
-        if (!event) {
-            event = _this.events[type] = [];
-        }
-        scope = scope || _this;
-        if (!_this._findListener(type, fn, scope)) {
-            event.push([ fn, scope ]);
-            _this.events[type]=event;
-        }
-        return _this;
-    },
-    /**
-     *  组件按事件前缀注销
-     *
-     *  @for _$.Component
-     *  @method _unPrefix
-     * @param {String} prefix 事件类型前缀
-     */
-    _unPrefix:function (prefix) {
-        var _this = this;
-        for(var eventKey in _this.events){
-            if(eventKey.indexOf(".") != -1){
-                var arr = eventKey.split(".");
-                if(arr[0] == prefix){
-                    delete _this.events[eventKey];
-                }
-            }
-        }
-    },
-    /**
-     *  组件按事件类型注销
-     *
-     *  @for _$.Component
-     *  @method _un
-     * @param {String} prefix 事件类型前缀
-     */
-    _un : function(type, fn, scope) {
-        var _this = this;
-        if (typeof fn != "function") {
-            return false;
-        }
-        type = type.toLowerCase();
-        var event = _this.events[type];
-        if (event) {
-            scope = scope || _this;
-            var item = _this._findListener(type, fn, scope);
-            if (item) {
-                event.remove(item);
-            }
-        }
-        return _this;
-    },
-    /**
-     *  查询事件处理器
-     *
-     *  @for _$.Component
-     *  @method _findListener
-     * @param {String} type 事件类型
-     * @param {Function} func 事件处理器
-     * @param {Object} scope 事件作用域
-     */
-    _findListener : function(type, func, scope) {
-
-        var _this = this;
-        type = type.toLowerCase();
-        scope = scope || _this;
-        var event = _this.events[type];
-        if (event) {
-            for ( var i = 0; i < event.length ; i++) {
-                var item = event[i];
-                if (item[0] == func && item[1] == scope) {
-                    return item;
-                }
-            }
-        }
-    },
-    /**
-     *  替换组件原Dom对象
-     *
-     *  @for _$.Component
-     *  @method _replaceNode
-     * @param {String} source 新html
-     */
-    _replaceNode:function(source){
-        var _this = this;
-        var template = Handlebars.compile(source);
-        var result = template(_this.options);
-        var element = $(result);
-        _this.el.replaceWith(element);
-        _this.el = element;
-        _this.el.addClass(_this._uiCls);
-        _this.el.attr("componentId",_this.uid);
-    },
-    /**
-     *  修改组件配置
-     *
-     *  @for _$.Component
-     *  @method setOption
-     * @param {String} key 配置key
-     * @param {Object} value 配置value
-     */
-    setOption:function(key,value){
-        var _this = this;
-        _this.options[key]=value;
-    },
-    /**
-     *  获取组件配置
-     *
-     *  @for _$.Component
-     *  @method getOption
-     * @param {String} key 配置key
-     */
-    getOption:function(key){
-        var _this = this;
-        var value = _this.options[key];
-        return value;
-    },
-    /**
-     *  组件toString方法
-     *
-     *  @for _$.Component
-     *  @method toString
-     */
-    toString:function(){
-        var _this = this;
-        return _this.id;
-    },
-    /**
-     *  组件销毁方法
-     *
-     *  @for _$.Component
-     *  @method destroy
-     */
-    destroy : function() {
-        var _this = this;
-        this.el.remove();
-        _$.unReg(_this);
-    }
-};
 
 /**
  *   验证组件
@@ -2015,604 +1628,6 @@ _$.Form.prototype = {
         return dtd.promise();
     }
 };
-/**
- *  表单组件模块
- *
- * @submodule form
- * @module CC
- */
 
-/**
- *  表单组件父类
- * @class FormItem
- * @submodule form
- * @constructor
- * @extends _$.Component
- * @param {String,nodeType,jquery} target 选择器
- * @param {String} processKey 解析器key
- * @namespace _$
- */
-
-var _EDITABLE_ = 1;
-var _SHOW_ = 0;
-_$.FormItem = function(target,processKey){
-    var _this = this;
-    _$.FormItem.superclass.constructor.call(_this,target,processKey);
-};
-
-_$.extend(_$.FormItem,_$.Component,{
-    /**
-     * 判断组件是否是表单
-     @for _$.FormItem
-     @property isFormItem
-     *@type {Boolean}
-     */
-    isFormItem:true,
-    formData:{},
-    /**
-     * 组件取值
-     @for _$.FormItem
-     @property value
-     *@type {Object}
-     */
-    value:null,
-    /**
-     * 组件原值
-     @for _$.FormItem
-     @property value
-     *@type {Object}
-     */
-    orgiValue:null,
-    _uiCls:_$._uiPreCls + "FormItem",
-    _cls:_$._clsPre + "formItem",
-    _spanCls:_$._uiPreCls + "span",
-    /**
-     * 组件校验状态
-     @for _$.FormItem
-     @property validState
-     *@type {Boolean}
-     */
-    validState:true,
-    setFormData:function (values,formId) {
-        var _this = this;
-        _this.formData[formId] = values;
-    },
-    getFormData:function (formId) {
-        var _this = this;
-        return _this.formData[formId];
-    },
-    /**
-     * 组件校验失败信息
-     @for _$.FormItem
-     @property errMsg
-     *@type {Array}
-     */
-    errMsg:[],
-    _create :function(){
-        var _this = this;
-        if(_this._isEdit()){
-            _this._editModel();
-        }else{
-            _this._showModel();
-        }
-        _this.el.attr("formId",_this.id);
-    },
-    /**
-     *  组件编辑模式初始化,
-     *
-     *  @for _$.FormItem
-     *  @method _editModel
-     */
-    _editModel:function(){
-    },
-    /**
-     *  获取用户自定义数据,
-     *
-     *  @for _$.FormItem
-     *  @method getUserData
-     */
-    getUserData:function () {
-        var _this = this;
-        return _this.getOption("userData");
-    },
-    /**
-     *  组件展示模式初始化,
-     *
-     *  @for _$.FormItem
-     *  @method _editModel
-     */
-    _showModel:function(){
-        var _this = this;
-        _this.setOption("model",_SHOW_);
-        _this._clearEdit();
-        var source='<div class="showDiv"></div>';
-        _this._replaceNode(source);
-        _this.el.addClass(_this._spanCls);
-        _this.el.addClass("FormItem");
-        _this.component = $(".showDiv",_this.el);
-        _this._bindChangeEvents();
-        _this._init();
-    },
-    /**
-     *  清空编辑模式,
-     *
-     *  @for _$.FormItem
-     *  @method _clearEdit
-     */
-    _clearEdit:function(){
-        var _this = this;
-        if(_this.component){
-            _this.component.unbind();
-            _this.component.remove();
-        }
-    },
-    /**
-     *  清空展示模式,
-     *
-     *  @for _$.FormItem
-     *  @method _clearShow
-     */
-    _clearShow:function(){
-        var _this = this;
-        if(_this.component){
-            _this.component.remove();
-        }
-    },
-
-    _elHeight:function () {
-        var _this = this;
-        var height =_this.getOption('height');
-        if(isNotEmpty(height)){
-            var validDivHeight = $(".form_item_valid",_this.el).height();
-            var memoDivHeight = $(".form_item_memo",_this.el).height();
-            var elHeight = validDivHeight + memoDivHeight + height;
-            _this.el.height(elHeight);
-        }
-    },
-    _setStyle:function(){
-        var _this = this;
-        var width = _this.getOption('width');
-        if(isNotEmpty(width)){
-            _this.el.width(width);
-        }
-        _this._elHeight();
-    },
-    setWidth:function (width) {
-        var _this = this;
-        if(isNotEmpty(width)){
-            _this.el.width(width);
-        }
-    },
-    /**
-     *  初始化组件,
-     *
-     *  @for _$.FormItem
-     *  @method _init
-     */
-    _init:function(){
-        var _this = this;
-        if(isNotEmpty(_this.value)) {
-            _this.setValue(_this.value);
-        }else{
-            var initValue= _this.options["initValue"];
-            if(isNotEmpty(initValue)){
-                _this.setValue(initValue);
-                _this.orgiValue = initValue;
-            }
-        }
-
-        _this._loadSuccess();
-    },
-    /**
-     *  表单name属性
-     *
-     *  @for _$.FormItem
-     *  @property name
-     * @type String
-     */
-    /**
-     *  表单initValue默认值
-     *
-     *  @for _$.FormItem
-     *  @property initValue
-     * @type {Object}
-     */
-    /**
-     *  表单中文说明
-     *
-     *  @for _$.FormItem
-     *  @property nameCn
-     * @type {String}
-     */
-    /**
-     *  是否必填
-     *
-     *  @for _$.FormItem
-     *  @property required
-     * @type {String}
-     */
-    /**
-     *  必填验证提示消息
-     *
-     *  @for _$.FormItem
-     *  @property required-msg
-     * @type {String}
-     */
-    /**
-     *  表单模式 1 编辑模式,2 展示模式
-     *
-     *  @for _$.FormItem
-     *  @property  model
-     * @type {Number}
-     */
-    /**
-     *  表单setValue格式化方法
-     *
-     *  @for _$.FormItem
-     *  @property  setValueFormat
-     * @type {Function}
-     */
-    /**
-     *  监控change事件
-     *
-     *  @for _$.FormItem
-     *  @property  onchange
-     * @type {Function}
-     */
-    /**
-     *  监控change事件
-     *
-     *  @for _$.FormItem
-     *  @event onchange
-     * @param {Event} e 事件对象
-     */
-
-    _attrProps:function(){
-        var _this = this;
-        var properties = _$.FormItem.superclass._attrProps.call(_this);
-        properties.addAll(['name',"onchange",'initValue','nameCn',"required-msg","qtype",
-            {'required':'boolean','immediately':'boolean',model: 'number',userData:'json',"setValueFormat":"function","returnValue":"boolean","changeOnInit":"boolean","index":"number"}]);
-        return properties;
-    },
-    _attrOpts:function(){
-        var _this = this;
-        var opts = _$.FormItem.superclass._attrOpts.call(_this);
-        return $.extend(true,opts,{
-            model:1,
-            returnValue:true,
-            changeOnInit:false,
-            immediately:false,
-            "setValueFormat":function(data,value){
-                return value;
-            }
-        });
-    },
-    /**
-     *  判断组件是否编辑模式,
-     *
-     *  @for _$.FormItem
-     *  @method _isEdit
-     */
-    _isEdit:function(){
-        var _this = this;
-        return _this.options.model == _EDITABLE_;
-    },
-    /**
-     *  从组件中获取现取值,
-     *
-     *  @for _$.FormItem
-     *  @method _sync
-     */
-    _sync:function(){
-        var _this = this;
-        _this.value =  _this.component.val();
-    },
-    /**
-     *  校验组件,
-     *
-     *  @for _$.FormItem
-     *  @method _validateItem
-     */
-    _validateItem:function(rule){
-        var _this = this;
-
-        var value = _this.getValue();
-        var nameCn = _this.getOption("nameCn");
-        var id = _this.id;
-        var name = _this.getOption("name");
-
-
-        return  _$.validator.execute(id,name,value,nameCn,rule);
-    },
-    /**
-     *  展示错误信息,
-     *
-     *  @for _$.FormItem
-     *  @method _showErrMsg
-     */
-    _showErrMsg:function(){
-        var _this = this;
-        $(".form_item_valid",_this.el).html( _this.errMsg.join(","));
-        $("#validDiv").append(_this.errMsg.join(",") + "," );
-        _this._elHeight();
-    },
-    /**
-     *  渲染组件,
-     *
-     *  @for _$.FormItem
-     *  @method _replaceNode
-     * @param {String} temp 组件html
-     */
-    _replaceNode:function(temp){
-        var _this = this;
-        var source='<div id="{{id}}" >'+ temp +'<div class="form_item_valid"></div><div class="form_item_memo">{{remark}}</div><div style="clear:both;"></div></div>';
-
-        if(_this._isEdit()){
-            source='<div id="{{id}}" >'+ temp +'<div class="form_item_valid"></div><div class="form_item_memo">{{remark}}</div><div style="clear:both;"></div></div>';
-        }else{
-            source='<div id="{{id}}" >'+ temp +'</div>';
-        }
-        var template = Handlebars.compile(source);
-        var result = template(_this.options);
-        var element = $(result);
-        _this.el.replaceWith(element);
-        _this.el = element;
-        _this.el.addClass(_this._uiCls);
-        _this.el.addClass("FormItem");
-        _this.el.attr("componentId",_this.uid);
-    },
-    /**
-     *  组件返回默认值,
-     *
-     *  @for _$.FormItem
-     *  @method reset
-     */
-    reset:function(){
-        var _this = this;
-        _this.setValue(_this.orgiValue);
-    },
-    /**
-     *  组件设置值,
-     *
-     *  @for _$.FormItem
-     *  @method setValue
-     * @param {Object} value 组件设置值
-     * @param {Boolean} change 是否触发onchange事件
-     */
-    setValue:function(value,change) {
-        var _this = this;
-        if(isEmpty(change)){
-            change = true;
-        }
-        if(isEmpty(value)){
-            _this.value = null;
-
-            if (_this._isEdit()) {
-                _this.component.val("");
-            } else {
-                _this.component.html("");
-            }
-        }else{
-            _this.value = value;
-            if (_this._isEdit()) {
-                _this.component.val(value);
-            } else {
-                _this.component.html(value);
-            }
-        }
-        if(change){
-            this.fireOnChange();
-        }
-    },
-    /**
-     *
-     * 触发onchange事件
-     */
-    fireOnChange:function(){
-        var _this = this;
-        var changeOnInit = _this.getOption("changeOnInit");
-
-        if (this.isLoaded() || changeOnInit) {
-            var event = {};
-            event.value = this.getValue();
-            _this._fire("onchange", event);
-        }
-    },
-    /**
-     * 获取设置值,
-     *
-     *  @for _$.FormItem
-     *  @method getValue
-     */
-    getValue:function(){
-        var _this = this;
-        return _this.value;
-    },
-    /**
-     * 组件设置校验状态,
-     *
-     *  @for _$.FormItem
-     *  @method setValid
-     */
-    setValid:function(flag){
-        var _this = this;
-        _this.validState = flag;
-
-        if(_this.validState){
-            _this.errMsg=[];
-            _this.component.removeClass("validClass");
-        }else{
-            _this.component.addClass("validClass");
-        }
-        this._showErrMsg();
-    },
-    /**
-     * 组件校验,
-     *
-     *  @for _$.FormItem
-     *  @method validate
-     */
-    validate:function (rules){
-        var _this = this;
-        var dtd=$.Deferred();
-        if(isNotEmpty(rules) && rules.length >= 0){
-            var arr=[];
-            rules.each(function(rule){
-                arr.push(_this._validateItem(rule))
-            });
-            $.when.apply(this,arr)
-                .done(function(){
-                    var v_flag = true;
-                    var errMsg = [];
-                    for (var i = 0; i < arguments.length; i++) {
-                        var res =  arguments[i];
-                        var state = res["state"];
-                        var info = res["info"];
-
-                        if(!state){
-                            v_flag = state;
-                            if(isNotEmpty(info)){
-                                errMsg.add(info);
-                            }
-                        }
-                    }
-                    var result ={
-                        "flag": v_flag,
-                        "errMsg": errMsg
-                    };
-                    dtd.resolve(result);
-                })
-                .fail(function(err){
-                    dtd.reject(err)
-                });
-        }else{
-            setTimeout(function () {
-                var result ={
-                    "flag": true,
-                    "errMsg": []
-                };
-                dtd.resolve(result);
-            },50)
-        }
-        return dtd.promise();
-    },
-    /**
-     * 组件校验,
-     *
-     *  @for _$.FormItem
-     *  @method isValid
-     */
-    isValid:function(hiddenFlag){
-        var _this = this;
-        var dtd=$.Deferred();
-        if(!_this._isEdit() || !hiddenFlag  &&  !_this.el.is(":visible")){
-            return true;
-        }
-        var validRules =_this.getOption("validRules");
-        var required = _this.getOption("required");
-
-        if(validRules){
-            var rules = [];
-            if(required == true){
-                var required_rule = {};
-                required_rule["type"] = "required";
-                required_rule["value"] = validRules["required"];
-                required_rule["msg"] = validRules["required-msg"];
-                rules.add(required_rule);
-            }
-
-
-            for(var key in validRules){
-                if(!key.endWith("msg")){
-                    var rule = {};
-                    rule["type"] = key;
-                    rule["value"] = validRules[key];
-                    rule["msg"] = validRules[key + "-msg"];
-
-                    rules.add(rule);
-                }
-            }
-
-            $.when(_this.validate(rules))
-            .done(function(res){
-                var flag = res.flag;
-                _this.errMsg = res.errMsg;
-                _this.setValid(flag);
-                dtd.resolve(flag);
-            })
-            .fail(function(err){
-                dtd.reject(err)
-            });
-
-        }else{
-            setTimeout(function () {
-                dtd.resolve(true);
-            },50)
-        }
-        return dtd.promise();
-    },
-    /**
-     * 组件获取修改后的值,
-     *
-     *  @for _$.FormItem
-     *  @method getEditValue
-     */
-    getEditValue:function(values){
-        var _this = this;
-        var orgiValue =  _this.orgiValue;
-        var current = _this.getValue();
-        var key =  _this.id;
-        if(isEmpty(orgiValue) && isNotEmpty(current)){
-            values[key] = current;
-        }else if(isNotEmpty(orgiValue) && isEmpty(current)){
-            values[key] = null;
-        }else if(isNotEmpty(orgiValue) && isNotEmpty(current) && (orgiValue != current)){
-            values[key] = current;
-        }
-    },
-    /**
-     * 组件设置模式,
-     *
-     *  @for _$.FormItem
-     *  @method setModel
-     */
-    setModel:function(model){
-        var _this = this;
-        if(_this.options.model == _SHOW_ && model == _EDITABLE_){
-            _this._editModel();
-        }else if(_this.options.model == _EDITABLE_ &&  model == _SHOW_){
-            _this._showModel();
-        }
-    },
-    /**
-     * 为控件绑定事件
-     *
-     *  @for _$.FormItem
-     *  @method _bindChangeEvents
-     */
-    _bindEvents:function(){
-        var _this = this;
-        _this._bindChangeEvents();
-    },
-    /**
-     * 组件绑定onchange事件
-     *
-     *  @for _$.FormItem
-     *  @method _bindChangeEvents
-     */
-    _bindChangeEvents:function () {
-        var _this = this;
-        _$.FormItem.superclass._getEvents.call(_this, ["onchange"]);
-    },
-    destroy : function() {
-        var _this = this;
-        if(_this._isEdit()){
-            _this._clearEdit();
-        }else{
-            _this._clearShow();
-        }
-        _$.FormItem.superclass.destroy.call(_this);
-    }
+_$.regPlugins(["TextInput","TextArea","Hidden","Combo"],{
 });
-
-_$.regPlugins(["TextInput","TextArea","Hidden"]);

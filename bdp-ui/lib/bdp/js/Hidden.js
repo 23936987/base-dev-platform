@@ -9,13 +9,18 @@
  * @param {String} processKey 解析器key
  * @namespace _$
  */
+_$._loadCssAndJs({
+    "TextJs":_$.basePath + "js/Text.js",
+    "HiddenCss":_$.basePath + "css/Hidden.css"
+});
 _$.Hidden=function (target,processKey){
     var _this = this;
     _$.Hidden.superclass.constructor.call(_this,target,processKey);
 };
 _$.regClass("Hidden",_$.Hidden);
 
-_$.extendLoad(_$.Hidden,"Text", {
+//_$.extendLoad(_$.Hidden,"Text", {
+_$.extend(_$.Hidden,_$.Text, {
     _cls:_$._clsPre + "Hidden",
     _uiCls:_$._uiPreCls + "Hidden",
     _create :function(){

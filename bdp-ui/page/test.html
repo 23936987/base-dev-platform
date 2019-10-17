@@ -3,38 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!--#include file="/base/common.shtml"-->
+    <script type="text/javascript" src="/lib/jquery/jquery-1.10.2.min.js"></script>
     <script type="text/javascript">
-       /* var wait=function(){
-            var dtd=$.Deferred();
-            var tasks=function(){
-                dtd.resolve("aaa");
-            };
-            setTimeout(tasks,5000);
-            return dtd.promise();
-        };
 
-        var wait1=function(){
-            var dtd=$.Deferred();
-            var tasks=function(){
-                dtd.resolve("bbb");
-            };
-            setTimeout(tasks,2000);
-            return dtd.promise();
-        };
 
-        var arr = [];
-        arr.push(wait())
-        arr.push(wait1())
-        $.when.apply(this,arr)
-        .done(function(){
-            for (var i = 0; i < arguments.length; i++) {
-                alert(arguments[i])
-            }
-        })
-        .fail(function(){
-            dtd.reject(err)
-        });*/
+       var htmlObj = $.ajax({
+           url:"xxxxxxxxxxx.js",
+           async: false
+       });
+
+       var jsStr = htmlObj.responseText;
+       eval(jsStr)
+
+        test("3333")
+
     </script>
 </head>
 <body>

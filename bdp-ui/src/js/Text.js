@@ -9,12 +9,19 @@
  * @param {String} processKey 解析器key
  * @namespace _$
  */
+_$._loadCssAndJs({
+    "FormItemJs":_$.basePath + "js/FormItem.js",
+    "TextCss":_$.basePath + "css/Text.css"
+});
+
+
 _$.Text=function (target,processKey){
     var _this = this;
     _$.Text.superclass.constructor.call(_this,target,processKey);
 };
 _$.regClass("Text",_$.Text);
 
+//_$.extendLoad(_$.Text,"FormItem", {
 _$.extend(_$.Text,_$.FormItem, {
     _cls:_$._clsPre + "Text",
     _uiCls:_$._uiPreCls + "Text",
@@ -66,7 +73,6 @@ _$.extend(_$.Text,_$.FormItem, {
         if(immediately){
             _this.isValid(false);
         }
-
         _this._fire("onblur",event);
         _this._fire("onchange",event);
     },
@@ -80,6 +86,7 @@ _$.extend(_$.Text,_$.FormItem, {
     _inputHandler:function(event){
         var _this = this;
         _this._fire("oninput",event)
+        _this._fire("onchange",event);
     },
     /**
      *  focus 事件处理器
