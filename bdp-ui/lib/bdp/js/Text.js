@@ -21,7 +21,6 @@ _$.Text=function (target,processKey){
 };
 _$.regClass("Text",_$.Text);
 
-//_$.extendLoad(_$.Text,"FormItem", {
 _$.extend(_$.Text,_$.FormItem, {
     _cls:_$._clsPre + "Text",
     _uiCls:_$._uiPreCls + "Text",

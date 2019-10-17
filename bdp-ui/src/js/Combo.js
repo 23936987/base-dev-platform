@@ -21,7 +21,6 @@ _$.Combo=function (target,processKey){
 };
 _$.regClass("Combo",_$.Combo);
 
-//_$.extendLoad(_$.Combo,"FormItem", {
 _$.extend(_$.Combo,_$.FormItem, {
     _cls:_$._clsPre + "Combo",
     _uiCls:_$._uiPreCls + "Combo",
@@ -101,8 +100,8 @@ _$.extend(_$.Combo,_$.FormItem, {
         _this._setStyle();
         _this._initPanel();
          hideComboPanel(_this.id);
-        _this._bindSingleEvents();
         _this._bindPanelEvents();
+        _this._bindSingleEvents();
     },
     _createMulti:function(){
         var _this = this;

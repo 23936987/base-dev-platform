@@ -19,7 +19,6 @@ _$.TextInput=function (target,processKey){
 };
 _$.regClass("TextInput",_$.TextInput);
 
-//_$.extendLoad(_$.TextInput,"Text", {
 _$.extend(_$.TextInput,_$.Text, {
     _cls:_$._clsPre + "TextInput",
     _uiCls:_$._uiPreCls + "TextInput",

@@ -19,7 +19,6 @@ _$.TextArea=function (target,processKey){
 };
 _$.regClass("TextArea",_$.TextArea);
 
-//_$.extendLoad(_$.TextArea,"Text", {
 _$.extend(_$.TextArea,_$.Text, {
     _cls:_$._clsPre + "TextArea",
     _uiCls:_$._uiPreCls + "TextArea",

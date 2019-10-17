@@ -154,57 +154,6 @@ $.extend(_$,{
 
          _$.extendCommon(childClass,parentClass,interfaces,props);
     },
-
-    extendLoad: function() {
-
-        var childClass, parentClassName,parentClass,interfaces,props;
-
-        childClass = arguments[0];
-        parentClassName = arguments[1];
-
-        if(arguments.length == 3){
-            props = arguments[2];
-            interfaces = [];
-        }else if(arguments.length == 4){
-            interfaces = arguments[2];
-            props = arguments[3];
-        }else{
-            alert("继承方法参数不对");
-            return;
-        }
-
-        parentClass =  _$.getClass(parentClassName);
-        if(parentClass != null) {
-            var childProps = childClass.prototype, parentProps = parentClass.prototype;
-            if (childClass.superclass == parentProps) {
-                return;
-            }
-
-            childClass.superclass = parentProps;
-            childClass.superclass.constructor = parentClass;
-
-            _$.extendCommon(childClass,parentClass,interfaces,props);
-
-        }else{
-
-            var res = {};
-            res[parentClassName]=_$.basePath+"js/"+parentClassName+".js";
-            _$._loadCssAndJs(res,function(){
-
-                parentClass =  _$.getClass(parentClassName);
-                var parentProps = parentClass.prototype;
-                if (childClass.superclass == parentProps) {
-                    return;
-                }
-
-                childClass.superclass = parentProps;
-                childClass.superclass.constructor = parentClass;
-
-                _$.extendCommon(childClass,parentClass,interfaces,props);
-            });
-        }
-    },
-
     implements:function () {
         var childClass,interfaces,props;
         if(arguments.length == 2){
@@ -447,30 +396,13 @@ $.extend(_$,{
     _loadJs:function(key,url,func){
         var _this = this;
         _this.jsLoaded[key] = _this._LOADING_;
-        /*var script = document.createElement("script");
-        script.setAttribute("type", "text/javascript");
-        script.src = url;
-        document.getElementsByTagName("head")[0].appendChild(script);
-        script.onload = script.onreadystatechange = function(){
-            if (!this.readyState || 'loaded' === this.readyState || 'complete' === this.readyState) {
-                _this.jsLoaded[key] = _this._SUCCESES_;
-                func.call(window);
-            }
-        }*/
-
         var jsObj = $.ajax({
                 url:url,
                 async: false
-            })
-        ;
+            });
         var jsStr = jsObj.responseText;
-        eval(jsStr)
-
+        eval(jsStr);
         _this.jsLoaded[key] = _this._SUCCESES_;
-
-      /*  setTimeout(function () {
-            func.call(window);
-        },20);*/
     },
     _loadCss:function(key,url,func){
         var _this = this;
@@ -486,17 +418,6 @@ $.extend(_$,{
                 func.call(window);
             }
         }
-/*
-        var cssObj = $.ajax({
-                url:url,
-                async: false
-            })
-        ;
-        var cssStr = cssObj.responseText;
-        eval(cssStr);
-
-        _this.cssLoaded[key] = _this._SUCCESES_;
-        func.call(window);*/
     }
 });
 
@@ -1629,5 +1550,6 @@ _$.Form.prototype = {
     }
 };
 
-_$.regPlugins(["TextInput","TextArea","Hidden","Combo"],{
+_$.regPlugins(["TextInput","TextArea","Hidden","Combo","ComboSearch"],{
+
 });
