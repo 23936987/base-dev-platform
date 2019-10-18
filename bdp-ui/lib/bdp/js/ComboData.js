@@ -45,18 +45,6 @@ _$.extend(_$.ComboData,_$.ComboBox, {
             'data':{}
         });
     },
-    _initShow:function(value){
-        var _this = this;
-        var list = _this.getOption("data");
-        _this.data = list;
-        var initValue= _this.options["initValue"];
-        if(isNotEmpty(_this.value)){
-            _this.setValue(_this.value);
-        }else{
-            _this.setValue(initValue);
-        }
-        _this._loadSuccess();
-    },
     _init:function(){
         var _this = this;
         var list = _this.getOption("data");

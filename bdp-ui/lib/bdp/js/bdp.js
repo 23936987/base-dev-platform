@@ -858,7 +858,7 @@ _$.validator.addMethod("required",function(params){
        dtd.resolve(flag);
        return dtd.promise();
     },null,"required");
-},"[{0}]必填");
+},"{0}必填");
 _$.validator.addMethod("email",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -867,7 +867,7 @@ _$.validator.addMethod("email",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是有效的电子邮件地址");
+},"{0}必须是有效的电子邮件地址");
 _$.validator.addMethod("password",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[A-Za-z0-9]{6,20}$/;
@@ -877,7 +877,7 @@ _$.validator.addMethod("password",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须由6-20位字母数字组成");
+},"{0}必须由6-20位字母数字组成");
 _$.validator.addMethod("mobile",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^1\d{10}$/;
@@ -887,7 +887,7 @@ _$.validator.addMethod("mobile",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是有效的手机号");
+},"{0}必须是有效的手机号");
 _$.validator.addMethod("tel",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^0\d{2,3}-?\d{7,8}$/;
@@ -897,7 +897,7 @@ _$.validator.addMethod("tel",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是有效的座机号");
+},"{0}必须是有效的座机号");
 _$.validator.addMethod("url",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^((https|http|ftp|rtsp|mms)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
@@ -907,7 +907,7 @@ _$.validator.addMethod("url",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是有效的网址");
+},"{0}必须是有效的网址");
 _$.validator.addMethod("account",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[a-z0-9A-z]\w{5,9}$/;
@@ -917,7 +917,7 @@ _$.validator.addMethod("account",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是由6-10位字母和数字组成");
+},"{0}必须是由6-10位字母和数字组成");
 _$.validator.addMethod("money",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /(^-?[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
@@ -927,7 +927,7 @@ _$.validator.addMethod("money",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是有效的金钱格式");
+},"{0}必须是有效的金钱格式");
 _$.validator.addMethod("number",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^(\-|\+)?\d+(\.\d+)?$/;
@@ -937,7 +937,7 @@ _$.validator.addMethod("number",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是数字");
+},"{0}必须是数字");
 _$.validator.addMethod("integer",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^[1-9]\d*$/;
@@ -947,7 +947,7 @@ _$.validator.addMethod("integer",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是正整数");
+},"{0}必须是正整数");
 _$.validator.addMethod("positive",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^-?\d+$/;
@@ -957,7 +957,7 @@ _$.validator.addMethod("positive",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是整数");
+},"{0}必须是整数");
 _$.validator.addMethod("natural",function(params){
     return  _$.validator.zeroHandler(params,function(val){
         var reg = /^\d+$/;
@@ -967,7 +967,7 @@ _$.validator.addMethod("natural",function(params){
         dtd.resolve(flag);
         return dtd.promise();
     });
-},"[{0}]必须是自然数");
+},"{0}必须是自然数");
 _$.validator.addMethod("greaterThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -985,7 +985,7 @@ _$.validator.addMethod("greaterThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于{1}");
+},"{0}必须大于{1}");
 _$.validator.addMethod("greaterEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1002,7 +1002,7 @@ _$.validator.addMethod("greaterEqThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于等于{1}");
+},"{0}必须大于等于{1}");
 _$.validator.addMethod("lessThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1019,7 +1019,7 @@ _$.validator.addMethod("lessThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须小于{1}");
+},"{0}必须小于{1}");
 _$.validator.addMethod("lessEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1036,7 +1036,7 @@ _$.validator.addMethod("lessEqThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须小于等于{1}");
+},"{0}必须小于等于{1}");
 
 _$.validator.addMethod("lengthGreaterThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
@@ -1050,7 +1050,7 @@ _$.validator.addMethod("lengthGreaterThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于{1}个字符");
+},"{0}必须大于{1}个字符");
 _$.validator.addMethod("lengthGreaterEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1063,7 +1063,7 @@ _$.validator.addMethod("lengthGreaterEqThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于等于{1}个字符");
+},"{0}必须大于等于{1}个字符");
 _$.validator.addMethod("lengthGreaterThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1076,7 +1076,7 @@ _$.validator.addMethod("lengthGreaterThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须小于{1}个字符");
+},"{0}必须小于{1}个字符");
 _$.validator.addMethod("lengthGreaterEqThan",function(params){
     return  _$.validator.oneHandler(params,function(val,num){
         var dtd=$.Deferred();
@@ -1089,7 +1089,7 @@ _$.validator.addMethod("lengthGreaterEqThan",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于等于{1}个字符");
+},"{0}必须大于等于{1}个字符");
 _$.validator.addMethod("rangeLength",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
         var dtd=$.Deferred();
@@ -1102,7 +1102,7 @@ _$.validator.addMethod("rangeLength",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]长度必须是大{1},小于{2}");
+},"{0}长度必须是大{1},小于{2}");
 _$.validator.addMethod("rangeLengthEq",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
         var dtd=$.Deferred();
@@ -1115,7 +1115,7 @@ _$.validator.addMethod("rangeLengthEq",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]长度必须是大于{1},小于等于{2}");
+},"{0}长度必须是大于{1},小于等于{2}");
 _$.validator.addMethod("range",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
         var dtd=$.Deferred();
@@ -1132,7 +1132,7 @@ _$.validator.addMethod("range",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须大于{1},小于{2}");
+},"{0}必须大于{1},小于{2}");
 _$.validator.addMethod("rangeEq",function(params){
     return  _$.validator.twoHandler(params,function(val,min,max){
         var dtd=$.Deferred();
@@ -1149,7 +1149,7 @@ _$.validator.addMethod("rangeEq",function(params){
             return dtd.promise();
         }
     });
-},"[{0}]必须是大于等于{1},小于等于{2}");
+},"{0}必须是大于等于{1},小于等于{2}");
 _$.validator.addMethod("greaterEqThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1187,7 +1187,7 @@ _$.validator.addMethod("greaterEqThanTo",function(params){
 
         },names);
     }
-},"[{0}]必须大于等于[{1}]");
+},"{0}必须大于等于{1}");
 _$.validator.addMethod("greaterThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1225,7 +1225,7 @@ _$.validator.addMethod("greaterThanTo",function(params){
 
         },names);
     }
-},"[{0}]必须大于[{1}]");
+},"{0}必须大于{1}");
 _$.validator.addMethod("lessEqThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1263,7 +1263,7 @@ _$.validator.addMethod("lessEqThanTo",function(params){
 
         },names);
     }
-},"[{0}]必须小于等于[{1}]");
+},"{0}必须小于等于{1}");
 _$.validator.addMethod("lessThanTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1301,7 +1301,7 @@ _$.validator.addMethod("lessThanTo",function(params){
 
         },names);
     }
-},"[{0}]必须小于[{1}]");
+},"{0}必须小于{1}");
 _$.validator.addMethod("equalTo",function(params){
     var ruleValue=params["ruleValue"];
     var arr = ruleValue.split(",");
@@ -1320,7 +1320,7 @@ _$.validator.addMethod("equalTo",function(params){
         dtd.resolve(result);
         return dtd.promise();
     },names);
-},"[{0}]必须等于[{1}]");
+},"{0}必须等于{1}");
 
 /**
  * @class Form
@@ -1550,6 +1550,6 @@ _$.Form.prototype = {
     }
 };
 
-_$.regPlugins(["TextInput","TextArea","Hidden","Combo","ComboSearch","ComboBox","ComboData"],{
+_$.regPlugins(["TextInput","TextArea","Hidden","Combo","ComboSearch","ComboBox","ComboData","ComboUrl"],{
 
 });
