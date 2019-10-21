@@ -7,6 +7,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var dictRouter = require('./routes/dict');
+var areaRouter = require('./routes/area');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/dict', dictRouter);
+app.use('/area', areaRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

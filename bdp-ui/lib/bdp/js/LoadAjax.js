@@ -155,7 +155,6 @@ _$.LoadAjax.prototype={
         });
     },
     _editInit: function (result) {
-        console.log(result)
         var _this = this;
         var errorCode = result["errorCode"];
         var errorMsg = result["errorMsg"];

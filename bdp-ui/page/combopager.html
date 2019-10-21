@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Combo</title>
+</head>
+<body>
+<div id="mainBodyContent">
+    <div id="content">
+
+        <form class="form-horizontal" role="form" id="form">
+            <table class="table able-striped table-bordered table-hover">
+                <thead>
+                </thead>
+                <tbody id="base_data_body">
+                <tr>
+                    <td  class="vertical_center horizontal_center">
+                        ComboPagerData
+                    </td>
+                    <td style="position: relative">
+                        <div id="type1" class="cc-ComboPagerData" model="1" multiple="false" data="dataList" panelWidth="300px" multiple="false"
+                             returnValue="true" pageSize="10"
+                             data-options="idField:'id',textField:'name'" style="width: 250px" ></div>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10" >
+                    <input type="button" value="isValid" onclick="isValid()">
+                    <input type="button" value="editModel" onclick="editModel()">
+                    <input type="button" value="showModel" onclick="showModel()">
+                    <input type="button" value="setValue" onclick="setValue()">
+                    <input type="button" value="getValue" onclick="getValue()">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--#include file="/base/common.shtml"-->
+<script type="text/javascript">
+
+    var dataList = [];
+
+    for (let i = 0; i < 100; i++) {
+        var data  = {};
+        data["id"] =  (i+1);
+        data["name"]  = "zhangsan"+ (i+1);
+
+        dataList.add(data)
+    }
+   function onchangeHandler(e) {
+      // alert(e.value)
+   }
+    function isValid() {
+        var form = new _$.Form("#form");
+        form.isValid().done(function (flag) {
+            logger("  ==== " + flag)
+        })
+        .fail(function(err){
+            logger(err)
+        });
+    }
+    function editModel() {
+        var name = _$.getById("type1");
+        name.setModel(1)
+    }
+    function showModel() {
+        var name = _$.getById("type1");
+        name.setModel(0)
+    }
+    function setValue() {
+        var form = new _$.Form("#form");
+        var data = {
+            "type1":"5"
+        }
+        form.setValue(data)
+    }
+    function getValue() {
+        var form = new _$.Form("#form");
+        var data = form.getValue();
+        alert(JSON.stringify(data))
+    }
+    function onloadsuccess() {
+        logger("------onloadsuccess---------")
+    }
+    var onLoadSuccess = function(){
+        logger("------11---------")
+    };
+    $(function(){
+        _$.parser.parse(onLoadSuccess)
+    });
+</script>
+
+</body>
+</html>
