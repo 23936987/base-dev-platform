@@ -5,18 +5,17 @@ _$.LoadAjax.interfaceName="loadAjax";
 
 _$.LoadAjax.prototype={
     _attrProps:function(){
-        var properties =["call", "basePath",'parentIds', 'parentKeys', "resultKey","idField","textField",
+        var properties =["url",'type','parentIds', 'parentKeys', "resultKey","idField","textField",
             {"params": "object", "beforeSend": "function","dataFilter":"function"}];
         return properties;
     },
     _attrOpts:function(){
         var opts = {
             "idField":"id",
+            'type':'GET',
             "textField":"name",
             'parentIds': '',
             'parentKeys': '',
-            "call": "",
-            "basePath": "/base",
             "resultKey": "rows",
             "beforeSend": function (obj) {
                 return {};
@@ -68,7 +67,7 @@ _$.LoadAjax.prototype={
     getAjaxInParams:function () {
       return {};
     },
-    _loadData: function (func,searchText) {
+    _loadData: function (func,searchParams) {
         var _this = this;
         var sendParams;
         var params = _this.getOption("params");
@@ -79,13 +78,9 @@ _$.LoadAjax.prototype={
         if (params == null) {
             params = {};
         }
-
+        var ajaxIn = _this.getAjaxInParams();
+        var sendParams = $.extend(ajaxIn,params, filterData,searchParams);
         if (isEmpty(parentIds)) {
-            var ajaxIn = _this.getAjaxInParams();
-            var data = $.extend(ajaxIn,params, filterData,searchText);
-            sendParams = {
-                "map": data
-            };
             _this.ajax(sendParams, func);
         } else {
             var parentIdsArr = parentIds.split(",");
@@ -100,29 +95,19 @@ _$.LoadAjax.prototype={
             };
 
             if (isParentLoaded()) {
-                _this._loadDataByParent(func)
+                _this._loadDataByParent(sendParams,func)
             }else{
                 var timer1 = setInterval(function () {
                     if (isParentLoaded()) {
                         clearInterval(timer1);
-                        _this._loadDataByParent(func)
+                        _this._loadDataByParent(sendParams,func)
                     }
                 }, 10);
             }
         }
     },
-    _loadDataByParent:function(func){
+    _loadDataByParent:function(data,func){
         var _this = this;
-        var params = _this.getOption("params");
-        var beforeSend = _this.getOption("beforeSend");
-        var filterData = beforeSend.call(window, _this);
-
-        if (params == null) {
-            params = {};
-        }
-
-        var sendParams;
-
         var parentIds = _this.getOption("parentIds");
         var parentKeys = _this.getOption("parentKeys");
         var parentIdsArr = parentIds.split(",");
@@ -146,46 +131,38 @@ _$.LoadAjax.prototype={
             parentParams[parentKey] = parentValue;
         }
 
-        var data = $.extend(params, filterData, parentParams);
-        sendParams = {
-            "map": data
-        };
+        var sendParams = $.extend(data, parentParams);
         _this.ajax(sendParams, func);
     },
     _clearArea:function () {
     },
     ajax: function (data, func) {
         var _this = this;
-        var call = _this.getOption("call");
-        var basePath = _this.getOption("basePath");
+        var url = _this.getOption("url");
+        var type = _this.getOption("type");
 
         if (_this._isEdit()) {
             _this._clearArea();
         }
         _this.data = [];
-        var route = {
-            "call": call,
-            "description": "查询下拉框条目"
-        };
-
-        var url = basePath + "/callService";
-        var options = {
+        $.ajax({
+            type:type,
             url: url,
-            route: route,
             data: data,
-            callback: function (result) {
+            success: function(result){
                 func.call(_this, result);
             }
-        };
-        $.cc.ajaxDtoRequestCommon(options);
+        });
     },
     _editInit: function (result) {
+        console.log(result)
         var _this = this;
-        var state = result.getState();
-        var info = result.getInfo();
-        if (state == 0) {
+        var errorCode = result["errorCode"];
+        var errorMsg = result["errorMsg"];
+
+        if (errorCode == '0') {
             var resultKey = _this.getOption("resultKey");
-            var list = result.get(resultKey);
+            var list = result.body[resultKey];
             var dataFilter = _this.getOption("dataFilter");
             list = dataFilter.call(window, list);
             _this.data = list;
@@ -213,24 +190,20 @@ _$.LoadAjax.prototype={
                            _this.setValue(null);
                        }
                    }
-               } else {
-                   _this.setValue(null);
                }
-           }else{
-               _this.setValue(null);
            }
             _this._loadSuccess();
         } else {
-            $.cc.error(info);
+            logger(errorMsg);
         }
     },
     _showInit: function (result) {
         var _this = this;
-        var state = result.getState();
-        var info = result.getInfo();
-        if (state == 0) {
+        var errorCode = result["errorCode"];
+        var errorMsg = result["errorMsg"];
+        if (errorCode == '0') {
             var resultKey = _this.getOption("resultKey");
-            var list = result.get(resultKey);
+            var list = result.body[resultKey];
             var dataFilter = _this.getOption("dataFilter");
             list = dataFilter.call(window, list);
             _this.data = list;
@@ -245,7 +218,7 @@ _$.LoadAjax.prototype={
             }
             _this._loadSuccess();
         } else {
-            $.cc.error(info);
+            logger(info);
         }
     }
 };

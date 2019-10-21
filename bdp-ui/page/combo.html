@@ -51,8 +51,31 @@
                         ComboUrl
                     </td>
                     <td style="position: relative">
-                        <div id="ComboUrl"  class="cc-ComboUrl" required="true"  immediately="true" nameCn="ComboUrl"
+                        <div id="ComboUrl"  class="cc-ComboUrl" required="true" initValue="1" immediately="true" nameCn="ComboUrl" url="/data/dict/getItems/yesOrNo"
                              idField="code" textField="name" style="width:200px;height:30px;" ></div>
+                    </td>
+                    <td  class="vertical_center horizontal_center">
+                        ComboUrl2
+                    </td>
+                    <td style="position: relative">
+                        <div id="ComboUrl2"  class="cc-ComboUrl" required="true" model="1" initValue="2"  nameCn="ComboUrl" url="/data/dict/getItems/stateType"
+                             idField="code" textField="name" style="width:200px;height:30px;" ></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="vertical_center horizontal_center">
+                        dict
+                    </td>
+                    <td style="position: relative">
+                        <div id="dict"  class="cc-ComboUrl" required="true" immediately="true" nameCn="ComboUrl" url="/data/dict/list"
+                             idField="id" textField="name" style="width:200px;height:30px;" ></div>
+                    </td>
+                    <td  class="vertical_center horizontal_center">
+                        dict
+                    </td>
+                    <td style="position: relative">
+                        <div id="dictList"  class="cc-ComboUrl" required="true" immediately="true" nameCn="ComboUrl" url="/data/dict/dictList"
+                             idField="code" textField="name" style="width:200px;height:30px;" parentIds="dict" parentKeys="dictId" panelWidth="250"></div>
                     </td>
                 </tr>
                 </tbody>

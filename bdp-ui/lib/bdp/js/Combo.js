@@ -204,6 +204,7 @@ _$.extend(_$.Combo,_$.FormItem, {
         _this.combo_delete.click(function(){
             _this.setValue(null);
             _this._comboDelete("");
+            hideComboPanel(_this.id)
             return false;
         });
         $(document).click(function(e) {
