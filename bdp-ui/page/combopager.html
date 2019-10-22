@@ -18,7 +18,7 @@
                         ComboPagerData
                     </td>
                     <td style="position: relative">
-                        <div id="type1" class="cc-ComboPagerData" model="1" multiple="false" data="dataList" panelWidth="300px" multiple="false"
+                        <div id="type1" class="cc-ComboPagerData" model="1" data="dataList" panelWidth="300px" multiple="true"
                              returnValue="true" pageSize="10"
                              data-options="idField:'id',textField:'name'" style="width: 250px" ></div>
 
@@ -75,7 +75,7 @@
     function setValue() {
         var form = new _$.Form("#form");
         var data = {
-            "type1":"5"
+            "type1":"25"
         }
         form.setValue(data)
     }
