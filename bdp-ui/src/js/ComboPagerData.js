@@ -210,5 +210,81 @@
                 }
             });
         },
+        _mutiSelectMoreItems:function (id,ids,names) {
+            var _this = this;
+            var idx = ids.indexOf(id);
+            ids.removeAt(idx);
+            _this.setValue(ids.join(","));
+        },
+        _moreItems:function () {
+            var _this = this;
+            var multiple = _this.getOption("multiple");
+            var idField = _this.getOption("idField");
+            var textField = _this.getOption("textField");
+            if(multiple){
+                if(isNotEmpty(_this.value)){
+                    var  ids = _this.value.split(",");
+                    var names = [];
+                    for (var i = 0; i < _this.dataList.length; i++) {
+                        var item = _this.dataList[i];
+                        for (var j = 0; j < ids.length; j++) {
+                            if(item[idField] == ids[j]) {
+                                names.push(item[textField]);
+                                break;
+                            }
+                        }
+                    }
+                    _this._showMoreItems(ids,names);
+                }
+            }
+        },
+        _mutiHoverSelect:function (ids) {
+            var _this = this;
+            var $combo_pager_items = $("." + _this._COMBO_PAGER_ITEM_CLASS_, _this.combo_pager_area);
+            $combo_pager_items.removeClass(_this._COMBO_PAGER_ITEM_HOVER_CLASS_);
+            $combo_pager_items.removeClass(_this._COMBO_PAGER_ITEM_SELECT_CLASS_);
+            var idField = _this.getOption("idField");
+            var _isSelect=false;
+            if(isNotEmpty(ids)){
+                if(ids != null && ids.length>0){
+                    ids.each(function (id) {
+                        _this.data.each(function (item,index) {
+                            if(item[idField] == id){
+                                if(!_isSelect){
+                                    _isSelect = true;
+                                }
+                                _this.index = index;
+                                var $combo_pager_item = $combo_pager_items.eq(index);
+                                $combo_pager_item.addClass(_this._COMBO_PAGER_ITEM_SELECT_CLASS_);
+                            }
+                        })
+                    })
+                }
+            }
+
+            if(!_isSelect){
+                _this._hightLightRow(0);
+            }
+        },
+        _singleHoverSelect:function (ids) {
+            var _this = this;
+            var idField = _this.getOption("idField");
+            var flag = _this.data.some(function (item,index) {
+                if(item[idField] == ids){
+                    _this.index = index;
+                    return true;
+                }
+                return false;
+            });
+            if(flag){
+                var $combo_pager_items = $("." + _this._COMBO_PAGER_ITEM_CLASS_, _this.combo_pager_area);
+                $combo_pager_items.removeClass(_this._COMBO_PAGER_ITEM_HOVER_CLASS_);
+
+                var $combo_pager_item = $combo_pager_items.eq(_this.index);
+                $combo_pager_item.addClass(_this._COMBO_PAGER_ITEM_SELECT_CLASS_).siblings().removeClass(_this._COMBO_PAGER_ITEM_SELECT_CLASS_);
+            }else{
+                _this._hightLightRow(0);
+            }
+        },
     });
 })(window);
