@@ -27,7 +27,6 @@
         _cls:_$._clsPre + "ComboPager",
         _uiCls:_$._uiPreCls + "ComboPager",
         data:[],
-        dataList:[],
         pageNum:1,
         total:0,
         totalPage:1,
@@ -319,6 +318,7 @@
         },
         _bindPanelEvents: function () {
             var _this = this;
+             _$.ComboPager.superclass._bindPanelEvents.call(_this);
             _this.index = -1;
             _this.panel.unbind('keydown').bind("keydown", function (e) {
                 var $combo_pager_items = $("." + _this._COMBO_PAGER_ITEM_CLASS_, _this.combo_pager_area);

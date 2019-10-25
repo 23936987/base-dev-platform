@@ -16,7 +16,6 @@
         "ComboPagerJs":_$.basePath + "js/ComboPager.js",
         "ComboPagerDataCss":_$.basePath + "css/ComboPagerData.css"
     });
-
     _$.ComboPagerData=function (target,processKey){
         var _this = this;
         _$.ComboPagerData.superclass.constructor.call(_this,target,processKey);
@@ -26,6 +25,7 @@
     _$.extend(_$.ComboPagerData,_$.ComboPager, {
         _cls:_$._clsPre + "ComboPagerData",
         _uiCls:_$._uiPreCls + "ComboPagerData",
+        dataList:[],
         _attrProps:function(){
             var _this = this;
             var properties = _$.ComboPagerData.superclass._attrProps.call(_this);
@@ -200,6 +200,76 @@
             }
 
             _this.setValue(ids.join(","));
+        },
+        _searchByTxt: function (searchTxt) {
+
+            var _this = this;
+            var multiple = _this.getOption("multiple");
+            var textField = _this.getOption("textField");
+            var idField = _this.getOption("idField");
+
+            var list = [];
+            if (isEmpty(searchTxt)) {
+                if (!multiple) {
+                    list = _this.data;
+                } else {
+                    var values = (_this.value + "").split(",");
+                    list = _this.data.filter(function (item, index) {
+                        for (var i = 0; i < values.length; i++) {
+                            if (item[idField] == values[i]) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                }
+            } else {
+                if (!multiple) {
+                    for (var i = 0; i < _this.data.length; i++) {
+                        var item = _this.data[i];
+                        if (item[textField].indexOf(searchTxt) != -1) {
+                            list.push(item);
+                        }
+                    }
+                } else {
+                    var values = (_this.value + "").split(",");
+                    var arr = _this.data.filter(function (item, index) {
+                        for (var i = 0; i < values.length; i++) {
+                            if (item[idField] == values[i]) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    if (arr != null && arr.length > 0) {
+                        for (var i = 0; i < arr.length; i++) {
+                            var item = arr[i];
+                            if (item[textField].indexOf(searchTxt) != -1) {
+                                list.push(item);
+                            }
+                        }
+                    }
+                }
+            }
+            _this._setData(list);
+            if(isNotEmpty(_this.value)){
+                var value = _this.value;
+                $("." + _this._COMBOBOX_ITEM_CLASS_, _this.combo_box_area).each(function () {
+                    $(this).removeClass(_this._COMBOBOX_ITEM_SELECT_CLASS_);
+                });
+                list.each(function (item, i) {
+                    var id = item[idField];
+                    var name = item[textField];
+
+                    if (id == value) {
+                        $("." + _this._COMBOBOX_ITEM_CLASS_ + "[data-value='" + value + "']", _this.combo_box_area).each(function () {
+                            $(this).addClass(_this._COMBOBOX_ITEM_SELECT_CLASS_);
+                        });
+                        _this.combo_input.html(name);
+                    }
+                });
+            }
         },
         _singleItemSelect:function (val) {
             var _this = this;
