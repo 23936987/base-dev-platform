@@ -72,7 +72,19 @@
             var end = start + pageSize;
             end = end < _this.total ? end : _this.total;
 
-            var list  = _this.dataList.slice(start,end);
+            var textField = _this.getOption("textField");
+
+            var arr  = _this.dataList.slice(start,end);
+            var searchTxt = _this.panel_search.val();
+            var list = [];
+            if (arr != null && arr.length > 0) {
+                for (var i = 0; i < arr.length; i++) {
+                    var item = arr[i];
+                    if (item[textField].indexOf(searchTxt) != -1) {
+                        list.push(item);
+                    }
+                }
+            }
             _this.data = list;
             func.call(_this, list);
         },
@@ -172,6 +184,8 @@
                     }
                 }
             }
+
+
             if (change) {
                 _this.fireOnChange()
             }
