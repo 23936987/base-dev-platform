@@ -508,6 +508,12 @@
             }
             if(change){
                 this.fireOnChange();
+                if(_this.validState){
+                    _this.panel.removeClass("validClass");
+                }else{
+                    hideValidateComboPanel(_this.id);
+                    _this.panel.addClass("validClass");
+                }
             }
         },
         getValue: function () {

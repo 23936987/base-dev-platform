@@ -177,7 +177,7 @@
         components : {},
         uids:{},
         classes:{},
-        _clsPre:"cc-",
+        _clsPre:"bdp-",
         _uiPreCls:"ui-",
         /**
          *  注册控件对象到全局上下文中

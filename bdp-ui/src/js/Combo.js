@@ -338,15 +338,9 @@
         },
     });
 
-    window.hideComboPanel=function(comboId){
+    window.hideValidateComboPanel=function(comboId) {
         var combo = _$.getById(comboId);
-        var panel = $("#combo_panel_" + comboId);
         var combo_show = combo.combo_show;
-        var multiple = combo.getOption("multiple");
-        var speed = combo.getOption("speed");
-        if(multiple || (isNotEmpty(combo.show_more) && combo.show_more.is(":visible"))){
-            combo._hideMore();
-        }
         var validState = combo.validState;
         if(validState){
             combo_show.css({
@@ -357,6 +351,16 @@
                 "border-bottom":"1px solid #ff0000"
             });
         }
+    }
+    window.hideComboPanel=function(comboId){
+        var combo = _$.getById(comboId);
+        var panel = $("#combo_panel_" + comboId);
+        var multiple = combo.getOption("multiple");
+        var speed = combo.getOption("speed");
+        if(multiple || (isNotEmpty(combo.show_more) && combo.show_more.is(":visible"))){
+            combo._hideMore();
+        }
+        hideValidateComboPanel(comboId);
 
         panel.slideUp(speed);
 

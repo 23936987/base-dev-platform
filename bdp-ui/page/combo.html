@@ -18,21 +18,21 @@
                         combo
                     </td>
                     <td style="position: relative">
-                        <div id="combo"  class="cc-Combo" required="true"  immediately="true" nameCn="combo" style="width:200px;height:30px;" ></div>
+                        <div id="combo"  class="bdp-Combo" required="true"  immediately="true" nameCn="combo" style="width:200px;height:30px;" ></div>
                     </td>
 
                     <td  class="vertical_center horizontal_center">
                         combo
                     </td>
                     <td style="position: relative">
-                        <div id="combosearch"  class="cc-ComboSearch" required="true"  immediately="true" nameCn="combosearch" style="width:200px;height:30px;" ></div>
+                        <div id="combosearch"  class="bdp-ComboSearch" required="true"  immediately="true" nameCn="combosearch" style="width:200px;height:30px;" ></div>
                     </td>
 
                     <td  class="vertical_center horizontal_center">
                         ComboBox
                     </td>
                     <td style="position: relative">
-                        <div id="combobox"  class="cc-ComboBox" required="true"  immediately="true" nameCn="combosearch" data="sexData"
+                        <div id="combobox"  class="bdp-ComboBox" required="true"  immediately="true" nameCn="combosearch" data="sexData"
                              idField="code" textField="name"
                              style="width:200px;height:30px;" ></div>
                     </td>
@@ -40,7 +40,7 @@
                         combodata
                     </td>
                     <td style="position: relative">
-                        <div id="combodata"  class="cc-ComboData" required="true"  immediately="true" nameCn="ComboData" data="sexData"
+                        <div id="combodata"  class="bdp-ComboData" required="true"  immediately="true" nameCn="ComboData" data="sexData"
                              idField="code" textField="name" style="width:200px;height:30px;" ></div>
                     </td>
 
@@ -51,14 +51,14 @@
                         ComboUrl
                     </td>
                     <td style="position: relative">
-                        <div id="ComboUrl"  class="cc-ComboUrl" required="true" initValue="1" immediately="true" nameCn="ComboUrl" url="/data/dict/getItems/yesOrNo"
+                        <div id="ComboUrl"  class="bdp-ComboUrl" required="true" initValue="1" immediately="true" nameCn="ComboUrl" url="/data/dict/getItems/yesOrNo"
                              idField="code" textField="name" style="width:200px;height:30px;" ></div>
                     </td>
                     <td  class="vertical_center horizontal_center">
                         ComboUrl2
                     </td>
                     <td style="position: relative">
-                        <div id="ComboUrl2"  class="cc-ComboUrl" required="true" model="1" initValue="2"  nameCn="ComboUrl" url="/data/dict/getItems/stateType"
+                        <div id="ComboUrl2"  class="bdp-ComboUrl" required="true" model="1" initValue="2"  nameCn="ComboUrl" url="/data/dict/getItems/stateType"
                              idField="code" textField="name" style="width:200px;height:30px;" ></div>
                     </td>
                 </tr>
@@ -67,14 +67,14 @@
                         dict
                     </td>
                     <td style="position: relative">
-                        <div id="dict"  class="cc-ComboUrl" required="true" immediately="true" nameCn="ComboUrl" url="/data/dict/list"
+                        <div id="dict"  class="bdp-ComboUrl" required="true" immediately="true" nameCn="ComboUrl" url="/data/dict/list"
                              idField="id" textField="name" style="width:200px;height:30px;" ></div>
                     </td>
                     <td  class="vertical_center horizontal_center">
                         dict
                     </td>
                     <td style="position: relative">
-                        <div id="dictList"  class="cc-ComboUrl" required="true" immediately="true" nameCn="ComboUrl" url="/data/dict/dictList"
+                        <div id="dictList"  class="bdp-ComboUrl" required="true" immediately="true" multiple="true" nameCn="ComboUrl" url="/data/dict/dictList"
                              idField="code" textField="name" style="width:200px;height:30px;" parentIds="dict" parentKeys="dictId" panelWidth="250"></div>
                     </td>
                 </tr>
@@ -113,11 +113,11 @@
         });
     }
     function editModel() {
-        var name = _$.getById("name");
+        var name = _$.getById("dictList");
         name.setModel(1)
     }
     function showModel() {
-        var name = _$.getById("name");
+        var name = _$.getById("dictList");
         name.setModel(0)
     }
     function setValue() {

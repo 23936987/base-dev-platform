@@ -26,6 +26,11 @@
     _$.extend(_$.Text,_$.FormItem, {
         _cls:_$._clsPre + "Text",
         _uiCls:_$._uiPreCls + "Text",
+        /**
+         *
+         * @returns {*}
+         * @private
+         */
         _attrProps:function(){
             var _this = this;
             var properties = _$.Text.superclass._attrProps.call(_this);
